@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "allowImportingTsExtensions": false,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    "noUncheckedIndexedAccess": true,
+    "paths": {
+      "@hifi/core": ["./packages/core/src/index.ts"],
+      "@hifi/liquid": ["./packages/liquid/src/index.ts"],
+      "@hifi/liquid/grammar": ["./packages/liquid/src/grammar.ts"],
+      "@hifi/print": ["./packages/print/src/index.ts"],
+      "@hifi/print/grammar": ["./packages/print/src/grammar.ts"],
+      "@hifi/texture": ["./packages/texture/src/index.ts"],
+      "@hifi/texture/grammar": ["./packages/texture/src/grammar.ts"]
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2023",
+    "useDefineForClassFields": true
+  },
+  "exclude": ["**/dist", "**/node_modules"]
+}

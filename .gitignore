@@ -1,0 +1,7 @@
+.direnv/
+.turbo/
+coverage/
+dist/
+node_modules/
+
+*.log
