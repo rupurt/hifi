@@ -1,10 +1,22 @@
-import { Link, Outlet, createRootRoute, createRoute, createRouter } from '@tanstack/react-router'
-import { GrammarPage } from './GrammarPage'
+import {
+  Link,
+  Outlet,
+  createRootRoute,
+  createRoute,
+  createRouter,
+  useRouterState,
+} from '@tanstack/react-router'
+import { LiquidStyleguide } from './LiquidStyleguide'
+import { PrintStyleguide } from './PrintStyleguide'
+import { TextureStyleguide } from './TextureStyleguide'
 import { grammarNames, grammarRegistry } from './grammars'
 
 function RootLayout() {
+  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const activeGrammar = grammarNames.find((grammar) => pathname === `/styleguide/${grammar}`)
+
   return (
-    <div className="site-shell">
+    <div className={`site-shell${activeGrammar ? ` site-shell-${activeGrammar}` : ''}`}>
       <header className="site-header">
         <Link className="wordmark" to="/">
           hifi
@@ -15,9 +27,8 @@ function RootLayout() {
               activeProps={{ 'aria-current': 'page', className: 'nav-link nav-link-active' }}
               className="nav-link"
               key={grammar}
-              params={{ grammar }}
               search={{ theme: undefined }}
-              to="/styleguide/$grammar"
+              to={`/styleguide/${grammar}`}
             >
               {grammarRegistry[grammar].label}
             </Link>
@@ -34,7 +45,7 @@ function LandingPage() {
     <main>
       <section className="hero">
         <p className="eyebrow">Interface material studies</p>
-        <h1>High-fidelity grammars for multi-dimensional interfaces.</h1>
+        <h1>High-fidelity design grammars</h1>
         <p className="hero-copy">
           hifi packages coherent visual languages as typed React libraries. Explore the material,
           themes, components, and behavior of each grammar.
@@ -54,9 +65,8 @@ function LandingPage() {
               <Link
                 className={`grammar-card grammar-card-${grammar}`}
                 key={grammar}
-                params={{ grammar }}
                 search={{ theme: undefined }}
-                to="/styleguide/$grammar"
+                to={`/styleguide/${grammar}`}
               >
                 <span className="grammar-status">{definition.status}</span>
                 <h3>{definition.label}</h3>
@@ -88,16 +98,34 @@ const indexRoute = createRoute({
   component: LandingPage,
 })
 
-export const grammarRoute = createRoute({
+export const liquidRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: 'styleguide/$grammar',
+  path: 'styleguide/liquid',
   validateSearch: (search: Record<string, unknown>) => ({
     theme: typeof search.theme === 'string' ? search.theme : undefined,
   }),
-  component: GrammarPage,
+  component: LiquidStyleguide,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, grammarRoute])
+export const textureRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'styleguide/texture',
+  validateSearch: (search: Record<string, unknown>) => ({
+    theme: typeof search.theme === 'string' ? search.theme : undefined,
+  }),
+  component: TextureStyleguide,
+})
+
+export const printRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'styleguide/print',
+  validateSearch: (search: Record<string, unknown>) => ({
+    theme: typeof search.theme === 'string' ? search.theme : undefined,
+  }),
+  component: PrintStyleguide,
+})
+
+const routeTree = rootRoute.addChildren([indexRoute, liquidRoute, textureRoute, printRoute])
 
 export const router = createRouter({
   defaultPreload: 'intent',

@@ -69,6 +69,8 @@ Grammar packages should expose React components, tokens, theme definitions, and 
 
 The sample application is both a development harness and the living specification for the packages. It uses [TanStack Router](https://tanstack.com/router) and builds to static assets in `apps/styleguide/dist`.
 
+Each grammar owns an explicit route component, its own art direction, and its own theme-responsive control treatment. The routes share an accessible specimen taxonomy—commands, selection, native fields, choices, feedback, cards, lists, and tables—so the same interface vocabulary can be compared without forcing every grammar into the same page design.
+
 Each grammar has a stable route:
 
 ```text
