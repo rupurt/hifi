@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { defineGrammar, getGrammarTheme } from './index'
+import { defineGrammar, getGrammarTheme, parseMaterialEnvelope, serializeMaterial } from './index'
 
 describe('grammar contracts', () => {
   const grammar = defineGrammar({
@@ -21,5 +21,21 @@ describe('grammar contracts', () => {
   it('resolves a requested theme and falls back to the first theme', () => {
     expect(getGrammarTheme(grammar, 'second').name).toBe('second')
     expect(getGrammarTheme(grammar, 'missing').name).toBe('first')
+  })
+})
+
+describe('programmable material contracts', () => {
+  const material = { grammar: 'example', name: 'Example material', roughness: 0.4, version: 1 }
+
+  it('serializes and validates the common material envelope', () => {
+    const parsed = parseMaterialEnvelope(JSON.parse(serializeMaterial(material)), 'example', 1)
+
+    expect(parsed).toEqual(material)
+  })
+
+  it('rejects a material from another grammar', () => {
+    expect(() => parseMaterialEnvelope(material, 'different', 1)).toThrowError(
+      'Expected a version 1 @hifi/different material',
+    )
   })
 })

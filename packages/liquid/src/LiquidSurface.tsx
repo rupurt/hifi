@@ -1,20 +1,13 @@
 import { Frame, Glass, GlassContainer, LiquidCanvas } from '@liquid-dom/react'
 import type { CSSProperties, PropsWithChildren } from 'react'
 import type { LiquidThemeName } from './grammar'
+import { type LiquidMaterial, liquidThemeMaterials } from './material'
+import { supportsLiquidDomRendering } from './support'
 
 export interface LiquidSurfaceProps extends PropsWithChildren {
   readonly className?: string
+  readonly material?: LiquidMaterial
   readonly theme?: LiquidThemeName
-}
-
-const settings: Record<
-  LiquidThemeName,
-  { readonly blur: number; readonly opacity: number; readonly fallback: string }
-> = {
-  clear: { blur: 6, opacity: 0.72, fallback: 'rgb(255 255 255 / 0.16)' },
-  tinted: { blur: 10, opacity: 0.82, fallback: 'rgb(137 116 255 / 0.2)' },
-  frosted: { blur: 18, opacity: 0.9, fallback: 'rgb(255 255 255 / 0.3)' },
-  blurred: { blur: 28, opacity: 0.78, fallback: 'rgb(214 235 255 / 0.22)' },
 }
 
 const hostStyle: CSSProperties = {
@@ -40,11 +33,16 @@ const contentStyle: CSSProperties = {
   zIndex: 1,
 }
 
-export function LiquidSurface({ children, className, theme = 'clear' }: LiquidSurfaceProps) {
-  const selected = settings[theme]
-  const supportsWebGpu = typeof navigator !== 'undefined' && 'gpu' in navigator
+export function LiquidSurface({
+  children,
+  className,
+  material,
+  theme = 'clear',
+}: LiquidSurfaceProps) {
+  const selected = material ?? liquidThemeMaterials[theme]
+  const supportsRenderer = supportsLiquidDomRendering()
 
-  if (!supportsWebGpu) {
+  if (!supportsRenderer) {
     return (
       <section
         className={className}
@@ -52,7 +50,7 @@ export function LiquidSurface({ children, className, theme = 'clear' }: LiquidSu
         style={{
           ...hostStyle,
           backdropFilter: `blur(${selected.blur}px)`,
-          backgroundColor: selected.fallback,
+          backgroundColor: toCssColor(selected.tint),
           border: '1px solid rgb(255 255 255 / 0.35)',
           boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.42), 0 24px 70px rgb(8 8 35 / 0.3)',
         }}
@@ -65,13 +63,37 @@ export function LiquidSurface({ children, className, theme = 'clear' }: LiquidSu
   return (
     <section className={className} data-liquid-renderer="webgpu" style={hostStyle}>
       <LiquidCanvas style={{ height: '100%', inset: 0, position: 'absolute', width: '100%' }}>
-        <GlassContainer blur={selected.blur} opacity={selected.opacity} spacing={24}>
+        <GlassContainer
+          bezelWidth={selected.bezelWidth}
+          blur={selected.blur}
+          contentDepth={selected.contentDepth}
+          contentIor={selected.contentIor}
+          dispersion={selected.dispersion}
+          displacementBlur={selected.displacementBlur}
+          displacementFactor={selected.displacementFactor}
+          ior={selected.ior}
+          opacity={selected.opacity}
+          spacing={24}
+          specularOpacity={selected.specularOpacity}
+          specularSharpness={selected.specularSharpness}
+          specularStrength={selected.specularStrength}
+          surfaceProfile={selected.surfaceProfile}
+          thickness={selected.thickness}
+          tint={selected.tint}
+        >
           <Frame height={230} width={460}>
-            <Glass cornerRadius={38} />
+            <Glass
+              cornerRadius={selected.cornerRadius}
+              cornerSmoothing={selected.cornerSmoothing}
+            />
           </Frame>
         </GlassContainer>
       </LiquidCanvas>
       <div style={contentStyle}>{children}</div>
     </section>
   )
+}
+
+function toCssColor({ a, b, g, r }: LiquidMaterial['tint']) {
+  return `rgb(${Math.round(r * 255)} ${Math.round(g * 255)} ${Math.round(b * 255)} / ${a})`
 }

@@ -173,7 +173,7 @@
 }
 
 .liquid-float-card {
-  backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(var(--generated-liquid-blur, 24px)) saturate(150%);
   background: rgb(224 242 255 / 0.12);
   border: 1px solid rgb(255 255 255 / 0.28);
   border-radius: 22px;
@@ -213,7 +213,7 @@
 }
 
 .liquid-page .theme-picker-option {
-  backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(var(--generated-liquid-blur, 24px)) saturate(150%);
   border-radius: 26px;
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16);
   overflow: hidden;
@@ -268,7 +268,7 @@
 .liquid-page .foundation-space-token,
 .liquid-page .foundation-layout-board,
 .liquid-page .foundation-icon-specimen {
-  backdrop-filter: blur(28px) saturate(150%);
+  backdrop-filter: blur(var(--generated-liquid-blur, 28px)) saturate(150%);
 }
 
 .liquid-page .catalog-button,
@@ -278,7 +278,7 @@
 .liquid-page .catalog-field textarea,
 .liquid-page .catalog-picker-group input[type="color"],
 .liquid-page .catalog-picker-group input[type="file"]::file-selector-button {
-  backdrop-filter: blur(16px);
+  backdrop-filter: blur(min(var(--generated-liquid-blur, 16px), 16px));
   box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16);
 }
 
@@ -305,6 +305,10 @@
 
 .liquid-page .catalog-table tbody tr:hover {
   background: rgb(255 255 255 / 0.08);
+}
+
+.liquid-page[data-generated-theme] .control-catalog {
+  --control-radius: var(--liquid-control-radius);
 }
 
 @media (max-width: 980px) {

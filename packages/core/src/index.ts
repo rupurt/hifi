@@ -30,3 +30,12 @@ export function getGrammarTheme<const Definition extends GrammarDefinition>(
   return (grammar.themes.find((theme) => theme.name === name) ??
     grammar.themes[0]) as Definition['themes'][number]
 }
+
+export {
+  isFiniteMaterialNumber,
+  isMaterialRecord,
+  type MaterialRecord,
+  type ProgrammableMaterial,
+  parseMaterialEnvelope,
+  serializeMaterial,
+} from './material'

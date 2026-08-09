@@ -4,11 +4,15 @@ import './styles/catalog.css'
 
 interface ControlCatalogProps {
   readonly grammarLabel: string
+  readonly hideInteractionSections?: boolean
 }
 
 const layers = ['Surface', 'Content', 'Signal'] as const
 
-export function ControlCatalog({ grammarLabel }: ControlCatalogProps) {
+export function ControlCatalog({
+  grammarLabel,
+  hideInteractionSections = false,
+}: ControlCatalogProps) {
   const radioName = useId()
   const [layer, setLayer] = useState<(typeof layers)[number]>('Content')
   const [enabled, setEnabled] = useState(true)
@@ -16,187 +20,191 @@ export function ControlCatalog({ grammarLabel }: ControlCatalogProps) {
 
   return (
     <div className="control-catalog">
-      <StyleguideSection
-        description={`Commands, selection, binary state, and disabled behavior rendered in the ${grammarLabel} grammar.`}
-        id="buttons-heading"
-        index="07"
-        title="Buttons"
-      >
-        <div className="catalog-grid catalog-grid-actions">
-          <article className="catalog-specimen catalog-specimen-wide">
-            <header>
-              <span>Command hierarchy</span>
-              <code>default states</code>
-            </header>
-            <div className="catalog-control-row">
-              <button className="catalog-button catalog-button-primary" type="button">
-                Continue
-              </button>
-              <button className="catalog-button" type="button">
-                Save draft
-              </button>
-              <button className="catalog-button catalog-button-danger" type="button">
-                Remove
-              </button>
-              <button className="catalog-button" disabled type="button">
-                Disabled
-              </button>
-              <button aria-label="Add item" className="catalog-icon-button" type="button">
-                <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
-              </button>
+      {hideInteractionSections ? null : (
+        <>
+          <StyleguideSection
+            description={`Commands, selection, binary state, and disabled behavior rendered in the ${grammarLabel} grammar.`}
+            id="buttons-heading"
+            index="07"
+            title="Buttons"
+          >
+            <div className="catalog-grid catalog-grid-actions">
+              <article className="catalog-specimen catalog-specimen-wide">
+                <header>
+                  <span>Command hierarchy</span>
+                  <code>default states</code>
+                </header>
+                <div className="catalog-control-row">
+                  <button className="catalog-button catalog-button-primary" type="button">
+                    Continue
+                  </button>
+                  <button className="catalog-button" type="button">
+                    Save draft
+                  </button>
+                  <button className="catalog-button catalog-button-danger" type="button">
+                    Remove
+                  </button>
+                  <button className="catalog-button" disabled type="button">
+                    Disabled
+                  </button>
+                  <button aria-label="Add item" className="catalog-icon-button" type="button">
+                    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+                      <path d="M12 5v14M5 12h14" />
+                    </svg>
+                  </button>
+                </div>
+              </article>
+
+              <article className="catalog-specimen">
+                <header>
+                  <span>Segmented control</span>
+                  <code>single select</code>
+                </header>
+                <fieldset className="catalog-segmented">
+                  <legend className="visually-hidden">Composition layer</legend>
+                  {layers.map((candidate) => (
+                    <button
+                      aria-pressed={candidate === layer}
+                      key={candidate}
+                      onClick={() => setLayer(candidate)}
+                      type="button"
+                    >
+                      {candidate}
+                    </button>
+                  ))}
+                </fieldset>
+              </article>
+
+              <article className="catalog-specimen">
+                <header>
+                  <span>Binary control</span>
+                  <code>switch</code>
+                </header>
+                <div className="catalog-switch-row">
+                  <button
+                    aria-checked={enabled}
+                    aria-label="Enable live material"
+                    className="catalog-switch"
+                    onClick={() => setEnabled((current) => !current)}
+                    role="switch"
+                    type="button"
+                  >
+                    <span />
+                  </button>
+                  <div>
+                    <strong>{enabled ? 'Material active' : 'Material quiet'}</strong>
+                    <small>Preserves a familiar binary state.</small>
+                  </div>
+                </div>
+              </article>
             </div>
-          </article>
+          </StyleguideSection>
 
-          <article className="catalog-specimen">
-            <header>
-              <span>Segmented control</span>
-              <code>single select</code>
-            </header>
-            <fieldset className="catalog-segmented">
-              <legend className="visually-hidden">Composition layer</legend>
-              {layers.map((candidate) => (
-                <button
-                  aria-pressed={candidate === layer}
-                  key={candidate}
-                  onClick={() => setLayer(candidate)}
-                  type="button"
-                >
-                  {candidate}
-                </button>
-              ))}
-            </fieldset>
-          </article>
-
-          <article className="catalog-specimen">
-            <header>
-              <span>Binary control</span>
-              <code>switch</code>
-            </header>
-            <div className="catalog-switch-row">
-              <button
-                aria-checked={enabled}
-                aria-label="Enable live material"
-                className="catalog-switch"
-                onClick={() => setEnabled((current) => !current)}
-                role="switch"
-                type="button"
-              >
-                <span />
-              </button>
-              <div>
-                <strong>{enabled ? 'Material active' : 'Material quiet'}</strong>
-                <small>Preserves a familiar binary state.</small>
+          <StyleguideSection
+            description="Native browser controls retain their expected semantics while the grammar supplies material, focus, shape, and hierarchy."
+            id="forms-heading"
+            index="08"
+            title="Forms"
+          >
+            <form className="catalog-form" onSubmit={(event) => event.preventDefault()}>
+              <div className="catalog-field-grid">
+                <label className="catalog-field">
+                  <span>Text input</span>
+                  <input defaultValue="High fidelity" type="text" />
+                  <small>Free-form content</small>
+                </label>
+                <label className="catalog-field">
+                  <span>Search</span>
+                  <input defaultValue="material grammar" type="search" />
+                  <small>Query with native clearing behavior</small>
+                </label>
+                <label className="catalog-field">
+                  <span>Number</span>
+                  <input defaultValue="24" min="0" type="number" />
+                  <small>Numeric input with steppers</small>
+                </label>
+                <label className="catalog-field">
+                  <span>Select</span>
+                  <select defaultValue="medium">
+                    <option value="subtle">Subtle</option>
+                    <option value="medium">Medium</option>
+                    <option value="expressive">Expressive</option>
+                  </select>
+                  <small>Bounded native selection</small>
+                </label>
+                <label className="catalog-field catalog-field-wide">
+                  <span>Textarea</span>
+                  <textarea defaultValue="A coherent visual language should hold together from the smallest control to the broadest application surface." />
+                  <small>Longer composition and notes</small>
+                </label>
+                <label className="catalog-field catalog-range-field">
+                  <span>
+                    Range
+                    <output>{range}%</output>
+                  </span>
+                  <input
+                    max="100"
+                    min="0"
+                    onChange={(event) => setRange(event.currentTarget.valueAsNumber)}
+                    type="range"
+                    value={range}
+                  />
+                  <small>Continuous bounded value</small>
+                </label>
               </div>
-            </div>
-          </article>
-        </div>
-      </StyleguideSection>
 
-      <StyleguideSection
-        description="Native browser controls retain their expected semantics while the grammar supplies material, focus, shape, and hierarchy."
-        id="forms-heading"
-        index="08"
-        title="Forms"
-      >
-        <form className="catalog-form" onSubmit={(event) => event.preventDefault()}>
-          <div className="catalog-field-grid">
-            <label className="catalog-field">
-              <span>Text input</span>
-              <input defaultValue="High fidelity" type="text" />
-              <small>Free-form content</small>
-            </label>
-            <label className="catalog-field">
-              <span>Search</span>
-              <input defaultValue="material grammar" type="search" />
-              <small>Query with native clearing behavior</small>
-            </label>
-            <label className="catalog-field">
-              <span>Number</span>
-              <input defaultValue="24" min="0" type="number" />
-              <small>Numeric input with steppers</small>
-            </label>
-            <label className="catalog-field">
-              <span>Select</span>
-              <select defaultValue="medium">
-                <option value="subtle">Subtle</option>
-                <option value="medium">Medium</option>
-                <option value="expressive">Expressive</option>
-              </select>
-              <small>Bounded native selection</small>
-            </label>
-            <label className="catalog-field catalog-field-wide">
-              <span>Textarea</span>
-              <textarea defaultValue="A coherent visual language should hold together from the smallest control to the broadest application surface." />
-              <small>Longer composition and notes</small>
-            </label>
-            <label className="catalog-field catalog-range-field">
-              <span>
-                Range
-                <output>{range}%</output>
-              </span>
-              <input
-                max="100"
-                min="0"
-                onChange={(event) => setRange(event.currentTarget.valueAsNumber)}
-                type="range"
-                value={range}
-              />
-              <small>Continuous bounded value</small>
-            </label>
-          </div>
+              <div className="catalog-choice-grid">
+                <fieldset className="catalog-choice-group">
+                  <legend>Checkboxes</legend>
+                  <label>
+                    <input defaultChecked type="checkbox" />
+                    <span>Show material effects</span>
+                  </label>
+                  <label>
+                    <input type="checkbox" />
+                    <span>Increase contrast</span>
+                  </label>
+                  <label>
+                    <input disabled type="checkbox" />
+                    <span>Unavailable option</span>
+                  </label>
+                </fieldset>
 
-          <div className="catalog-choice-grid">
-            <fieldset className="catalog-choice-group">
-              <legend>Checkboxes</legend>
-              <label>
-                <input defaultChecked type="checkbox" />
-                <span>Show material effects</span>
-              </label>
-              <label>
-                <input type="checkbox" />
-                <span>Increase contrast</span>
-              </label>
-              <label>
-                <input disabled type="checkbox" />
-                <span>Unavailable option</span>
-              </label>
-            </fieldset>
+                <fieldset className="catalog-choice-group">
+                  <legend>Radio choices</legend>
+                  <label>
+                    <input defaultChecked name={radioName} type="radio" />
+                    <span>Automatic</span>
+                  </label>
+                  <label>
+                    <input name={radioName} type="radio" />
+                    <span>Light</span>
+                  </label>
+                  <label>
+                    <input name={radioName} type="radio" />
+                    <span>Dark</span>
+                  </label>
+                </fieldset>
 
-            <fieldset className="catalog-choice-group">
-              <legend>Radio choices</legend>
-              <label>
-                <input defaultChecked name={radioName} type="radio" />
-                <span>Automatic</span>
-              </label>
-              <label>
-                <input name={radioName} type="radio" />
-                <span>Light</span>
-              </label>
-              <label>
-                <input name={radioName} type="radio" />
-                <span>Dark</span>
-              </label>
-            </fieldset>
-
-            <div className="catalog-picker-group">
-              <label className="catalog-field">
-                <span>Color</span>
-                <input defaultValue="#6558f5" type="color" />
-              </label>
-              <label className="catalog-field">
-                <span>Date</span>
-                <input defaultValue="2026-08-08" type="date" />
-              </label>
-              <label className="catalog-field">
-                <span>File</span>
-                <input type="file" />
-              </label>
-            </div>
-          </div>
-        </form>
-      </StyleguideSection>
+                <div className="catalog-picker-group">
+                  <label className="catalog-field">
+                    <span>Color</span>
+                    <input defaultValue="#6558f5" type="color" />
+                  </label>
+                  <label className="catalog-field">
+                    <span>Date</span>
+                    <input defaultValue="2026-08-08" type="date" />
+                  </label>
+                  <label className="catalog-field">
+                    <span>File</span>
+                    <input type="file" />
+                  </label>
+                </div>
+              </div>
+            </form>
+          </StyleguideSection>
+        </>
+      )}
 
       <StyleguideSection
         description="Compact labels make state and classification visible without overpowering the content they qualify."

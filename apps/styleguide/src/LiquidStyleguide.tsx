@@ -1,9 +1,17 @@
-import { LiquidSurface, type LiquidThemeName, liquidGrammar } from '@hifi/liquid'
+import {
+  type LiquidMaterial,
+  LiquidSurface,
+  type LiquidThemeName,
+  liquidGrammar,
+  liquidThemeMaterials,
+} from '@hifi/liquid'
 import { useNavigate, useSearch } from '@tanstack/react-router'
+import { type CSSProperties, useEffect, useState } from 'react'
 import { ControlCatalog } from './ControlCatalog'
 import { FoundationCatalog } from './FoundationCatalog'
-import { StyleguideSection } from './StyleguideSection'
+import { LiquidInteractionCatalog } from './LiquidInteractionCatalog'
 import { StyleguideNav } from './StyleguideNav'
+import { StyleguideSection } from './StyleguideSection'
 import { ThemePicker } from './ThemePicker'
 import './styles/liquid.css'
 
@@ -12,9 +20,30 @@ export function LiquidStyleguide() {
   const navigate = useNavigate({ from: '/styleguide/liquid' })
   const selectedTheme =
     liquidGrammar.themes.find((candidate) => candidate.name === theme) ?? liquidGrammar.themes[0]
+  const preset = liquidThemeMaterials[selectedTheme.name as LiquidThemeName]
+  const [material, setMaterial] = useState<LiquidMaterial>(preset)
+
+  useEffect(() => setMaterial(preset), [preset])
+
+  const tint = `${Math.round(material.tint.r * 255)} ${Math.round(material.tint.g * 255)} ${Math.round(material.tint.b * 255)}`
+  const pageStyle = {
+    '--control-radius': `${Math.min(material.cornerRadius, 32)}px`,
+    '--generated-liquid-blur': `${material.blur}px`,
+    '--liquid-accent': `rgb(${tint})`,
+    '--liquid-accent-contrast': '#07101e',
+    '--liquid-control-radius': `${Math.min(material.cornerRadius, 32)}px`,
+    '--liquid-glass': `rgb(${tint} / ${Math.min(0.36, material.tint.a + 0.04)})`,
+    '--liquid-glass-strong': `rgb(${tint} / ${Math.min(0.5, material.tint.a + 0.14)})`,
+    background: `radial-gradient(circle at 12% 12%, rgb(${tint} / 0.24), transparent 28%), radial-gradient(circle at 82% 28%, color-mix(in srgb, rgb(${tint}) 30%, #25c7ff), transparent 32%), radial-gradient(circle at 58% 78%, color-mix(in srgb, rgb(${tint}) 22%, #ff56ae), transparent 33%), #080d22`,
+  } as CSSProperties
 
   return (
-    <main className="grammar-page liquid-page" data-theme={selectedTheme.name}>
+    <main
+      className="grammar-page liquid-page"
+      data-generated-theme="true"
+      data-theme={selectedTheme.name}
+      style={pageStyle}
+    >
       <div aria-hidden="true" className="liquid-atmosphere">
         <span className="liquid-orb liquid-orb-a" />
         <span className="liquid-orb liquid-orb-b" />
@@ -40,12 +69,9 @@ export function LiquidStyleguide() {
         </div>
 
         <div className="liquid-hero-visual">
-          <LiquidSurface
-            className="liquid-primary-lens"
-            theme={selectedTheme.name as LiquidThemeName}
-          >
+          <LiquidSurface className="liquid-primary-lens" material={material}>
             <div className="liquid-lens-copy">
-              <span>{selectedTheme.label} glass</span>
+              <span>{material.name}</span>
               <strong>Context stays alive beneath the surface.</strong>
               <p>{selectedTheme.description}</p>
               <button type="button">Enter the field</button>
@@ -53,7 +79,7 @@ export function LiquidStyleguide() {
           </LiquidSurface>
           <div className="liquid-float-card liquid-float-card-a">
             <span>Refraction</span>
-            <strong>1.46</strong>
+            <strong>{material.ior.toFixed(2)}</strong>
           </div>
           <div className="liquid-float-card liquid-float-card-b">
             <span>Light field</span>
@@ -71,6 +97,7 @@ export function LiquidStyleguide() {
         title="A spectrum of glass"
       >
         <ThemePicker
+          label="Starting preset"
           onChange={(name) => {
             void navigate({ replace: true, search: { theme: name } })
           }}
@@ -80,7 +107,12 @@ export function LiquidStyleguide() {
       </StyleguideSection>
 
       <FoundationCatalog />
-      <ControlCatalog grammarLabel="liquid" />
+      <LiquidInteractionCatalog
+        key={selectedTheme.name}
+        onMaterialChange={setMaterial}
+        theme={selectedTheme.name as LiquidThemeName}
+      />
+      <ControlCatalog grammarLabel="liquid" hideInteractionSections />
     </main>
   )
 }

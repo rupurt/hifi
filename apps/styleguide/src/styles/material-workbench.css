@@ -1,0 +1,271 @@
+.material-workbench {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+  margin-top: 32px;
+}
+
+.material-workbench-preview {
+  --print-surface-min-height: 560px;
+  --texture-surface-min-height: 560px;
+
+  overflow: hidden;
+  position: relative;
+  transition:
+    background 180ms ease,
+    border-radius 180ms ease,
+    box-shadow 180ms ease,
+    color 180ms ease;
+}
+
+.material-workbench-controls {
+  align-content: start;
+  background: #f4f1e9;
+  border: 1px solid #26231e;
+  color: #24211c;
+  display: grid;
+  min-height: 560px;
+  padding: 22px;
+}
+
+.material-workbench-controls > header,
+.material-workbench-controls > footer {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.material-workbench-controls > header {
+  border-bottom: 1px solid rgb(36 33 28 / 0.28);
+  padding-bottom: 15px;
+}
+
+.material-workbench-controls > header span,
+.material-workbench-controls > header small,
+.material-workbench-fields label > span,
+.material-workbench-toggle,
+.material-workbench-controls summary {
+  font-family: var(--guide-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.material-workbench-controls > header span {
+  font-weight: 900;
+}
+
+.material-workbench-controls > header small {
+  color: rgb(36 33 28 / 0.55);
+}
+
+.material-workbench-fields {
+  display: grid;
+  gap: 13px 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 18px 0;
+}
+
+.material-workbench-fields label {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+}
+
+.material-workbench-fields label > span {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.material-workbench-fields output {
+  color: rgb(36 33 28 / 0.58);
+  font-variant-numeric: tabular-nums;
+  text-transform: none;
+}
+
+.material-workbench-select select {
+  background: transparent;
+  border: 1px solid rgb(36 33 28 / 0.38);
+  border-radius: 0;
+  color: inherit;
+  min-height: 35px;
+  padding: 0 9px;
+  text-transform: capitalize;
+}
+
+.material-workbench-text input {
+  background: transparent;
+  border: 1px solid rgb(36 33 28 / 0.38);
+  border-radius: 0;
+  color: inherit;
+  min-height: 35px;
+  padding: 0 9px;
+  width: 100%;
+}
+
+.material-workbench-color input {
+  background: transparent;
+  border: 1px solid rgb(36 33 28 / 0.38);
+  height: 35px;
+  padding: 3px;
+  width: 100%;
+}
+
+.material-workbench-range input {
+  accent-color: #24211c;
+  margin: 5px 0;
+  width: 100%;
+}
+
+.material-workbench-toggle {
+  align-items: center;
+  background: transparent;
+  border: 1px solid rgb(36 33 28 / 0.38);
+  color: inherit;
+  display: flex;
+  justify-content: space-between;
+  min-height: 35px;
+  padding: 0 9px;
+}
+
+.material-workbench-toggle span {
+  color: rgb(36 33 28 / 0.56);
+}
+
+.material-workbench-controls details {
+  border: 1px solid rgb(36 33 28 / 0.3);
+  min-height: 0;
+}
+
+.material-workbench-controls summary {
+  cursor: pointer;
+  font-weight: 800;
+  padding: 11px;
+}
+
+.material-workbench-controls pre {
+  border-top: 1px solid rgb(36 33 28 / 0.2);
+  font-family: var(--guide-mono);
+  font-size: 0.58rem;
+  height: 110px;
+  line-height: 1.5;
+  margin: 0;
+  overflow: auto;
+  padding: 10px;
+}
+
+.material-workbench-controls > footer {
+  align-self: end;
+  border-top: 1px solid rgb(36 33 28 / 0.28);
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding-top: 15px;
+}
+
+.material-workbench-controls > footer button {
+  background: transparent;
+  border: 1px solid #24211c;
+  color: inherit;
+  font-size: 0.62rem;
+  font-weight: 850;
+  min-height: 35px;
+  padding: 0 12px;
+  text-transform: uppercase;
+}
+
+.material-workbench-controls > footer button[type="submit"] {
+  background: #24211c;
+  color: #fff;
+}
+
+.texture-workbench-specimen,
+.print-workbench-specimen {
+  max-width: 430px;
+  position: relative;
+  text-align: left;
+  width: 100%;
+}
+
+.texture-workbench-specimen > span,
+.print-workbench-specimen > span,
+.print-workbench-specimen > small {
+  font-family: var(--guide-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.texture-workbench-specimen > strong,
+.print-workbench-specimen > strong {
+  display: block;
+  font-size: clamp(2.7rem, 5vw, 5rem);
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  margin: 22px 0;
+}
+
+.texture-workbench-specimen > p,
+.print-workbench-specimen > p {
+  line-height: 1.5;
+  max-width: 310px;
+}
+
+.texture-workbench-specimen > div {
+  display: flex;
+  gap: 10px;
+  margin-top: 38px;
+}
+
+.texture-workbench-specimen i {
+  border: 1px solid currentColor;
+  display: block;
+  height: 34px;
+  width: 34px;
+}
+
+.texture-workbench-specimen i:nth-child(2) {
+  border-radius: 50%;
+}
+
+.texture-workbench-specimen i:nth-child(3) {
+  transform: rotate(45deg) scale(0.72);
+}
+
+.print-workbench-specimen > strong {
+  max-width: 390px;
+}
+
+.print-workbench-specimen hr {
+  border: 0;
+  border-top: 3px solid currentColor;
+  margin: 36px 0 12px;
+}
+
+@media (max-width: 900px) {
+  .material-workbench {
+    grid-template-columns: 1fr;
+  }
+
+  .material-workbench-preview,
+  .material-workbench-controls {
+    --print-surface-min-height: 500px;
+    --texture-surface-min-height: 500px;
+
+    min-height: 500px;
+  }
+}
+
+@media (max-width: 560px) {
+  .material-workbench-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .material-workbench-preview {
+    --print-surface-min-height: 430px;
+    --print-surface-padding: 30px;
+    --texture-surface-min-height: 430px;
+    --texture-surface-padding: 30px;
+  }
+}

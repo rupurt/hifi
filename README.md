@@ -105,6 +105,25 @@ The first themes should explore a useful range without fragmenting the API:
 
 Theme names and parameters should describe material behavior rather than a single product or color palette.
 
+### Programmable materials
+
+Materials are portable, versioned data rather than values trapped inside a component. Each grammar owns a live theme generator that edits the same material object its route and surface renderers consume: optical parameters in Liquid, substrate and pattern parameters in Texture, and paper, ink, grid, type, and composition parameters in Print. A change is applied to the complete styleguide grammar—not only the generator preview—before the resulting theme is copied or downloaded as JSON.
+
+An exported material can be validated and applied directly in an application:
+
+```tsx
+import { LiquidSurface, parseLiquidMaterial } from '@hifi/liquid'
+import materialJson from './luminous-field-024.json'
+
+const material = parseLiquidMaterial(materialJson)
+
+export function Panel() {
+  return <LiquidSurface material={material}>Calibrated surface</LiquidSurface>
+}
+```
+
+The shared `ProgrammableMaterial` envelope supplies the `grammar`, `name`, and `version` fields, while each package validates its own parameters. `parseLiquidMaterial`, `parseTextureMaterial`, and `parsePrintMaterial` reject incompatible input; their matching serializer functions produce the canonical JSON used by the styleguide exporters.
+
 ## Development environment
 
 The canonical development environment is a Nix flake. It provides Node.js 24, pnpm, and [`just`](https://github.com/casey/just); the flake and workspace lockfiles pin the complete toolchain.

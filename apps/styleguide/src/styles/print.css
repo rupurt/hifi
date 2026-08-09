@@ -312,6 +312,49 @@
   border-top-width: 2px;
 }
 
+.print-page[data-generated-theme] .print-edition-line {
+  border-bottom-width: var(--print-rule);
+  border-top-width: var(--print-heavy-rule);
+}
+
+.print-page[data-generated-theme] .print-nameplate {
+  border-bottom-width: var(--print-heavy-rule);
+}
+
+.print-page[data-generated-theme] .guide-section-heading {
+  border-top-width: var(--print-heavy-rule);
+}
+
+.print-page[data-generated-theme] .grammar-section-nav {
+  border-bottom-width: var(--print-rule);
+  border-top-width: var(--print-rule);
+}
+
+.print-page[data-generated-theme] .theme-picker-option[aria-pressed="true"] {
+  background: var(--print-accent);
+}
+
+.print-page[data-generated-theme] .control-catalog {
+  --control-accent: var(--generated-control-accent);
+  --control-accent-contrast: var(--generated-control-accent-contrast);
+  --control-border: var(--generated-control-border);
+  --control-shadow: var(--generated-control-shadow);
+  --control-surface: var(--generated-control-surface);
+  --control-surface-strong: var(--generated-control-surface-strong);
+  --control-text: var(--generated-control-text);
+}
+
+.print-page[data-generated-theme] .catalog-button,
+.print-page[data-generated-theme] .catalog-icon-button,
+.print-page[data-generated-theme] .catalog-segmented,
+.print-page[data-generated-theme]
+  .catalog-field
+  input:not([type="range"], [type="color"], [type="file"]),
+.print-page[data-generated-theme] .catalog-field select,
+.print-page[data-generated-theme] .catalog-field textarea {
+  border-width: var(--print-rule);
+}
+
 @media (max-width: 980px) {
   .print-lede {
     grid-template-columns: 1fr;

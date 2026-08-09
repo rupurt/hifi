@@ -1,54 +1,63 @@
 import type { CSSProperties, PropsWithChildren } from 'react'
 import type { PrintThemeName } from './grammar'
+import { type PrintComposition, type PrintMaterial, printThemeMaterials } from './material'
 
 export interface PrintSurfaceProps extends PropsWithChildren {
   readonly className?: string
+  readonly material?: PrintMaterial
   readonly theme?: PrintThemeName
 }
 
-const printStyles: Record<PrintThemeName, CSSProperties> = {
-  broadsheet: {
-    background: '#eee9dd',
-    color: '#181713',
-    fontFamily: 'Georgia, Times, serif',
-  },
-  magazine: {
-    background: 'linear-gradient(145deg, #f34b39 0 48%, #f2e7d3 48%)',
-    color: '#171515',
-    fontFamily: 'Arial, Helvetica, sans-serif',
-  },
-  technical: {
-    backgroundColor: '#f0eee7',
-    backgroundImage:
-      'linear-gradient(rgb(25 64 91 / 0.09) 1px, transparent 1px), linear-gradient(90deg, rgb(25 64 91 / 0.09) 1px, transparent 1px)',
-    backgroundSize: '20px 20px',
-    color: '#19364a',
-    fontFamily: 'ui-monospace, SFMono-Regular, monospace',
-  },
-  poster: {
-    background: '#f4c62d',
-    color: '#201e18',
-    fontFamily: 'Impact, Haettenschweiler, sans-serif',
-    textTransform: 'uppercase',
-  },
-}
+export function PrintSurface({
+  children,
+  className,
+  material,
+  theme = 'broadsheet',
+}: PrintSurfaceProps) {
+  const selected = material ?? printThemeMaterials[theme]
 
-export function PrintSurface({ children, className, theme = 'broadsheet' }: PrintSurfaceProps) {
   return (
     <section
       className={className}
       style={{
-        ...printStyles[theme],
-        border: '1px solid rgb(30 28 22 / 0.3)',
-        boxShadow: '8px 10px 0 rgb(26 23 18 / 0.16)',
+        ...getPrintMaterialStyle(selected),
+        border: `${selected.ruleWeight}px solid color-mix(in srgb, ${selected.inkColor} 30%, transparent)`,
+        boxShadow: `${selected.shadowOffset}px ${selected.shadowOffset + 2}px 0 color-mix(in srgb, ${selected.inkColor} 16%, transparent)`,
         display: 'grid',
-        minHeight: 320,
-        padding: 48,
+        minHeight: 'var(--print-surface-min-height, 320px)',
+        padding: 'var(--print-surface-padding, 48px)',
         placeItems: 'center',
         textAlign: 'center',
+        textTransform: selected.uppercase ? 'uppercase' : undefined,
       }}
     >
       {children}
     </section>
   )
+}
+
+export function getPrintMaterialStyle(material: PrintMaterial): CSSProperties {
+  const backgrounds: Record<PrintComposition, string> = {
+    columns: `repeating-linear-gradient(90deg, transparent 0 ${material.gridSize - 1}px, color-mix(in srgb, ${material.inkColor} 7%, transparent) ${material.gridSize - 1}px ${material.gridSize}px)`,
+    field: material.accentColor,
+    grid: `linear-gradient(color-mix(in srgb, ${material.accentColor} 9%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, ${material.accentColor} 9%, transparent) 1px, transparent 1px)`,
+    split: `linear-gradient(145deg, ${material.accentColor} 0 48%, ${material.paperColor} 48%)`,
+  }
+
+  const typefaces: Record<PrintMaterial['typeface'], string> = {
+    display: 'Impact, Haettenschweiler, sans-serif',
+    mono: 'ui-monospace, SFMono-Regular, monospace',
+    sans: 'Arial, Helvetica, sans-serif',
+    serif: 'Georgia, Times, serif',
+  }
+
+  return {
+    backgroundColor: material.paperColor,
+    backgroundImage:
+      material.composition === 'field' ? undefined : backgrounds[material.composition],
+    backgroundSize:
+      material.composition === 'grid' ? `${material.gridSize}px ${material.gridSize}px` : undefined,
+    color: material.inkColor,
+    fontFamily: typefaces[material.typeface],
+  }
 }

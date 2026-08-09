@@ -1,9 +1,18 @@
-import { PrintSurface, type PrintThemeName, printGrammar } from '@hifi/print'
+import {
+  getPrintMaterialStyle,
+  type PrintMaterial,
+  PrintSurface,
+  type PrintThemeName,
+  printGrammar,
+  printThemeMaterials,
+} from '@hifi/print'
 import { useNavigate, useSearch } from '@tanstack/react-router'
+import { type CSSProperties, useEffect, useState } from 'react'
 import { ControlCatalog } from './ControlCatalog'
 import { FoundationCatalog } from './FoundationCatalog'
-import { StyleguideSection } from './StyleguideSection'
+import { PrintMaterialLab } from './ProgrammableMaterialLabs'
 import { StyleguideNav } from './StyleguideNav'
+import { StyleguideSection } from './StyleguideSection'
 import { ThemePicker } from './ThemePicker'
 import './styles/print.css'
 
@@ -12,9 +21,47 @@ export function PrintStyleguide() {
   const navigate = useNavigate({ from: '/styleguide/print' })
   const selectedTheme =
     printGrammar.themes.find((candidate) => candidate.name === theme) ?? printGrammar.themes[0]
+  const preset = printThemeMaterials[selectedTheme.name as PrintThemeName]
+  const [material, setMaterial] = useState<PrintMaterial>(preset)
+
+  useEffect(() => setMaterial(preset), [preset])
+
+  const materialStyle = getPrintMaterialStyle(material)
+  const controlShadow = `${material.shadowOffset}px ${material.shadowOffset}px 0 color-mix(in srgb, ${material.inkColor} 16%, transparent)`
+  const controlSurface = `color-mix(in srgb, ${material.paperColor} 78%, transparent)`
+  const pageStyle = {
+    ...materialStyle,
+    '--control-accent': material.accentColor,
+    '--control-accent-contrast': material.paperColor,
+    '--control-border': material.inkColor,
+    '--control-shadow': controlShadow,
+    '--control-surface': controlSurface,
+    '--control-surface-strong': material.paperColor,
+    '--generated-control-accent': material.accentColor,
+    '--generated-control-accent-contrast': material.paperColor,
+    '--generated-control-border': material.inkColor,
+    '--generated-control-shadow': controlShadow,
+    '--generated-control-surface': controlSurface,
+    '--generated-control-surface-strong': material.paperColor,
+    '--generated-control-text': material.inkColor,
+    '--guide-display': materialStyle.fontFamily,
+    '--guide-font': materialStyle.fontFamily,
+    '--guide-ink': material.inkColor,
+    '--guide-line': material.inkColor,
+    '--guide-muted': `color-mix(in srgb, ${material.inkColor} 68%, transparent)`,
+    '--print-accent': material.accentColor,
+    '--print-heavy-rule': `${Math.max(3, material.ruleWeight * 3)}px`,
+    '--print-rule': `${Math.max(1, material.ruleWeight)}px`,
+    textTransform: material.uppercase ? 'uppercase' : undefined,
+  } as CSSProperties
 
   return (
-    <main className="grammar-page print-page" data-theme={selectedTheme.name}>
+    <main
+      className="grammar-page print-page"
+      data-generated-theme="true"
+      data-theme={selectedTheme.name}
+      style={pageStyle}
+    >
       <header className="print-masthead">
         <div className="print-edition-line">
           <span>Hifi specimen journal</span>
@@ -39,10 +86,10 @@ export function PrintStyleguide() {
             Read the specimens <span aria-hidden="true">↓</span>
           </a>
         </div>
-        <PrintSurface className="print-cover" theme={selectedTheme.name as PrintThemeName}>
+        <PrintSurface className="print-cover" material={material}>
           <div className="print-cover-copy">
             <span>Special material issue</span>
-            <strong>{selectedTheme.label}</strong>
+            <strong>{material.name}</strong>
             <p>{selectedTheme.description}</p>
           </div>
         </PrintSurface>
@@ -51,18 +98,23 @@ export function PrintStyleguide() {
       <StyleguideNav />
 
       <StyleguideSection
-        description="Each edition changes its typographic voice and compositional pressure without abandoning the same semantic hierarchy."
+        description="Start from an edition preset, then generate the paper, ink, type, rules, grid, and composition applied to the entire Print grammar."
         id="material-heading"
         index="01"
-        title="Select an edition"
+        title="Compose an editorial theme"
       >
         <ThemePicker
-          label="Editorial theme"
+          label="Starting edition"
           onChange={(name) => {
             void navigate({ replace: true, search: { theme: name } })
           }}
           themes={printGrammar.themes}
           value={selectedTheme.name}
+        />
+        <PrintMaterialLab
+          material={material}
+          onChange={setMaterial}
+          onReset={() => setMaterial(preset)}
         />
       </StyleguideSection>
 

@@ -1,50 +1,32 @@
 import type { CSSProperties, PropsWithChildren } from 'react'
 import type { TextureThemeName } from './grammar'
+import { type TextureMaterial, type TexturePattern, textureThemeMaterials } from './material'
 
 export interface TextureSurfaceProps extends PropsWithChildren {
   readonly className?: string
+  readonly material?: TextureMaterial
   readonly theme?: TextureThemeName
 }
 
-const textureBackgrounds: Record<TextureThemeName, CSSProperties> = {
-  paper: {
-    backgroundColor: '#e9dfca',
-    backgroundImage:
-      'radial-gradient(circle at 20% 30%, rgb(81 62 40 / 0.08) 0 1px, transparent 1.5px), radial-gradient(circle at 70% 65%, rgb(255 255 255 / 0.55) 0 1px, transparent 1.5px)',
-    backgroundSize: '18px 17px, 21px 23px',
-  },
-  canvas: {
-    backgroundColor: '#b9aa8b',
-    backgroundImage:
-      'repeating-linear-gradient(0deg, transparent 0 5px, rgb(45 38 29 / 0.1) 5px 6px), repeating-linear-gradient(90deg, transparent 0 5px, rgb(255 255 255 / 0.18) 5px 6px)',
-  },
-  grain: {
-    backgroundColor: '#30333a',
-    backgroundImage:
-      'radial-gradient(circle at 25% 25%, rgb(255 255 255 / 0.14) 0 0.7px, transparent 1px)',
-    backgroundSize: '5px 5px',
-    color: '#f4f0e8',
-  },
-  fabric: {
-    backgroundColor: '#7e3151',
-    backgroundImage:
-      'repeating-linear-gradient(45deg, transparent 0 4px, rgb(255 255 255 / 0.08) 4px 5px), repeating-linear-gradient(-45deg, transparent 0 4px, rgb(20 5 12 / 0.1) 4px 5px)',
-    color: '#fff8f2',
-  },
-}
+export function TextureSurface({
+  children,
+  className,
+  material,
+  theme = 'paper',
+}: TextureSurfaceProps) {
+  const selected = material ?? textureThemeMaterials[theme]
 
-export function TextureSurface({ children, className, theme = 'paper' }: TextureSurfaceProps) {
   return (
     <section
       className={className}
       style={{
-        ...textureBackgrounds[theme],
+        ...getTextureMaterialStyle(selected),
         border: '1px solid rgb(44 36 24 / 0.22)',
-        borderRadius: 8,
-        boxShadow: '0 24px 50px rgb(42 29 16 / 0.2)',
+        borderRadius: selected.borderRadius,
+        boxShadow: `0 ${selected.shadowDepth}px ${selected.shadowDepth * 2.4}px rgb(42 29 16 / 0.2)`,
         display: 'grid',
-        minHeight: 320,
-        padding: 48,
+        minHeight: 'var(--texture-surface-min-height, 320px)',
+        padding: 'var(--texture-surface-padding, 48px)',
         placeItems: 'center',
         textAlign: 'center',
       }}
@@ -52,4 +34,32 @@ export function TextureSurface({ children, className, theme = 'paper' }: Texture
       {children}
     </section>
   )
+}
+
+export function getTextureMaterialStyle(material: TextureMaterial): CSSProperties {
+  const texture = mix(material.textureColor, material.intensity)
+  const highlight = mix(material.highlightColor, material.intensity)
+  const scale = `${material.scale}px`
+  const line = `${Math.max(1, material.scale - 1)}px`
+
+  const patterns: Record<TexturePattern, string> = {
+    crosshatch: `repeating-linear-gradient(45deg, transparent 0 ${line}, ${highlight} ${line} ${scale}), repeating-linear-gradient(-45deg, transparent 0 ${line}, ${texture} ${line} ${scale})`,
+    fiber: `radial-gradient(circle at 20% 30%, ${texture} 0 1px, transparent 1.5px), radial-gradient(circle at 70% 65%, ${highlight} 0 1px, transparent 1.5px)`,
+    grain: `radial-gradient(circle at 25% 25%, ${texture} 0 0.7px, transparent 1px)`,
+    weave: `repeating-linear-gradient(0deg, transparent 0 ${line}, ${texture} ${line} ${scale}), repeating-linear-gradient(90deg, transparent 0 ${line}, ${highlight} ${line} ${scale})`,
+  }
+
+  return {
+    backgroundColor: material.backgroundColor,
+    backgroundImage: patterns[material.pattern],
+    backgroundSize:
+      material.pattern === 'fiber'
+        ? `${scale} ${scale}, ${material.scale + 3}px ${material.scale + 2}px`
+        : scale,
+    color: material.foregroundColor,
+  }
+}
+
+function mix(color: string, intensity: number) {
+  return `color-mix(in srgb, ${color} ${Math.round(intensity * 100)}%, transparent)`
 }

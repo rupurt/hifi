@@ -286,6 +286,43 @@
   border-top-style: dashed;
 }
 
+.texture-page[data-generated-theme] .texture-hero h1 em {
+  color: var(--generated-control-accent);
+}
+
+.texture-page[data-generated-theme] .control-catalog {
+  --control-accent: var(--generated-control-accent);
+  --control-accent-contrast: var(--generated-control-accent-contrast);
+  --control-border: var(--generated-control-border);
+  --control-muted: var(--generated-control-muted);
+  --control-shadow: var(--generated-control-shadow);
+  --control-surface: var(--generated-control-surface);
+  --control-surface-strong: var(--generated-control-surface-strong);
+  --control-text: var(--generated-control-text);
+}
+
+.texture-page[data-generated-theme] .catalog-specimen,
+.texture-page[data-generated-theme] .catalog-object-card,
+.texture-page[data-generated-theme] .catalog-metric-card,
+.texture-page[data-generated-theme] .catalog-action-card,
+.texture-page[data-generated-theme] .catalog-feedback-card,
+.texture-page[data-generated-theme] .catalog-list-card,
+.texture-page[data-generated-theme] .catalog-table-shell,
+.texture-page[data-generated-theme] .catalog-form,
+.texture-page[data-generated-theme] .catalog-badge-board,
+.texture-page[data-generated-theme] .catalog-composition,
+.texture-page[data-generated-theme] .type-role-card,
+.texture-page[data-generated-theme] .foundation-space-token,
+.texture-page[data-generated-theme] .foundation-layout-board,
+.texture-page[data-generated-theme] .foundation-icon-specimen {
+  background-image: var(--generated-texture-image);
+  background-size: var(--generated-texture-size);
+}
+
+.texture-page[data-generated-theme] .catalog-button {
+  box-shadow: var(--generated-control-shadow);
+}
+
 @media (max-width: 980px) {
   .texture-hero-sample {
     margin-inline: 30px;

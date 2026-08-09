@@ -41,6 +41,9 @@ importers:
       '@hifi/texture':
         specifier: workspace:*
         version: link:../../packages/texture
+      '@liquid-dom/react':
+        specifier: ^0.1.1
+        version: 0.1.1(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tanstack/react-router':
         specifier: ^1.170.23
         version: 1.170.23(react-dom@19.2.8(react@19.2.8))(react@19.2.8)

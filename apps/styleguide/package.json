@@ -13,6 +13,7 @@
     "@hifi/liquid": "workspace:*",
     "@hifi/print": "workspace:*",
     "@hifi/texture": "workspace:*",
+    "@liquid-dom/react": "^0.1.1",
     "@tanstack/react-router": "^1.170.23",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
