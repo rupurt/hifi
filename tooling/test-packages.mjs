@@ -9,7 +9,7 @@ const pnpmStore = await runForOutput('pnpm', ['store', 'path'], workspaceRoot)
 const temporaryRoot = await mkdtemp(join(tmpdir(), 'hifi-package-consumer-'))
 const packDirectory = join(temporaryRoot, 'packs')
 const consumerDirectory = join(temporaryRoot, 'consumer')
-const packageNames = ['core', 'liquid', 'texture', 'print']
+const packageNames = ['core', 'liquid', 'texture', 'print', 'signal', 'kinetic']
 
 try {
   await mkdir(packDirectory)
@@ -70,8 +70,10 @@ try {
     },
     dependencies: {
       '@hifi/core': `file:${archives['@hifi/core']}`,
+      '@hifi/kinetic': `file:${archives['@hifi/kinetic']}`,
       '@hifi/liquid': `file:${archives['@hifi/liquid']}`,
       '@hifi/print': `file:${archives['@hifi/print']}`,
+      '@hifi/signal': `file:${archives['@hifi/signal']}`,
       '@hifi/texture': `file:${archives['@hifi/texture']}`,
       react: styleguideManifest.dependencies.react,
       'react-dom': styleguideManifest.dependencies['react-dom'],
@@ -111,8 +113,10 @@ try {
 
   await writeFile(
     join(consumerDirectory, 'src/main.tsx'),
-    `import { LiquidSurface, liquidThemeMaterials } from '@hifi/liquid'
+    `import { KineticButton, KineticSurface, kineticThemeMaterials } from '@hifi/kinetic'
+import { LiquidSurface, liquidThemeMaterials } from '@hifi/liquid'
 import { PrintSurface, printThemeMaterials } from '@hifi/print'
+import { SignalSurface, signalThemeMaterials } from '@hifi/signal'
 import { TextureSurface, textureThemeMaterials } from '@hifi/texture'
 import { createRoot } from 'react-dom/client'
 
@@ -125,6 +129,10 @@ createRoot(root).render(
     <LiquidSurface material={liquidThemeMaterials.clear}>Liquid</LiquidSurface>
     <TextureSurface material={textureThemeMaterials.paper}>Texture</TextureSurface>
     <PrintSurface material={printThemeMaterials.broadsheet}>Print</PrintSurface>
+    <SignalSurface material={signalThemeMaterials.phosphor}>Signal</SignalSurface>
+    <KineticSurface material={kineticThemeMaterials.precision}>
+      <KineticButton material={kineticThemeMaterials.precision}>Kinetic</KineticButton>
+    </KineticSurface>
   </main>,
 )
 `,
@@ -134,6 +142,14 @@ createRoot(root).render(
     join(consumerDirectory, 'verify.mjs'),
     `import assert from 'node:assert/strict'
 import { defineGrammar } from '@hifi/core'
+import {
+  KineticButton,
+  KineticSurface,
+  kineticThemeMaterials,
+  parseKineticMaterial,
+  serializeKineticMaterial,
+} from '@hifi/kinetic'
+import { kineticGrammar as kineticGrammarEntry } from '@hifi/kinetic/grammar'
 import {
   LiquidSurface,
   liquidThemeMaterials,
@@ -149,6 +165,13 @@ import {
 } from '@hifi/print'
 import { printGrammar as printGrammarEntry } from '@hifi/print/grammar'
 import {
+  SignalSurface,
+  parseSignalMaterial,
+  serializeSignalMaterial,
+  signalThemeMaterials,
+} from '@hifi/signal'
+import { signalGrammar as signalGrammarEntry } from '@hifi/signal/grammar'
+import {
   TextureSurface,
   parseTextureMaterial,
   serializeTextureMaterial,
@@ -160,9 +183,14 @@ assert.equal(typeof defineGrammar, 'function')
 assert.equal(typeof LiquidSurface, 'function')
 assert.equal(typeof TextureSurface, 'function')
 assert.equal(typeof PrintSurface, 'function')
+assert.equal(typeof SignalSurface, 'function')
+assert.equal(typeof KineticSurface, 'function')
+assert.equal(typeof KineticButton, 'function')
 assert.equal(liquidGrammarEntry.name, 'liquid')
 assert.equal(textureGrammarEntry.name, 'texture')
 assert.equal(printGrammarEntry.name, 'print')
+assert.equal(signalGrammarEntry.name, 'signal')
+assert.equal(kineticGrammarEntry.name, 'kinetic')
 assert.deepEqual(
   parseLiquidMaterial(JSON.parse(serializeLiquidMaterial(liquidThemeMaterials.clear))),
   liquidThemeMaterials.clear,
@@ -174,6 +202,14 @@ assert.deepEqual(
 assert.deepEqual(
   parsePrintMaterial(JSON.parse(serializePrintMaterial(printThemeMaterials.broadsheet))),
   printThemeMaterials.broadsheet,
+)
+assert.deepEqual(
+  parseSignalMaterial(JSON.parse(serializeSignalMaterial(signalThemeMaterials.phosphor))),
+  signalThemeMaterials.phosphor,
+)
+assert.deepEqual(
+  parseKineticMaterial(JSON.parse(serializeKineticMaterial(kineticThemeMaterials.precision))),
+  kineticThemeMaterials.precision,
 )
 `,
   )

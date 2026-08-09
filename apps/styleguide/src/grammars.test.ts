@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest'
 import { grammarNames, grammarRegistry, isGrammarName } from './grammars'
 
 describe('styleguide grammar registry', () => {
-  it('registers the three foundational grammar routes', () => {
-    expect(grammarNames).toEqual(['liquid', 'texture', 'print'])
+  it('registers the five foundational grammar routes', () => {
+    expect(grammarNames).toEqual(['liquid', 'texture', 'print', 'signal', 'kinetic'])
   })
 
   it('recognizes registered names without accepting arbitrary paths', () => {

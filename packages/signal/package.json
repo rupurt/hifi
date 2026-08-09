@@ -1,0 +1,53 @@
+{
+  "name": "@hifi/signal",
+  "version": "0.1.0",
+  "description": "Programmable emissive signal surfaces for React.",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./grammar": {
+      "types": "./dist/grammar.d.ts",
+      "import": "./dist/grammar.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/spoke-sh/hifi.git",
+    "directory": "packages/signal"
+  },
+  "homepage": "https://github.com/spoke-sh/hifi#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node ../../tooling/clean-package-dist.mjs && tsc -p tsconfig.build.json",
+    "prepack": "pnpm run build",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@hifi/core": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": ">=18.2.0 <20"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "react": "^19.2.8",
+    "typescript": "^7.0.2"
+  }
+}

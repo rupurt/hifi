@@ -4,7 +4,13 @@ import { router } from './router'
 describe('styleguide routes', () => {
   it('gives each grammar an explicit route', () => {
     expect(Object.keys(router.routesByPath)).toEqual(
-      expect.arrayContaining(['/styleguide/liquid', '/styleguide/texture', '/styleguide/print']),
+      expect.arrayContaining([
+        '/styleguide/liquid',
+        '/styleguide/texture',
+        '/styleguide/print',
+        '/styleguide/signal',
+        '/styleguide/kinetic',
+      ]),
     )
   })
 

@@ -1,15 +1,17 @@
 import {
-  Link,
-  Outlet,
   createRootRoute,
   createRoute,
   createRouter,
+  Link,
+  Outlet,
   useRouterState,
 } from '@tanstack/react-router'
+import { grammarNames, grammarRegistry } from './grammars'
+import { KineticStyleguide } from './KineticStyleguide'
 import { LiquidStyleguide } from './LiquidStyleguide'
 import { PrintStyleguide } from './PrintStyleguide'
+import { SignalStyleguide } from './SignalStyleguide'
 import { TextureStyleguide } from './TextureStyleguide'
-import { grammarNames, grammarRegistry } from './grammars'
 
 function RootLayout() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
@@ -55,7 +57,7 @@ function LandingPage() {
       <section aria-labelledby="grammar-heading" className="grammar-index">
         <div className="section-heading">
           <p className="eyebrow">The collection</p>
-          <h2 id="grammar-heading">Three starting points</h2>
+          <h2 id="grammar-heading">Five material systems</h2>
         </div>
         <div className="grammar-grid">
           {grammarNames.map((grammar) => {
@@ -125,7 +127,32 @@ export const printRoute = createRoute({
   component: PrintStyleguide,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, liquidRoute, textureRoute, printRoute])
+export const signalRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'styleguide/signal',
+  validateSearch: (search: Record<string, unknown>) => ({
+    theme: typeof search.theme === 'string' ? search.theme : undefined,
+  }),
+  component: SignalStyleguide,
+})
+
+export const kineticRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: 'styleguide/kinetic',
+  validateSearch: (search: Record<string, unknown>) => ({
+    theme: typeof search.theme === 'string' ? search.theme : undefined,
+  }),
+  component: KineticStyleguide,
+})
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  liquidRoute,
+  textureRoute,
+  printRoute,
+  signalRoute,
+  kineticRoute,
+])
 
 export const router = createRouter({
   defaultPreload: 'intent',

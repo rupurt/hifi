@@ -30,6 +30,6 @@ const grammar = defineGrammar({
 const theme = getGrammarTheme(grammar, 'default')
 ```
 
-Material helpers validate the shared `grammar`, `name`, and `version` envelope used by `@hifi/liquid`, `@hifi/texture`, and `@hifi/print`.
+Material helpers validate the shared `grammar`, `name`, and `version` envelope used by every hifi grammar package.
 
 This package is ESM-only and supports Node.js 20 or newer.

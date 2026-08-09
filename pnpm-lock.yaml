@@ -35,12 +35,18 @@ importers:
       '@hifi/core':
         specifier: workspace:*
         version: link:../../packages/core
+      '@hifi/kinetic':
+        specifier: workspace:*
+        version: link:../../packages/kinetic
       '@hifi/liquid':
         specifier: workspace:*
         version: link:../../packages/liquid
       '@hifi/print':
         specifier: workspace:*
         version: link:../../packages/print
+      '@hifi/signal':
+        specifier: workspace:*
+        version: link:../../packages/signal
       '@hifi/texture':
         specifier: workspace:*
         version: link:../../packages/texture
@@ -79,6 +85,22 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
+  packages/kinetic:
+    dependencies:
+      '@hifi/core':
+        specifier: workspace:^
+        version: link:../core
+    devDependencies:
+      '@types/react':
+        specifier: ^19.2.18
+        version: 19.2.18
+      react:
+        specifier: ^19.2.8
+        version: 19.2.8
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
   packages/liquid:
     dependencies:
       '@hifi/core':
@@ -102,6 +124,22 @@ importers:
         version: 7.0.2
 
   packages/print:
+    dependencies:
+      '@hifi/core':
+        specifier: workspace:^
+        version: link:../core
+    devDependencies:
+      '@types/react':
+        specifier: ^19.2.18
+        version: 19.2.18
+      react:
+        specifier: ^19.2.8
+        version: 19.2.8
+      typescript:
+        specifier: ^7.0.2
+        version: 7.0.2
+
+  packages/signal:
     dependencies:
       '@hifi/core':
         specifier: workspace:^

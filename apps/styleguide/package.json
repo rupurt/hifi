@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@hifi/core": "workspace:*",
+    "@hifi/kinetic": "workspace:*",
     "@hifi/liquid": "workspace:*",
     "@hifi/print": "workspace:*",
     "@hifi/texture": "workspace:*",
+    "@hifi/signal": "workspace:*",
     "@liquid-dom/react": "^0.1.1",
     "@tanstack/react-router": "^1.170.23",
     "react": "^19.2.8",

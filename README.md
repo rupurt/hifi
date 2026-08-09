@@ -30,6 +30,8 @@ Themes are variants inside a grammar. In `liquid`, themes might describe clear, 
 | `liquid` | Layered, refractive glass surfaces | clear, tinted, frosted, transparent | First priority |
 | `texture` | Tactile and material-rich surfaces | paper, canvas, grain, fabric | Experimental |
 | `print` | Editorial composition inspired by physical print | broadsheet, magazine, technical, poster | Experimental |
+| `signal` | Emissive information shaped by luminance and time | phosphor, matrix, spectral, night | Experimental |
+| `kinetic` | Physical controls governed by force and consequence | precision, sprung, magnetic, viscous | Experimental |
 
 These are the starting points, not a closed set. A new grammar belongs in `hifi` when it offers a distinct, reusable visual language rather than a one-off component skin.
 
@@ -52,7 +54,9 @@ These are the starting points, not a closed set. A new grammar belongs in `hifi`
 │   └── styleguide/          # TanStack Router development and showcase app
 ├── packages/
 │   ├── core/                # Shared grammar contracts and utilities
+│   ├── kinetic/             # Physical interaction grammar
 │   ├── liquid/              # Glassmorphic React grammar
+│   ├── signal/              # Emissive signal grammar
 │   ├── texture/             # Textured React grammar
 │   └── print/               # Print-inspired React grammar
 ├── tooling/                 # Shared TypeScript configuration
@@ -75,6 +79,8 @@ The independently consumable packages are:
 | `@hifi/liquid` | WebGPU liquid glass with a CSS fallback | React 19 |
 | `@hifi/texture` | Tactile substrate and pattern surfaces | React 18.2–19 |
 | `@hifi/print` | Editorial composition and print surfaces | React 18.2–19 |
+| `@hifi/signal` | Emissive traces, analytical fields, and optional audio monitoring | React 18.2–19 |
+| `@hifi/kinetic` | Physical surfaces and controls driven by a response model | React 18.2–19 |
 
 All packages are ESM-only, support Node.js 20 or newer, publish TypeScript declarations, and expose versioned material parsers and serializers. Their package-level READMEs document the public entry points and basic use.
 
@@ -90,6 +96,8 @@ Each grammar has a stable route:
 /styleguide/liquid
 /styleguide/texture
 /styleguide/print
+/styleguide/signal
+/styleguide/kinetic
 ```
 
 The page at `/styleguide/{grammar}` should include:
@@ -120,7 +128,7 @@ Theme names and parameters should describe material behavior rather than a singl
 
 ### Programmable materials
 
-Materials are portable, versioned data rather than values trapped inside a component. Each grammar owns a live theme generator that edits the same material object its route and surface renderers consume: optical parameters in Liquid, substrate and pattern parameters in Texture, and paper, ink, grid, type, and composition parameters in Print. A change is applied to the complete styleguide grammar—not only the generator preview—before the resulting theme is copied or downloaded as JSON.
+Materials are portable, versioned data rather than values trapped inside a component. Each grammar owns a live theme generator that edits the same material object its route and surface renderers consume: optical parameters in Liquid, substrate and pattern parameters in Texture, paper, ink, grid, type, and composition parameters in Print, emitted light and persistence in Signal, and mass, stiffness, damping, friction, travel, and actuation in Kinetic. A change is applied to the complete styleguide grammar—not only the generator preview—before the resulting theme is copied or downloaded as JSON.
 
 An exported material can be validated and applied directly in an application:
 
@@ -135,7 +143,9 @@ export function Panel() {
 }
 ```
 
-The shared `ProgrammableMaterial` envelope supplies the `grammar`, `name`, and `version` fields, while each package validates its own parameters. `parseLiquidMaterial`, `parseTextureMaterial`, and `parsePrintMaterial` reject incompatible input; their matching serializer functions produce the canonical JSON used by the styleguide exporters.
+The shared `ProgrammableMaterial` envelope supplies the `grammar`, `name`, and `version` fields, while each package validates its own parameters. Every grammar package exports matching `parse…Material` and `serialize…Material` functions; parsers reject incompatible input and serializers produce the canonical JSON used by the styleguide exporters.
+
+Signal progressively enhances its visual field on HDR-capable displays while retaining an SDR baseline. Its Web Audio monitor is silent by default and starts only after direct user input. Kinetic likewise keeps vibration and synthesized actuation feedback opt-in; its visual response model works without either capability.
 
 ## Development environment
 
@@ -183,11 +193,11 @@ GPU rendering quality is difficult to establish with DOM-only unit tests. The in
 
 `just check` is the expected pre-push gate.
 
-The final stage of that gate packs all four libraries, installs the tarballs into a clean temporary consumer, checks their declarations with TypeScript, imports them directly with Node, and bundles a React application with Vite. This prevents source aliases in the styleguide from masking distribution errors.
+The final stage of that gate packs all six libraries, installs the tarballs into a clean temporary consumer, checks their declarations with TypeScript, imports them directly with Node, and bundles a React application with Vite. This prevents source aliases in the styleguide from masking distribution errors.
 
 ## Releases
 
-Consumer-facing changes use [Changesets](https://github.com/changesets/changesets). The four packages form a fixed version group so compatible releases move together and internal `@hifi/core` ranges remain coordinated.
+Consumer-facing changes use [Changesets](https://github.com/changesets/changesets). The six packages form a fixed version group so compatible releases move together and internal `@hifi/core` ranges remain coordinated.
 
 ```sh
 pnpm changeset
@@ -215,6 +225,8 @@ Before a grammar is considered part of the suite, it should:
 - [ ] Build out the `liquid` component vocabulary and mature its initial theme variants.
 - [ ] Publish the static styleguide with reliable deep links.
 - [ ] Establish complete `texture` and `print` grammars from the shared contracts.
+- [ ] Develop `signal` into a full emissive and temporal component vocabulary.
+- [ ] Develop `kinetic` into a full force- and response-driven component vocabulary.
 - [ ] Add browser-level accessibility, rendering, and visual regression coverage.
 
 ## Status

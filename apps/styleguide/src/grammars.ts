@@ -1,12 +1,16 @@
 import type { GrammarDefinition } from '@hifi/core'
+import { kineticGrammar } from '@hifi/kinetic/grammar'
 import { liquidGrammar } from '@hifi/liquid/grammar'
 import { printGrammar } from '@hifi/print/grammar'
+import { signalGrammar } from '@hifi/signal/grammar'
 import { textureGrammar } from '@hifi/texture/grammar'
 
 export const grammarRegistry = {
   liquid: liquidGrammar,
   texture: textureGrammar,
   print: printGrammar,
+  signal: signalGrammar,
+  kinetic: kineticGrammar,
 } as const satisfies Record<string, GrammarDefinition>
 
 export type GrammarName = keyof typeof grammarRegistry
