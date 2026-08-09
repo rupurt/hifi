@@ -4,7 +4,7 @@ import {
   parseMaterialEnvelope,
   serializeMaterial,
 } from '@hifi/core'
-import type { PrintThemeName } from './grammar'
+import type { PrintThemeName } from './grammar.js'
 
 export type PrintComposition = 'columns' | 'split' | 'grid' | 'field'
 export type PrintTypeface = 'serif' | 'sans' | 'mono' | 'display'

@@ -4,7 +4,7 @@ import {
   parseMaterialEnvelope,
   serializeMaterial,
 } from '@hifi/core'
-import type { TextureThemeName } from './grammar'
+import type { TextureThemeName } from './grammar.js'
 
 export type TexturePattern = 'fiber' | 'weave' | 'grain' | 'crosshatch'
 

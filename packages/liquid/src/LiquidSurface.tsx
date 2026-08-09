@@ -1,8 +1,8 @@
 import { Frame, Glass, GlassContainer, LiquidCanvas } from '@liquid-dom/react'
 import type { CSSProperties, PropsWithChildren } from 'react'
-import type { LiquidThemeName } from './grammar'
-import { type LiquidMaterial, liquidThemeMaterials } from './material'
-import { supportsLiquidDomRendering } from './support'
+import type { LiquidThemeName } from './grammar.js'
+import { type LiquidMaterial, liquidThemeMaterials } from './material.js'
+import { supportsLiquidDomRendering } from './support.js'
 
 export interface LiquidSurfaceProps extends PropsWithChildren {
   readonly className?: string

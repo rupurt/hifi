@@ -28,8 +28,8 @@ Themes are variants inside a grammar. In `liquid`, themes might describe clear, 
 | Grammar | Language | Example themes | Status |
 | --- | --- | --- | --- |
 | `liquid` | Layered, refractive glass surfaces | clear, tinted, frosted, transparent | First priority |
-| `texture` | Tactile and material-rich surfaces | paper, canvas, grain, fabric | Planned |
-| `print` | Editorial composition inspired by physical print | broadsheet, magazine, technical, poster | Planned |
+| `texture` | Tactile and material-rich surfaces | paper, canvas, grain, fabric | Experimental |
+| `print` | Editorial composition inspired by physical print | broadsheet, magazine, technical, poster | Experimental |
 
 These are the starting points, not a closed set. A new grammar belongs in `hifi` when it offers a distinct, reusable visual language rather than a one-off component skin.
 
@@ -64,6 +64,19 @@ These are the starting points, not a closed set. A new grammar belongs in `hifi`
 ```
 
 Grammar packages should expose React components, tokens, theme definitions, and public types from deliberate entry points. Shared code belongs in `core` only when it describes a capability common to multiple grammars; grammar-specific abstractions stay with their grammar.
+
+## Packages
+
+The independently consumable packages are:
+
+| Package | Purpose | React support |
+| --- | --- | --- |
+| `@hifi/core` | Grammar contracts and programmable-material utilities | None required |
+| `@hifi/liquid` | WebGPU liquid glass with a CSS fallback | React 19 |
+| `@hifi/texture` | Tactile substrate and pattern surfaces | React 18.2–19 |
+| `@hifi/print` | Editorial composition and print surfaces | React 18.2–19 |
+
+All packages are ESM-only, support Node.js 20 or newer, publish TypeScript declarations, and expose versioned material parsers and serializers. Their package-level READMEs document the public entry points and basic use.
 
 ## Styleguide
 
@@ -169,6 +182,20 @@ Run `just` without arguments to print the available commands.
 GPU rendering quality is difficult to establish with DOM-only unit tests. The initial Vitest suite should validate deterministic application behavior; browser smoke tests and visual regression coverage can be added as the visual contract stabilizes.
 
 `just check` is the expected pre-push gate.
+
+The final stage of that gate packs all four libraries, installs the tarballs into a clean temporary consumer, checks their declarations with TypeScript, imports them directly with Node, and bundles a React application with Vite. This prevents source aliases in the styleguide from masking distribution errors.
+
+## Releases
+
+Consumer-facing changes use [Changesets](https://github.com/changesets/changesets). The four packages form a fixed version group so compatible releases move together and internal `@hifi/core` ranges remain coordinated.
+
+```sh
+pnpm changeset
+pnpm version-packages
+pnpm release
+```
+
+`pnpm release` runs the complete validation and downstream tarball smoke test before publishing the public scoped packages. Publishing still requires registry credentials with access to the `@hifi` scope.
 
 ## Adding a grammar
 

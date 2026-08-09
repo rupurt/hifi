@@ -1,4 +1,4 @@
-export { type PrintThemeName, printGrammar } from './grammar'
+export { type PrintThemeName, printGrammar } from './grammar.js'
 export {
   type PrintComposition,
   type PrintMaterial,
@@ -6,5 +6,5 @@ export {
   parsePrintMaterial,
   printThemeMaterials,
   serializePrintMaterial,
-} from './material'
-export { getPrintMaterialStyle, PrintSurface, type PrintSurfaceProps } from './PrintSurface'
+} from './material.js'
+export { getPrintMaterialStyle, PrintSurface, type PrintSurfaceProps } from './PrintSurface.js'

@@ -1,6 +1,6 @@
 import type { CSSProperties, PropsWithChildren } from 'react'
-import type { TextureThemeName } from './grammar'
-import { type TextureMaterial, type TexturePattern, textureThemeMaterials } from './material'
+import type { TextureThemeName } from './grammar.js'
+import { type TextureMaterial, type TexturePattern, textureThemeMaterials } from './material.js'
 
 export interface TextureSurfaceProps extends PropsWithChildren {
   readonly className?: string

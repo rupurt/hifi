@@ -1,0 +1,11 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@3.1.4/schema.json",
+  "changelog": false,
+  "commit": false,
+  "fixed": [["@hifi/core", "@hifi/liquid", "@hifi/texture", "@hifi/print"]],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": ["@hifi/styleguide"]
+}

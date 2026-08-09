@@ -38,4 +38,4 @@ export {
   type ProgrammableMaterial,
   parseMaterialEnvelope,
   serializeMaterial,
-} from './material'
+} from './material.js'

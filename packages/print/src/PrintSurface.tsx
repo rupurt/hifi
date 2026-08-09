@@ -1,6 +1,6 @@
 import type { CSSProperties, PropsWithChildren } from 'react'
-import type { PrintThemeName } from './grammar'
-import { type PrintComposition, type PrintMaterial, printThemeMaterials } from './material'
+import type { PrintThemeName } from './grammar.js'
+import { type PrintComposition, type PrintMaterial, printThemeMaterials } from './material.js'
 
 export interface PrintSurfaceProps extends PropsWithChildren {
   readonly className?: string

@@ -5,7 +5,7 @@ import {
   parseMaterialEnvelope,
   serializeMaterial,
 } from '@hifi/core'
-import type { LiquidThemeName } from './grammar'
+import type { LiquidThemeName } from './grammar.js'
 
 export type LiquidSurfaceProfile = 'convex' | 'concave' | 'lip'
 

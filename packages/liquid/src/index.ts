@@ -1,5 +1,5 @@
-export { type LiquidThemeName, liquidGrammar } from './grammar'
-export { LiquidSurface, type LiquidSurfaceProps } from './LiquidSurface'
+export { type LiquidThemeName, liquidGrammar } from './grammar.js'
+export { LiquidSurface, type LiquidSurfaceProps } from './LiquidSurface.js'
 export {
   type LiquidColor,
   type LiquidMaterial,
@@ -7,5 +7,5 @@ export {
   liquidThemeMaterials,
   parseLiquidMaterial,
   serializeLiquidMaterial,
-} from './material'
-export { supportsLiquidDomRendering } from './support'
+} from './material.js'
+export { supportsLiquidDomRendering } from './support.js'

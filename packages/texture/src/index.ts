@@ -1,13 +1,13 @@
-export { type TextureThemeName, textureGrammar } from './grammar'
+export { type TextureThemeName, textureGrammar } from './grammar.js'
 export {
   parseTextureMaterial,
   serializeTextureMaterial,
   type TextureMaterial,
   type TexturePattern,
   textureThemeMaterials,
-} from './material'
+} from './material.js'
 export {
   getTextureMaterialStyle,
   TextureSurface,
   type TextureSurfaceProps,
-} from './TextureSurface'
+} from './TextureSurface.js'
