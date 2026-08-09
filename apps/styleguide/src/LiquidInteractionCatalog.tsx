@@ -126,27 +126,45 @@ export function LiquidInteractionCatalog({
     ],
   )
   const materialJson = useMemo(() => serializeLiquidMaterial(material), [material])
+  const profileDirection = material.surfaceProfile === 'concave' ? -1 : 1
+  const profileScale = material.surfaceProfile === 'concave' ? 0.94 : 1.04
   const materialStyle = {
     '--lab-bezel': `${material.bezelWidth}px`,
+    '--lab-bezel-inset': `${Math.max(5, material.bezelWidth * 0.42)}px`,
+    '--lab-bezel-stroke': `${Math.max(1, Math.min(3.5, material.bezelWidth * 0.075))}px`,
     '--lab-blur': `${material.blur}px`,
+    '--lab-blur-feedback': `${material.blur * 0.32}px`,
+    '--lab-caustic-alpha': 0.1 + material.specularOpacity * 0.62,
     '--lab-chroma': `${material.dispersion * 360}px`,
     '--lab-chroma-negative': `${material.dispersion * -360}px`,
     '--lab-control-blur': `${Math.max(2, material.blur * 0.72)}px`,
     '--lab-control-fill': 0.035 + material.opacity * 0.07 + material.tint.a * 0.24,
     '--lab-control-radius': `${Math.min(18, Math.max(5, material.cornerRadius * 0.32))}px`,
     '--lab-depth': `${material.thickness}px`,
+    '--lab-depth-shadow-blur': `${18 + material.thickness * 0.82}px`,
+    '--lab-depth-shadow-y': `${4 + material.thickness * 0.46}px`,
     '--lab-displacement': material.displacementFactor,
+    '--lab-displacement-x': `${(material.displacementFactor - 1) * 28}px`,
+    '--lab-distortion-scale': 0.88 + material.displacementFactor * 0.14,
     '--lab-edge-alpha': 0.12 + material.specularOpacity * 0.38,
     '--lab-highlight-alpha': 0.08 + material.specularOpacity * 0.28,
     '--lab-ior': material.ior,
+    '--lab-copy-skew': `${(material.ior - 1) * -9}deg`,
+    '--lab-copy-x': `${
+      ((material.ior - 1) * 46 + (material.displacementFactor - 1) * 28) * profileDirection
+    }px`,
+    '--lab-copy-y': `${(material.ior - 1) * -20 * profileDirection}px`,
     '--lab-ior-shift': `${(material.ior - 1) * 16}px`,
     '--lab-ior-shift-diagonal': `${(material.ior - 1) * 12}px`,
-    '--lab-ior-scale': 0.88 + material.ior * 0.08,
-    '--lab-lens-scale': 0.92 + material.displacementFactor * 0.08,
+    '--lab-ior-scale': 0.76 + material.ior * 0.18,
+    '--lab-lens-scale': 0.88 + material.displacementFactor * 0.14,
+    '--lab-refract-x': `${(material.ior - 1) * 46}px`,
+    '--lab-refract-y': `${(material.ior - 1) * -20}px`,
     '--lab-map-blur': `${material.displacementBlur * 0.12}px`,
     '--lab-opacity': materialEnabled ? material.opacity : 0.08,
     '--lab-panel-radius': `${Math.min(34, Math.max(14, material.cornerRadius * 0.72))}px`,
     '--lab-probe-size': `${30 + material.thickness * 0.75}px`,
+    '--lab-profile-scale': material.surfaceProfile === 'lip' ? 1.02 : profileScale,
     '--lab-rail-height': `${Math.min(8, Math.max(4, material.bezelWidth * 0.16))}px`,
     '--lab-shadow-blur': `${28 + material.thickness * 0.7}px`,
     '--lab-shadow-y': `${material.thickness * 0.38}px`,
@@ -556,6 +574,7 @@ export function LiquidInteractionCatalog({
           className="liquid-demo-stage liquid-form-stage"
           data-material-enabled={materialEnabled}
           data-liquid-renderer={canRender ? 'webgpu' : 'css-fallback'}
+          data-surface-profile={material.surfaceProfile}
           style={materialStyle}
         >
           <LiquidBackdrop label="Optical calibration field" />
@@ -570,7 +589,9 @@ export function LiquidInteractionCatalog({
               <section className="liquid-specimen liquid-result-specimen">
                 <header>
                   <span>01 / Refracted result</span>
-                  <small>{canRender ? 'Live pixels' : 'CSS approximation'}</small>
+                  <small>
+                    {material.blur.toFixed(0)}px blur · {material.thickness.toFixed(0)}px depth
+                  </small>
                 </header>
                 <div className="liquid-specimen-source" aria-hidden="true">
                   <span>Optical field 024</span>
@@ -599,7 +620,9 @@ export function LiquidInteractionCatalog({
               <section className="liquid-specimen liquid-map-specimen">
                 <header>
                   <span>02 / Displacement map</span>
-                  <small>Renderer diagnostic</small>
+                  <small>
+                    D {material.displacementFactor.toFixed(2)} · B {material.bezelWidth.toFixed(0)}
+                  </small>
                 </header>
                 <div className="liquid-map-source" aria-hidden="true" />
                 <MaterialSpecimenCanvas
@@ -807,7 +830,22 @@ function MaterialSpecimenCanvas({
       <div
         aria-hidden="true"
         className={`liquid-specimen-fallback${debug ? ' liquid-specimen-fallback-map' : ''}`}
-      />
+        data-surface-profile={material.surfaceProfile}
+      >
+        {debug ? null : (
+          <>
+            <span className="liquid-fallback-copy">
+              LIGHT
+              <br />
+              BENDS
+              <br />
+              HERE
+            </span>
+            <span className="liquid-fallback-caustic" />
+            <span className="liquid-fallback-bezel" />
+          </>
+        )}
+      </div>
     )
   }
 

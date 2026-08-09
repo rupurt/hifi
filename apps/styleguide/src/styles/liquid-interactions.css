@@ -811,12 +811,14 @@
   background:
     linear-gradient(rgb(255 255 255 / 0.09) 1px, transparent 1px),
     linear-gradient(90deg, rgb(255 255 255 / 0.09) 1px, transparent 1px),
+    repeating-linear-gradient(115deg, transparent 0 9px, rgb(255 255 255 / 0.045) 10px 11px),
     radial-gradient(circle at 16% 82%, #ff668d 0 7%, transparent 25%),
     radial-gradient(circle at 84% 18%, #4ddbe8 0 8%, transparent 27%),
     linear-gradient(135deg, #24235b, #101932 55%, #272044);
   background-size:
-    28px 28px,
-    28px 28px,
+    18px 18px,
+    18px 18px,
+    auto,
     auto,
     auto,
     auto;
@@ -824,6 +826,25 @@
   overflow: hidden;
   padding: 66px 34px;
   position: relative;
+}
+
+.liquid-specimen-source::after {
+  background: repeating-linear-gradient(
+    90deg,
+    #ff6b9c 0 6px,
+    #f8e46a 6px 12px,
+    #52e4e8 12px 18px,
+    rgb(255 255 255 / 0.08) 18px 24px
+  );
+  border: 1px solid rgb(255 255 255 / 0.5);
+  bottom: 92px;
+  content: "";
+  height: 13px;
+  left: 32%;
+  opacity: 0.8;
+  position: absolute;
+  transform: rotate(-4deg);
+  width: 210px;
 }
 
 .liquid-specimen-source > span {
@@ -898,8 +919,99 @@
   position: absolute;
   top: 50%;
   transform: translate(-50%, -50%) scale(var(--lab-lens-scale));
+  transition:
+    backdrop-filter 160ms ease,
+    border-radius 260ms ease,
+    box-shadow 220ms ease,
+    transform 240ms ease;
   width: 310px;
   z-index: 3;
+}
+
+.liquid-fallback-copy {
+  color: rgb(255 255 255 / 0.72);
+  display: block;
+  filter: blur(var(--lab-blur-feedback));
+  font-family: var(--guide-display);
+  font-size: 5.2rem;
+  font-weight: 500;
+  left: -92px;
+  letter-spacing: -0.08em;
+  line-height: 0.69;
+  mix-blend-mode: screen;
+  opacity: var(--lab-opacity);
+  position: absolute;
+  text-shadow:
+    var(--lab-chroma-negative) 0 calc(2px + var(--lab-chroma)) rgb(61 220 255 / 0.7),
+    var(--lab-chroma) 0 calc(2px + var(--lab-chroma)) rgb(255 77 161 / 0.62);
+  top: -7px;
+  transform: translate(var(--lab-copy-x), var(--lab-copy-y)) skewX(var(--lab-copy-skew))
+    scale(var(--lab-profile-scale));
+  transform-origin: center;
+  transition:
+    filter 180ms ease,
+    opacity 180ms ease,
+    text-shadow 180ms ease,
+    transform 240ms ease;
+  white-space: nowrap;
+}
+
+.liquid-fallback-caustic,
+.liquid-fallback-bezel {
+  border-radius: max(2px, calc(var(--lab-shape-radius) - var(--lab-bezel-inset)));
+  inset: var(--lab-bezel-inset);
+  pointer-events: none;
+  position: absolute;
+}
+
+.liquid-fallback-caustic {
+  background:
+    radial-gradient(circle at 24% 12%, rgb(255 255 255 / var(--lab-caustic-alpha)), transparent 25%),
+    linear-gradient(132deg, rgb(255 255 255 / var(--lab-highlight-alpha)), transparent 42%);
+  box-shadow:
+    inset calc(var(--lab-ior-shift) * -1) var(--lab-ior-shift-diagonal) var(--lab-bezel)
+    rgb(255 255 255 / calc(var(--lab-caustic-alpha) * 0.24)),
+    inset var(--lab-ior-shift) calc(var(--lab-ior-shift-diagonal) * -1) var(--lab-bezel)
+    rgb(0 0 24 / 0.3);
+  opacity: var(--lab-specular);
+  transition:
+    border-radius 260ms ease,
+    box-shadow 220ms ease,
+    inset 220ms ease,
+    opacity 180ms ease;
+}
+
+.liquid-fallback-bezel {
+  border: var(--lab-bezel-stroke) solid rgb(255 255 255 / var(--lab-edge-alpha));
+  box-shadow:
+    inset 0 0 var(--lab-bezel) rgb(255 255 255 / calc(var(--lab-highlight-alpha) * 0.3)),
+    0 0 calc(var(--lab-bezel) * 0.45) rgb(85 224 255 / calc(var(--lab-specular) * 0.18));
+  transition:
+    border-radius 260ms ease,
+    border-width 220ms ease,
+    box-shadow 220ms ease,
+    inset 220ms ease;
+}
+
+.liquid-specimen-fallback[data-surface-profile="concave"] {
+  box-shadow:
+    inset 0 0 calc(var(--lab-bezel) * 1.4) rgb(0 0 24 / 0.56),
+    inset 0 1px 0 rgb(255 255 255 / calc(var(--lab-specular-alpha) * 0.62)),
+    0 var(--lab-shadow-y) var(--lab-shadow-blur) rgb(0 0 24 / 0.24);
+}
+
+.liquid-specimen-fallback[data-surface-profile="concave"] .liquid-fallback-caustic {
+  background:
+    radial-gradient(circle at 72% 78%, rgb(255 255 255 / var(--lab-caustic-alpha)), transparent 22%),
+    radial-gradient(ellipse at center, transparent 42%, rgb(0 0 24 / 0.42) 100%);
+}
+
+.liquid-specimen-fallback[data-surface-profile="lip"] .liquid-fallback-bezel {
+  border-style: double;
+  border-width: max(3px, calc(var(--lab-bezel-stroke) * 2));
+  box-shadow:
+    inset 0 0 calc(var(--lab-bezel) * 0.48) rgb(255 255 255 / var(--lab-highlight-alpha)),
+    0 0 calc(var(--lab-bezel) * 0.32) rgb(90 226 255 / calc(var(--lab-specular) * 0.2));
 }
 
 .liquid-specimen-fallback-map {
@@ -915,6 +1027,29 @@
   filter: blur(var(--lab-map-blur));
   height: 116px;
   width: 270px;
+}
+
+.liquid-specimen-fallback-map[data-surface-profile="concave"] {
+  background: radial-gradient(
+    ellipse at center,
+    #808080 0 18%,
+    #b55a75 36%,
+    #59a58e 59%,
+    #808080 82%
+  );
+}
+
+.liquid-specimen-fallback-map[data-surface-profile="lip"] {
+  background: radial-gradient(
+    ellipse at center,
+    #808080 0 24%,
+    #59a58e 31%,
+    #b55a75 39%,
+    #808080 48%,
+    #59a58e 66%,
+    #b55a75 74%,
+    #808080 84%
+  );
 }
 
 [data-material-enabled="false"] .liquid-specimen-canvas,
