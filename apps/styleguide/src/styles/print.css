@@ -8,6 +8,11 @@
   --control-surface: rgb(250 247 238 / 0.72);
   --control-surface-strong: #faf7ee;
   --control-border: #17140f;
+  --control-accent-contrast: #fffaf0;
+  --control-danger: #b51f17;
+  --control-warning: #a8660d;
+  --control-positive: #146349;
+  --control-radius: 0px;
   --control-shadow: 6px 7px 0 rgb(23 20 15 / 0.16);
   background-color: #f2eddf;
   background-image: radial-gradient(circle, rgb(40 32 22 / 0.09) 0 0.6px, transparent 0.9px);
@@ -152,10 +157,9 @@
   max-width: 340px;
 }
 
-.print-page .grammar-local-nav {
+.print-page .grammar-section-nav {
   border-bottom-width: 3px;
   border-top-width: 3px;
-  justify-content: space-between;
 }
 
 .print-page .guide-section-heading {

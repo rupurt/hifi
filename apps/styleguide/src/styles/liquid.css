@@ -9,6 +9,11 @@
   --control-surface-strong: var(--liquid-glass-strong);
   --control-border: rgb(255 255 255 / 0.22);
   --control-accent: var(--liquid-accent);
+  --control-accent-contrast: var(--liquid-accent-contrast);
+  --control-danger: #ff7c99;
+  --control-warning: #ffd184;
+  --control-positive: #70ebc5;
+  --control-radius: 20px;
   --control-shadow: inset 0 1px 0 rgb(255 255 255 / 0.2), 0 24px 60px rgb(0 0 28 / 0.3);
   background:
     radial-gradient(circle at 12% 12%, rgb(129 83 255 / 0.28), transparent 28%),
@@ -251,10 +256,18 @@
 
 .liquid-page .catalog-specimen,
 .liquid-page .catalog-object-card,
+.liquid-page .catalog-metric-card,
+.liquid-page .catalog-action-card,
 .liquid-page .catalog-feedback-card,
 .liquid-page .catalog-list-card,
 .liquid-page .catalog-table-shell,
-.liquid-page .catalog-form {
+.liquid-page .catalog-form,
+.liquid-page .catalog-badge-board,
+.liquid-page .catalog-composition,
+.liquid-page .type-role-card,
+.liquid-page .foundation-space-token,
+.liquid-page .foundation-layout-board,
+.liquid-page .foundation-icon-specimen {
   backdrop-filter: blur(28px) saturate(150%);
 }
 

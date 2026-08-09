@@ -1,7 +1,9 @@
 import { TextureSurface, type TextureThemeName, textureGrammar } from '@hifi/texture'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { ControlCatalog } from './ControlCatalog'
+import { FoundationCatalog } from './FoundationCatalog'
 import { StyleguideSection } from './StyleguideSection'
+import { StyleguideNav } from './StyleguideNav'
 import { ThemePicker } from './ThemePicker'
 import './styles/texture.css'
 
@@ -28,7 +30,7 @@ export function TextureStyleguide() {
             Texture gives digital controls tooth, grain, weave, and pressure. Surfaces communicate
             their use through tactility before a label has to explain them.
           </p>
-          <a className="grammar-jump-link" href="#commands-heading">
+          <a className="grammar-jump-link" href="#buttons-heading">
             Handle the controls <span aria-hidden="true">↓</span>
           </a>
         </div>
@@ -46,12 +48,7 @@ export function TextureStyleguide() {
         </TextureSurface>
       </header>
 
-      <nav aria-label="Texture styleguide sections" className="grammar-local-nav">
-        <a href="#material-heading">Material</a>
-        <a href="#commands-heading">Commands</a>
-        <a href="#fields-heading">Fields</a>
-        <a href="#structures-heading">Structures</a>
-      </nav>
+      <StyleguideNav />
 
       <StyleguideSection
         description="Fiber, weave, density, and relief alter the surface while preserving a familiar control vocabulary."
@@ -68,6 +65,7 @@ export function TextureStyleguide() {
         />
       </StyleguideSection>
 
+      <FoundationCatalog />
       <ControlCatalog grammarLabel="texture" />
     </main>
   )

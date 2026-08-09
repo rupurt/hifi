@@ -1,7 +1,9 @@
 import { PrintSurface, type PrintThemeName, printGrammar } from '@hifi/print'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { ControlCatalog } from './ControlCatalog'
+import { FoundationCatalog } from './FoundationCatalog'
 import { StyleguideSection } from './StyleguideSection'
+import { StyleguideNav } from './StyleguideNav'
 import { ThemePicker } from './ThemePicker'
 import './styles/print.css'
 
@@ -33,7 +35,7 @@ export function PrintStyleguide() {
             rint turns interface hierarchy into an editorial act. Rules, columns, scale, ink, and
             whitespace make every control part of a deliberate reading sequence.
           </p>
-          <a className="grammar-jump-link" href="#commands-heading">
+          <a className="grammar-jump-link" href="#buttons-heading">
             Read the specimens <span aria-hidden="true">↓</span>
           </a>
         </div>
@@ -46,12 +48,7 @@ export function PrintStyleguide() {
         </PrintSurface>
       </section>
 
-      <nav aria-label="Print styleguide sections" className="grammar-local-nav">
-        <a href="#material-heading">Edition</a>
-        <a href="#commands-heading">Commands</a>
-        <a href="#fields-heading">Fields</a>
-        <a href="#structures-heading">Structures</a>
-      </nav>
+      <StyleguideNav />
 
       <StyleguideSection
         description="Each edition changes its typographic voice and compositional pressure without abandoning the same semantic hierarchy."
@@ -69,6 +66,7 @@ export function PrintStyleguide() {
         />
       </StyleguideSection>
 
+      <FoundationCatalog />
       <ControlCatalog grammarLabel="print" />
     </main>
   )

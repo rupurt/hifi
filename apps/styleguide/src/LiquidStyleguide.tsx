@@ -1,7 +1,9 @@
 import { LiquidSurface, type LiquidThemeName, liquidGrammar } from '@hifi/liquid'
 import { useNavigate, useSearch } from '@tanstack/react-router'
 import { ControlCatalog } from './ControlCatalog'
+import { FoundationCatalog } from './FoundationCatalog'
 import { StyleguideSection } from './StyleguideSection'
+import { StyleguideNav } from './StyleguideNav'
 import { ThemePicker } from './ThemePicker'
 import './styles/liquid.css'
 
@@ -32,7 +34,7 @@ export function LiquidStyleguide() {
             Liquid bends the world behind an interface. Refraction, blur, tint, and luminous edges
             preserve context while controls rise into focus.
           </p>
-          <a className="grammar-jump-link" href="#commands-heading">
+          <a className="grammar-jump-link" href="#buttons-heading">
             Explore controls <span aria-hidden="true">↓</span>
           </a>
         </div>
@@ -60,12 +62,7 @@ export function LiquidStyleguide() {
         </div>
       </header>
 
-      <nav aria-label="Liquid styleguide sections" className="grammar-local-nav">
-        <a href="#material-heading">Material</a>
-        <a href="#commands-heading">Commands</a>
-        <a href="#fields-heading">Fields</a>
-        <a href="#structures-heading">Structures</a>
-      </nav>
+      <StyleguideNav />
 
       <StyleguideSection
         description="The optical behavior changes while the grammar's structure remains stable. Select a variant to apply it to every specimen below."
@@ -82,6 +79,7 @@ export function LiquidStyleguide() {
         />
       </StyleguideSection>
 
+      <FoundationCatalog />
       <ControlCatalog grammarLabel="liquid" />
     </main>
   )
