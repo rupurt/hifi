@@ -10,9 +10,9 @@ import { useEffect, useState } from 'react'
 import { ControlCatalog } from './ControlCatalog'
 import { FoundationCatalog } from './FoundationCatalog'
 import { LiquidInteractionCatalog } from './LiquidInteractionCatalog'
+import { LiquidThemePicker } from './LiquidThemePicker'
 import { StyleguideNav } from './StyleguideNav'
 import { StyleguideSection } from './StyleguideSection'
-import { ThemePicker } from './ThemePicker'
 import { liquidStyles } from './stylex/liquid.stylex'
 import { className, sharedStyles, stylexProps } from './stylex/shared.stylex'
 
@@ -103,14 +103,12 @@ export function LiquidStyleguide() {
         index="01"
         title="A spectrum of glass"
       >
-        <ThemePicker
-          grammar="liquid"
+        <LiquidThemePicker
           label="Starting preset"
           onChange={(name) => {
             void navigate({ replace: true, search: { theme: name } })
           }}
-          themes={liquidGrammar.themes}
-          value={selectedTheme.name}
+          value={selectedTheme.name as LiquidThemeName}
         />
       </StyleguideSection>
 

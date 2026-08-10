@@ -10,6 +10,8 @@ pnpm add @hifi/liquid react react-dom
 
 React 19 is required by the liquid-dom renderer.
 
+Preset themes cover `clear`, `tinted`, `frosted`, `prismatic`, `blurred`, and `smoked` glass.
+
 ## Use a preset
 
 ```tsx

@@ -7,7 +7,9 @@ describe('liquid grammar', () => {
       'clear',
       'tinted',
       'frosted',
+      'prismatic',
       'blurred',
+      'smoked',
     ])
   })
 })

@@ -21,13 +21,13 @@ A grammar owns:
 - accessibility behavior and reduced-effect fallbacks;
 - examples, usage guidance, and tests.
 
-Themes are variants inside a grammar. In `liquid`, themes might describe clear, tinted, blurred, frosted, or highly transparent glass while preserving the same underlying component vocabulary and behavior.
+Themes are variants inside a grammar. In `liquid`, themes describe clear, tinted, frosted, prismatic, blurred, or smoked glass while preserving the same underlying component vocabulary and behavior.
 
 ## Initial grammars
 
 | Grammar | Language | Example themes | Status |
 | --- | --- | --- | --- |
-| `liquid` | Layered, refractive glass surfaces | clear, tinted, frosted, transparent | First priority |
+| `liquid` | Layered, refractive glass surfaces | clear, tinted, frosted, prismatic, smoked | First priority |
 | `texture` | Tactile and material-rich surfaces | paper, canvas, grain, fabric | Experimental |
 | `print` | Editorial composition inspired by physical print | broadsheet, magazine, technical, poster | Experimental |
 | `signal` | Emissive information shaped by luminance and time | phosphor, matrix, spectral, night | Experimental |
@@ -163,7 +163,9 @@ The first themes should explore a useful range without fragmenting the API:
 - `clear` — neutral, highly transparent glass;
 - `tinted` — glass whose color participates in hierarchy and mood;
 - `frosted` — diffuse glass with stronger separation from its background;
-- `blurred` — soft, depth-forward glass with restrained refraction.
+- `prismatic` — high-dispersion glass that holds a frozen spectrum at its edge;
+- `blurred` — soft, depth-forward glass with restrained refraction;
+- `smoked` — dark absorptive glass with reduced transmission and hard highlights.
 
 Theme names and parameters should describe material behavior rather than a single product or color palette.
 

@@ -9,6 +9,19 @@ describe('liquid materials', () => {
     expect(parsed).toEqual(source)
   })
 
+  it('keeps the extended spectrum optically distinct', () => {
+    expect(liquidThemeMaterials.tinted.tint.a).toBeGreaterThan(
+      liquidThemeMaterials.clear.tint.a * 3,
+    )
+    expect(liquidThemeMaterials.prismatic.dispersion).toBeGreaterThan(
+      liquidThemeMaterials.tinted.dispersion,
+    )
+    expect(liquidThemeMaterials.prismatic.blur).toBeLessThan(liquidThemeMaterials.clear.blur)
+    expect(liquidThemeMaterials.smoked.tint.a).toBeGreaterThan(
+      liquidThemeMaterials.frosted.tint.a,
+    )
+  })
+
   it('rejects incompatible material versions', () => {
     expect(() => parseLiquidMaterial({ ...liquidThemeMaterials.clear, version: 2 })).toThrowError(
       'Expected a version 1 @hifi/liquid material',
