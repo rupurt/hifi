@@ -37,13 +37,15 @@ export function KineticStyleguide() {
     accent: material.accentColor,
     actuation: material.actuation,
     background: material.backgroundColor,
-    controlShadow: `0 ${Math.max(2, material.travel * 0.5)}px 0 color-mix(in srgb, ${material.foregroundColor} 28%, transparent), 0 ${Math.max(5, material.travel)}px ${Math.max(10, material.mass * 8)}px color-mix(in srgb, ${material.foregroundColor} 16%, transparent)`,
+    controlShadow:
+      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-foreground) 28%, transparent), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(10px + var(--kinetic-mass) * 8px) var(--kinetic-soft-shadow)',
     damping: material.damping,
     detents: material.detents,
     duration: `${duration}ms`,
     foreground: material.foregroundColor,
     friction: material.friction,
-    generatedShadow: `0 ${Math.max(2, material.travel * 0.45)}px 0 color-mix(in srgb, ${material.foregroundColor} 28%, transparent), 0 ${Math.max(5, material.travel)}px ${Math.max(10, material.mass * 7)}px color-mix(in srgb, ${material.foregroundColor} 14%, transparent)`,
+    generatedShadow:
+      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-foreground) 28%, transparent), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(10px + var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-foreground) 14%, transparent)',
     mass: material.mass,
     radius: `${material.radius}px`,
     restitution: material.restitution,

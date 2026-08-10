@@ -17,10 +17,99 @@ export const kineticStyles = stylex.create({
     '--guide-section-index-color': 'var(--kinetic-accent)',
     '--guide-section-padding': 'clamp(22px, 3.5vw, 48px)',
     '--guide-section-shadow':
-      '0 28px 70px color-mix(in srgb, var(--kinetic-foreground) 10%, transparent)',
+      '12px 28px 70px color-mix(in srgb, var(--kinetic-foreground) 10%, transparent)',
     '--guide-section-title-leading': '0.94',
     '--guide-section-title-tracking': '-0.025em',
     '--guide-section-title-weight': '850',
+    '--kinetic-edge-shadow': 'color-mix(in srgb, var(--kinetic-foreground) 20%, transparent)',
+    '--kinetic-hard-shadow': 'color-mix(in srgb, var(--kinetic-foreground) 34%, transparent)',
+    '--kinetic-light-highlight': 'color-mix(in srgb, white 56%, transparent)',
+    '--kinetic-soft-shadow': 'color-mix(in srgb, var(--kinetic-foreground) 16%, transparent)',
+    '--kinetic-shadow-y': 'max(3px, calc(var(--kinetic-travel) * 0.68))',
+    '--kinetic-shadow-x': 'max(1px, calc(var(--kinetic-shadow-y) * 0.42))',
+    '--kinetic-shadow-soft-y': 'calc(var(--kinetic-shadow-y) + 6px)',
+    '--kinetic-shadow-soft-x': 'max(2px, calc(var(--kinetic-shadow-soft-y) * 0.42))',
+    '--kinetic-shadow-hover-y': 'calc(var(--kinetic-shadow-y) + 1px)',
+    '--kinetic-shadow-hover-x': 'max(1px, calc(var(--kinetic-shadow-hover-y) * 0.42))',
+    '--kinetic-shadow-hover-soft-y': 'calc(var(--kinetic-shadow-soft-y) + 2px)',
+    '--kinetic-shadow-hover-soft-x': 'max(2px, calc(var(--kinetic-shadow-hover-soft-y) * 0.42))',
+    '--kinetic-segment-shadow-y': 'max(3px, calc(var(--kinetic-travel) * 0.46))',
+    '--kinetic-segment-shadow-x': 'max(1px, calc(var(--kinetic-segment-shadow-y) * 0.42))',
+    '--kinetic-segment-shadow-soft-y': 'calc(var(--kinetic-segment-shadow-y) + 4px)',
+    '--kinetic-segment-shadow-soft-x':
+      'max(2px, calc(var(--kinetic-segment-shadow-soft-y) * 0.42))',
+    '--kinetic-switch-shadow-y': 'max(2px, calc(var(--kinetic-shadow-y) * 0.5))',
+    '--kinetic-switch-shadow-x': 'max(1px, calc(var(--kinetic-switch-shadow-y) * 0.42))',
+    '--kinetic-control-lift': 'var(--kinetic-shadow-y)',
+    '--kinetic-control-press': 'calc(var(--kinetic-travel) * var(--kinetic-actuation))',
+    '--kinetic-control-press-x': 'max(0.5px, calc(var(--kinetic-control-press) * 0.42))',
+    '--kinetic-encoder-shadow-y': 'max(3px, calc(var(--kinetic-travel) * 0.45))',
+    '--kinetic-encoder-shadow-x': 'max(1px, calc(var(--kinetic-encoder-shadow-y) * 0.42))',
+    '--kinetic-encoder-shadow-soft-y': 'calc(var(--kinetic-encoder-shadow-y) + 5px)',
+    '--kinetic-encoder-shadow-soft-x':
+      'max(2px, calc(var(--kinetic-encoder-shadow-soft-y) * 0.42))',
+    '--generated-button-background': 'none',
+    '--generated-button-font': 'var(--guide-mono)',
+    '--generated-button-letter-spacing': '0.065em',
+    '--generated-button-min-height': '48px',
+    '--generated-button-padding-block': '12px',
+    '--generated-button-text-transform': 'uppercase',
+    '--generated-field-label-font': 'var(--guide-mono)',
+    '--generated-button-shadow':
+      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 var(--kinetic-hard-shadow), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(8px + var(--kinetic-mass) * 6px) var(--kinetic-soft-shadow)',
+    '--generated-button-hover-shadow':
+      'inset 1px 1px 0 color-mix(in srgb, white 66%, transparent), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-hover-x) var(--kinetic-shadow-hover-y) 0 color-mix(in srgb, var(--kinetic-foreground) 38%, transparent), var(--kinetic-shadow-hover-soft-x) var(--kinetic-shadow-hover-soft-y) calc(10px + var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-foreground) 18%, transparent)',
+    '--generated-button-active-shadow':
+      'inset 2px 2px calc(3px + var(--kinetic-friction) * 4px) color-mix(in srgb, var(--kinetic-foreground) 24%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent), 1px 1px 0 color-mix(in srgb, var(--kinetic-foreground) 28%, transparent)',
+    '--generated-button-hover-transform': 'translate(-0.42px, -1px)',
+    '--generated-button-active-transform':
+      'translate(var(--kinetic-control-press-x), var(--kinetic-control-press))',
+    '--generated-button-transition':
+      'box-shadow var(--kinetic-duration) ease, transform var(--kinetic-duration) cubic-bezier(0.2, calc(0.8 + var(--kinetic-restitution)), 0.25, 1)',
+    '--generated-icon-radius': '50%',
+    '--generated-input-background': 'none',
+    '--generated-input-shadow':
+      'inset 2px 2px calc(3px + var(--kinetic-friction) * 3px) color-mix(in srgb, var(--kinetic-foreground) 20%, transparent), inset -1px -1px 0 color-mix(in srgb, white 34%, transparent)',
+    '--generated-input-focus-shadow':
+      'inset 2px 2px calc(3px + var(--kinetic-friction) * 3px) color-mix(in srgb, var(--kinetic-foreground) 20%, transparent), inset -1px -1px 0 color-mix(in srgb, white 34%, transparent)',
+    '--generated-primary-button-shadow':
+      'inset 1px 1px 0 color-mix(in srgb, white 52%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--kinetic-foreground) 24%, transparent), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-accent) 52%, var(--kinetic-foreground)), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(9px + var(--kinetic-mass) * 6px) color-mix(in srgb, var(--kinetic-accent) 20%, transparent)',
+    '--generated-primary-button-hover-shadow':
+      'inset 1px 1px 0 color-mix(in srgb, white 64%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--kinetic-foreground) 24%, transparent), var(--kinetic-shadow-hover-x) var(--kinetic-shadow-hover-y) 0 color-mix(in srgb, var(--kinetic-accent) 58%, var(--kinetic-foreground)), var(--kinetic-shadow-hover-soft-x) var(--kinetic-shadow-hover-soft-y) calc(11px + var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-accent) 24%, transparent)',
+    '--generated-primary-button-active-shadow':
+      'inset 2px 2px calc(4px + var(--kinetic-friction) * 4px) color-mix(in srgb, var(--kinetic-foreground) 30%, transparent), inset -1px -1px 0 color-mix(in srgb, white 20%, transparent), 1px 1px 0 color-mix(in srgb, var(--kinetic-accent) 48%, var(--kinetic-foreground))',
+    '--generated-primary-button-background': 'none',
+    '--generated-danger-button-background': 'none',
+    '--generated-segment-background': 'none',
+    '--generated-segment-background-color':
+      'color-mix(in srgb, var(--kinetic-background) 94%, white)',
+    '--generated-segment-border-width': '1px',
+    '--generated-segment-color': 'color-mix(in srgb, var(--kinetic-foreground) 70%, transparent)',
+    '--generated-segment-gap': '5px',
+    '--generated-segment-min-height': '48px',
+    '--generated-segment-padding': '7px',
+    '--generated-segment-radius': 'max(2px, calc(var(--kinetic-radius) * 0.45))',
+    '--generated-segment-weight': '750',
+    '--generated-segment-shadow':
+      'inset 1px 1px 0 color-mix(in srgb, white 52%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--kinetic-foreground) 18%, transparent), var(--kinetic-segment-shadow-x) var(--kinetic-segment-shadow-y) 0 color-mix(in srgb, var(--kinetic-foreground) 32%, transparent), var(--kinetic-segment-shadow-soft-x) var(--kinetic-segment-shadow-soft-y) calc(7px + var(--kinetic-mass) * 3px) color-mix(in srgb, var(--kinetic-foreground) 14%, transparent)',
+    '--generated-segment-active-background':
+      'color-mix(in srgb, var(--kinetic-background) 84%, black)',
+    '--generated-segment-active-shadow':
+      'inset 2px 2px calc(4px + var(--kinetic-mass) * 2px) color-mix(in srgb, var(--kinetic-foreground) 28%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent), 1px 1px 0 color-mix(in srgb, var(--kinetic-foreground) 22%, transparent)',
+    '--generated-segment-active-border':
+      'color-mix(in srgb, var(--kinetic-foreground) 28%, transparent)',
+    '--generated-segment-active-color': 'var(--kinetic-foreground)',
+    '--generated-segment-active-weight': '950',
+    '--generated-segment-active-transform':
+      'translate(var(--kinetic-segment-shadow-x), var(--kinetic-segment-shadow-y))',
+    '--generated-segment-press-transform':
+      'translate(var(--kinetic-control-press-x), var(--kinetic-control-press))',
+    '--generated-segment-housing-shadow':
+      'inset 2px 2px calc(5px + var(--kinetic-friction) * 4px) color-mix(in srgb, var(--kinetic-foreground) 22%, transparent), inset -1px -1px 0 color-mix(in srgb, white 32%, transparent)',
+    '--generated-switch-thumb-shadow':
+      'inset 1px 1px 0 var(--kinetic-light-highlight), var(--kinetic-switch-shadow-x) var(--kinetic-switch-shadow-y) calc(5px + var(--kinetic-mass) * 2px) color-mix(in srgb, var(--kinetic-foreground) 24%, transparent)',
+    '--generated-switch-housing-shadow':
+      'inset 2px 2px calc(4px + var(--kinetic-friction) * 3px) color-mix(in srgb, var(--kinetic-foreground) 24%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent)',
     backgroundImage:
       'linear-gradient(90deg, var(--kinetic-grid-line) 1px, transparent 1px), linear-gradient(var(--kinetic-grid-line) 1px, transparent 1px), linear-gradient(145deg, color-mix(in srgb, var(--kinetic-background) 84%, white), var(--kinetic-background))',
     backgroundSize: '96px 96px, 96px 96px, auto',

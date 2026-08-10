@@ -281,6 +281,8 @@ export const workbenchStyles = stylex.create({
     borderRadius: '50%',
     borderStyle: 'solid',
     borderWidth: 1,
+    boxShadow:
+      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), 1px 2px 0 color-mix(in srgb, var(--kinetic-foreground) 26%, transparent)',
     color: 'inherit',
     height: 32,
     width: 32,
@@ -293,11 +295,15 @@ export const workbenchStyles = stylex.create({
     borderStyle: 'solid',
     borderWidth: 1,
     boxShadow:
-      '0 calc(var(--kinetic-travel) * 0.45) 0 color-mix(in srgb, var(--kinetic-foreground) 26%, transparent), 0 calc(var(--kinetic-travel) * 0.75) calc(var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-foreground) 14%, transparent)',
+      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-encoder-shadow-x) var(--kinetic-encoder-shadow-y) 0 color-mix(in srgb, var(--kinetic-foreground) 26%, transparent), var(--kinetic-encoder-shadow-soft-x) var(--kinetic-encoder-shadow-soft-y) calc(var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-foreground) 14%, transparent)',
     height: 112,
     position: 'relative',
-    transition: 'transform var(--kinetic-duration) cubic-bezier(0.2, 1.35, 0.3, 1)',
     width: 112,
+  },
+  encoderRotor: {
+    inset: 0,
+    position: 'absolute',
+    transition: 'transform var(--kinetic-duration) cubic-bezier(0.2, 1.35, 0.3, 1)',
   },
   encoderRotation: (angle: number) => ({ transform: `rotate(${angle}deg)` }),
   encoderMark: {

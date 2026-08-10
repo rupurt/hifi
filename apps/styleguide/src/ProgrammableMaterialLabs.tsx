@@ -322,14 +322,15 @@ export function KineticMaterialLab({
                 >
                   −
                 </button>
-                <div
-                  {...stylexProps(
-                    workbenchStyles.encoder,
-                    workbenchStyles.encoderRotation(encoder * detentAngle),
-                  )}
-                  aria-hidden="true"
-                >
-                  <i {...stylexProps(workbenchStyles.encoderMark)} />
+                <div {...stylexProps(workbenchStyles.encoder)} aria-hidden="true">
+                  <i
+                    {...stylexProps(
+                      workbenchStyles.encoderRotor,
+                      workbenchStyles.encoderRotation(encoder * detentAngle),
+                    )}
+                  >
+                    <i {...stylexProps(workbenchStyles.encoderMark)} />
+                  </i>
                 </div>
                 <button
                   aria-label="Rotate encoder clockwise"

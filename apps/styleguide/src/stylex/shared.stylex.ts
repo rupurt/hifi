@@ -629,7 +629,7 @@ export const sharedStyles = stylex.create({
   themePickerKinetic: {
     borderRadius: 'var(--kinetic-radius)',
     boxShadow:
-      '0 calc(var(--kinetic-travel) * 0.35) 0 color-mix(in srgb, var(--kinetic-foreground) 24%, transparent), 0 calc(var(--kinetic-travel) * 0.7) calc(var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-foreground) 12%, transparent)',
+      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-foreground) 24%, transparent), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-foreground) 12%, transparent)',
     position: 'relative',
     transition:
       'transform var(--kinetic-duration) cubic-bezier(0.2, 1.4, 0.3, 1), box-shadow var(--kinetic-duration) ease',
@@ -646,8 +646,8 @@ export const sharedStyles = stylex.create({
   },
   themePickerKineticActive: {
     boxShadow:
-      'inset 0 2px calc(var(--kinetic-mass) * 3px) color-mix(in srgb, var(--kinetic-foreground) 18%, transparent)',
-    transform: 'translateY(calc(var(--kinetic-travel) * var(--kinetic-actuation)))',
+      'inset 2px 2px calc(var(--kinetic-mass) * 3px) color-mix(in srgb, var(--kinetic-foreground) 18%, transparent), inset -1px -1px 0 color-mix(in srgb, white 22%, transparent)',
+    transform: 'translate(var(--kinetic-control-press-x), var(--kinetic-control-press))',
   },
   themePickerName: {
     display: 'block',

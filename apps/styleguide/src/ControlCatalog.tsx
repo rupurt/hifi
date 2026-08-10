@@ -18,6 +18,7 @@ export function ControlCatalog({
   const [layer, setLayer] = useState<(typeof layers)[number]>('Content')
   const [enabled, setEnabled] = useState(true)
   const [range, setRange] = useState(68)
+  const isKinetic = grammarLabel === 'kinetic'
 
   return (
     <div className={catalogClass('control-catalog')}>
@@ -209,14 +210,42 @@ export function ControlCatalog({
                     Range
                     <output className={className(catalogStyles.fieldHelp)}>{range}%</output>
                   </span>
-                  <input
-                    className={className(catalogStyles.range)}
-                    max="100"
-                    min="0"
-                    onChange={(event) => setRange(event.currentTarget.valueAsNumber)}
-                    type="range"
-                    value={range}
-                  />
+                  {isKinetic ? (
+                    <div
+                      {...stylexProps(
+                        catalogStyles.kineticRangeControl,
+                        catalogStyles.kineticRangeValue(`${range}%`),
+                      )}
+                    >
+                      <input
+                        aria-label="Range"
+                        className={className(catalogStyles.kineticRangeInput)}
+                        max="100"
+                        min="0"
+                        onChange={(event) => setRange(event.currentTarget.valueAsNumber)}
+                        type="range"
+                        value={range}
+                      />
+                      <span
+                        aria-hidden="true"
+                        className={className(catalogStyles.kineticRangeRail)}
+                      >
+                        <i className={className(catalogStyles.kineticRangeFill)} />
+                        <i className={className(catalogStyles.kineticRangeKnob)}>
+                          <i className={className(catalogStyles.kineticRangeKnobMark)} />
+                        </i>
+                      </span>
+                    </div>
+                  ) : (
+                    <input
+                      className={className(catalogStyles.range)}
+                      max="100"
+                      min="0"
+                      onChange={(event) => setRange(event.currentTarget.valueAsNumber)}
+                      type="range"
+                      value={range}
+                    />
+                  )}
                   <small className={className(catalogStyles.fieldHelp)}>
                     Continuous bounded value
                   </small>
@@ -228,19 +257,34 @@ export function ControlCatalog({
                   <legend className={className(catalogStyles.choiceLegend)}>Checkboxes</legend>
                   <label className={className(catalogStyles.choiceLabel)}>
                     <input
-                      className={className(catalogStyles.choiceInput)}
+                      className={className(
+                        catalogStyles.choiceInput,
+                        isKinetic && catalogStyles.kineticChoiceInput,
+                        isKinetic && catalogStyles.kineticCheckbox,
+                      )}
                       defaultChecked
                       type="checkbox"
                     />
                     <span>Show material effects</span>
                   </label>
                   <label className={className(catalogStyles.choiceLabel)}>
-                    <input className={className(catalogStyles.choiceInput)} type="checkbox" />
+                    <input
+                      className={className(
+                        catalogStyles.choiceInput,
+                        isKinetic && catalogStyles.kineticChoiceInput,
+                        isKinetic && catalogStyles.kineticCheckbox,
+                      )}
+                      type="checkbox"
+                    />
                     <span>Increase contrast</span>
                   </label>
                   <label className={className(catalogStyles.choiceLabel)}>
                     <input
-                      className={className(catalogStyles.choiceInput)}
+                      className={className(
+                        catalogStyles.choiceInput,
+                        isKinetic && catalogStyles.kineticChoiceInput,
+                        isKinetic && catalogStyles.kineticCheckbox,
+                      )}
                       disabled
                       type="checkbox"
                     />
@@ -252,7 +296,11 @@ export function ControlCatalog({
                   <legend className={className(catalogStyles.choiceLegend)}>Radio choices</legend>
                   <label className={className(catalogStyles.choiceLabel)}>
                     <input
-                      className={className(catalogStyles.choiceInput)}
+                      className={className(
+                        catalogStyles.choiceInput,
+                        isKinetic && catalogStyles.kineticChoiceInput,
+                        isKinetic && catalogStyles.kineticRadio,
+                      )}
                       defaultChecked
                       name={radioName}
                       type="radio"
@@ -261,7 +309,11 @@ export function ControlCatalog({
                   </label>
                   <label className={className(catalogStyles.choiceLabel)}>
                     <input
-                      className={className(catalogStyles.choiceInput)}
+                      className={className(
+                        catalogStyles.choiceInput,
+                        isKinetic && catalogStyles.kineticChoiceInput,
+                        isKinetic && catalogStyles.kineticRadio,
+                      )}
                       name={radioName}
                       type="radio"
                     />
@@ -269,7 +321,11 @@ export function ControlCatalog({
                   </label>
                   <label className={className(catalogStyles.choiceLabel)}>
                     <input
-                      className={className(catalogStyles.choiceInput)}
+                      className={className(
+                        catalogStyles.choiceInput,
+                        isKinetic && catalogStyles.kineticChoiceInput,
+                        isKinetic && catalogStyles.kineticRadio,
+                      )}
                       name={radioName}
                       type="radio"
                     />
