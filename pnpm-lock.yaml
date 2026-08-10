@@ -95,11 +95,10 @@ importers:
         version: 7.0.2
 
   packages/kinetic:
-    dependencies:
+    devDependencies:
       '@hifi/core':
         specifier: workspace:^
         version: link:../core
-    devDependencies:
       '@types/react':
         specifier: ^19.2.18
         version: 19.2.18

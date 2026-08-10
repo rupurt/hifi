@@ -251,10 +251,11 @@ assert.deepEqual(
       throw new Error(`@hifi/${name} packed an unexpected version`)
     }
 
-    if (
-      name !== 'core' &&
-      installedManifest.dependencies?.['@hifi/core'] !== `^${releaseVersion}`
-    ) {
+    const coreRange =
+      installedManifest.dependencies?.['@hifi/core'] ??
+      installedManifest.peerDependencies?.['@hifi/core']
+
+    if (name !== 'core' && coreRange !== `^${releaseVersion}`) {
       throw new Error(`@hifi/${name} did not pack a coordinated @hifi/core range`)
     }
   }

@@ -39,13 +39,12 @@
     "prepack": "pnpm --filter @hifi/core build && pnpm run build",
     "typecheck": "tsc -p tsconfig.json"
   },
-  "dependencies": {
-    "@hifi/core": "workspace:^"
-  },
   "peerDependencies": {
+    "@hifi/core": "^0.1.0",
     "react": ">=18.2.0 <20"
   },
   "devDependencies": {
+    "@hifi/core": "workspace:^",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "react": "^19.2.8",
