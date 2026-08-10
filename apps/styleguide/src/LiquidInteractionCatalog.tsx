@@ -476,6 +476,16 @@ export function LiquidInteractionCatalog({
                 <legend className={className(sharedStyles.visuallyHidden)}>
                   Composition layer
                 </legend>
+                {!canRender ? (
+                  <span
+                    className={className(
+                      styles.layerIndicator,
+                      layer === 'Content' && styles.layerIndicatorContent,
+                      layer === 'Signal' && styles.layerIndicatorSignal,
+                    )}
+                    aria-hidden="true"
+                  />
+                ) : null}
                 {(['Surface', 'Content', 'Signal'] as const).map((candidate) => {
                   const buttonKey = candidate.toLowerCase() as ButtonKey
 

@@ -17,6 +17,13 @@ export const liquidStyles = stylex.create({
     '--generated-control-muted': 'rgb(231 241 255 / 0.66)',
     '--generated-control-shadow':
       'inset 0 1px 0 rgb(255 255 255 / 0.2), 0 24px 60px rgb(0 0 28 / 0.3)',
+    '--control-backdrop-filter':
+      'blur(var(--generated-liquid-blur, 28px)) saturate(150%)',
+    '--control-danger': '#ff7c99',
+    '--control-interactive-backdrop-filter':
+      'blur(min(var(--generated-liquid-blur, 16px), 16px))',
+    '--control-warning': '#ffd184',
+    '--control-positive': '#70ebc5',
     backgroundColor: '#080d22',
   },
   generatedPage: (values: {

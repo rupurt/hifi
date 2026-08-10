@@ -21,6 +21,7 @@ export const catalogStyles = stylex.create({
     '@media (max-width: 680px)': { gridTemplateColumns: '1fr' },
   },
   surface: {
+    backdropFilter: 'var(--control-backdrop-filter, none)',
     backgroundColor: 'var(--control-surface)',
     borderColor: 'var(--control-border)',
     borderRadius: 'var(--control-radius)',
@@ -68,6 +69,7 @@ export const catalogStyles = stylex.create({
     outlineOffset: { ':focus-visible': 3 },
   },
   button: {
+    backdropFilter: 'var(--control-interactive-backdrop-filter, none)',
     backgroundColor: 'var(--control-surface-strong)',
     backgroundImage:
       'var(--generated-button-background, linear-gradient(180deg, rgb(255 255 255 / 0.1), transparent 36%))',
@@ -123,6 +125,7 @@ export const catalogStyles = stylex.create({
   },
   iconButton: {
     alignItems: 'center',
+    backdropFilter: 'var(--control-interactive-backdrop-filter, none)',
     backgroundColor: 'var(--control-surface-strong)',
     backgroundImage:
       'var(--generated-button-background, radial-gradient(circle at 35% 20%, rgb(255 255 255 / 0.22), transparent 46%))',

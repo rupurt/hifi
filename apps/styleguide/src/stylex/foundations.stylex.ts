@@ -11,6 +11,7 @@ export const foundationStyles = stylex.create({
     '@media (max-width: 680px)': { gridTemplateColumns: '1fr' },
   },
   surface: {
+    backdropFilter: 'var(--control-backdrop-filter, none)',
     backgroundColor: 'var(--control-surface)',
     borderColor: 'var(--control-border)',
     borderRadius: 'var(--control-radius)',
@@ -134,8 +135,8 @@ export const foundationStyles = stylex.create({
     minHeight: 260,
     padding: 18,
   },
-  swatchField: { backgroundColor: 'var(--control-surface)', color: 'var(--guide-ink)' },
-  swatchInk: { backgroundColor: 'var(--guide-ink)', color: 'var(--control-surface)' },
+  swatchField: { backgroundColor: 'var(--control-surface-strong)', color: 'var(--guide-ink)' },
+  swatchInk: { backgroundColor: 'var(--guide-ink)', color: 'var(--control-surface-strong)' },
   swatchAccent: {
     backgroundColor: 'var(--control-accent)',
     color: 'var(--control-accent-contrast)',
@@ -272,6 +273,7 @@ export const foundationStyles = stylex.create({
   },
   iconButton: {
     alignItems: 'center',
+    backdropFilter: 'var(--control-interactive-backdrop-filter, none)',
     backgroundColor: 'var(--control-surface-strong)',
     borderColor: 'var(--control-border)',
     borderRadius: 'var(--control-radius)',
