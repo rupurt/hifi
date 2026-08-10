@@ -1,6 +1,12 @@
 export { type KineticThemeName, kineticGrammar } from './grammar.js'
 export { KineticButton, type KineticButtonProps } from './KineticButton.js'
 export {
+  type KineticDenseTableAlignment,
+  type KineticDenseTableColumn,
+  KineticDenseTable,
+  type KineticDenseTableProps,
+} from './KineticDenseTable.js'
+export {
   getKineticMaterialStyle,
   KineticSurface,
   type KineticSurfaceProps,

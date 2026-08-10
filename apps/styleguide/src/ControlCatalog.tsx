@@ -1,3 +1,8 @@
+import {
+  KineticDenseTable,
+  type KineticDenseTableColumn,
+  type KineticMaterial,
+} from '@hifi/kinetic'
 import { useId, useState } from 'react'
 import { StyleguideSection } from './StyleguideSection'
 import { catalogClass, catalogStyles } from './stylex/catalog.stylex'
@@ -6,13 +11,145 @@ import { className, stylexProps } from './stylex/shared.stylex'
 interface ControlCatalogProps {
   readonly grammarLabel: string
   readonly hideInteractionSections?: boolean
+  readonly kineticMaterial?: KineticMaterial
 }
 
 const layers = ['Surface', 'Content', 'Signal'] as const
 
+interface ReviewRow {
+  readonly bound: string
+  readonly detail: string
+  readonly id: string
+  readonly operation: string
+  readonly rationale: string
+  readonly state: 'ready' | 'review'
+  readonly subject: string
+}
+
+const reviewRows: readonly ReviewRow[] = [
+  {
+    bound: '6 columns · 3 records',
+    detail: 'Native row + column semantics',
+    id: 'alignment-surface',
+    operation: 'VERIFY',
+    rationale: 'Dense evidence remains attached to an explicit subject and heading.',
+    state: 'ready',
+    subject: 'Alignment surface',
+  },
+  {
+    bound: '1040 px minimum',
+    detail: 'One bounded horizontal axis',
+    id: 'viewport-continuity',
+    operation: 'PRESERVE',
+    rationale: 'Narrow viewports scroll the relation instead of changing its meaning.',
+    state: 'review',
+    subject: 'Viewport continuity',
+  },
+  {
+    bound: '0 implied records',
+    detail: 'Full-span declared result',
+    id: 'empty-evidence',
+    operation: 'DECLARE',
+    rationale: 'An empty relation communicates its boundary instead of rendering silence.',
+    state: 'ready',
+    subject: 'Empty evidence',
+  },
+]
+
+function KineticDenseTableSpecimen({ material }: { readonly material?: KineticMaterial }) {
+  const columns: readonly KineticDenseTableColumn<ReviewRow>[] = [
+    {
+      header: 'Rank / subject',
+      id: 'subject',
+      render: (row, index) => (
+        <div className={className(catalogStyles.denseIdentity)}>
+          <span className={className(catalogStyles.denseOrdinal)}>
+            {String(index + 1).padStart(2, '0')}
+          </span>
+          <span className={className(catalogStyles.denseStack)}>
+            <strong>{row.subject}</strong>
+            <code className={className(catalogStyles.denseMeta)}>{row.id}</code>
+          </span>
+        </div>
+      ),
+      rowHeader: true,
+      width: '24%',
+    },
+    {
+      header: 'Recommendation',
+      id: 'operation',
+      render: (row) => (
+        <span className={className(catalogStyles.denseStack)}>
+          <strong>{row.operation}</strong>
+          <small className={className(catalogStyles.denseMeta)}>INTERFACE / STRUCTURE</small>
+        </span>
+      ),
+      width: '16%',
+    },
+    {
+      header: 'Why now',
+      id: 'rationale',
+      render: (row) => <p className={className(catalogStyles.denseReason)}>{row.rationale}</p>,
+      width: '25%',
+    },
+    {
+      header: 'Bounds',
+      id: 'bounds',
+      render: (row) => (
+        <span className={className(catalogStyles.denseStack)}>
+          <strong>{row.bound}</strong>
+          <small className={className(catalogStyles.denseMeta)}>{row.detail}</small>
+        </span>
+      ),
+      width: '17%',
+    },
+    {
+      header: 'Readiness',
+      id: 'state',
+      render: (row) => (
+        <span
+          className={className(
+            catalogStyles.denseState,
+            row.state === 'ready' && catalogStyles.denseStateReady,
+            row.state === 'review' && catalogStyles.denseStateReview,
+          )}
+        >
+          {row.state}
+        </span>
+      ),
+      width: '10%',
+    },
+    {
+      align: 'right',
+      header: 'Action',
+      id: 'action',
+      render: () => (
+        <button className={catalogClass('catalog-table-action')} type="button">
+          Inspect
+        </button>
+      ),
+      width: '8%',
+    },
+  ]
+
+  return (
+    <KineticDenseTable
+      ariaLabel="Interface review queue"
+      className={className(catalogStyles.denseTable)}
+      columns={columns}
+      getRowClassName={() => className(catalogStyles.denseTableRow)}
+      getRowKey={(row) => row.id}
+      material={material}
+      minWidth={1040}
+      rows={reviewRows}
+    />
+  )
+}
+
 export function ControlCatalog({
   grammarLabel,
   hideInteractionSections = false,
+  kineticMaterial,
 }: ControlCatalogProps) {
   const radioName = useId()
   const [layer, setLayer] = useState<(typeof layers)[number]>('Content')
@@ -466,96 +603,100 @@ export function ControlCatalog({
         index="11"
         title="Tables"
       >
-        <section aria-label="Component readiness" className={catalogClass('catalog-table-shell')}>
-          <div className={catalogClass('catalog-table-heading')}>
-            <div>
-              <span className={className(catalogStyles.code, catalogStyles.stackBlock)}>
-                Component inventory
-              </span>
-              <strong className={className(catalogStyles.tableHeadingTitle)}>
-                Grammar readiness
-              </strong>
+        {isKinetic ? (
+          <KineticDenseTableSpecimen material={kineticMaterial} />
+        ) : (
+          <section aria-label="Component readiness" className={catalogClass('catalog-table-shell')}>
+            <div className={catalogClass('catalog-table-heading')}>
+              <div>
+                <span className={className(catalogStyles.code, catalogStyles.stackBlock)}>
+                  Component inventory
+                </span>
+                <strong className={className(catalogStyles.tableHeadingTitle)}>
+                  Grammar readiness
+                </strong>
+              </div>
+              <button className={catalogClass('catalog-button')} type="button">
+                Filter
+              </button>
             </div>
-            <button className={catalogClass('catalog-button')} type="button">
-              Filter
-            </button>
-          </div>
-          <table className={catalogClass('catalog-table')}>
-            <thead>
-              <tr>
-                {['Primitive', 'Family', 'Theme coverage', 'State', 'Action'].map((heading) => (
+            <table className={catalogClass('catalog-table')}>
+              <thead>
+                <tr>
+                  {['Primitive', 'Family', 'Theme coverage', 'State', 'Action'].map((heading) => (
+                    <th
+                      className={className(catalogStyles.tableCell, catalogStyles.tableHead)}
+                      key={heading}
+                      scope="col"
+                    >
+                      {heading}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                <tr className={className(catalogStyles.tableRow)}>
                   <th
-                    className={className(catalogStyles.tableCell, catalogStyles.tableHead)}
-                    key={heading}
-                    scope="col"
+                    className={className(catalogStyles.tableCell, catalogStyles.tableRowHead)}
+                    scope="row"
                   >
-                    {heading}
+                    Button
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              <tr className={className(catalogStyles.tableRow)}>
-                <th
-                  className={className(catalogStyles.tableCell, catalogStyles.tableRowHead)}
-                  scope="row"
-                >
-                  Button
-                </th>
-                <td className={className(catalogStyles.tableCell)}>Command</td>
-                <td className={className(catalogStyles.tableCell)}>4 / 4</td>
-                <td className={className(catalogStyles.tableCell)}>
-                  <span className={catalogClass('catalog-badge', 'catalog-badge-positive')}>
-                    Ready
-                  </span>
-                </td>
-                <td className={className(catalogStyles.tableCell)}>
-                  <button className={catalogClass('catalog-table-action')} type="button">
-                    Inspect
-                  </button>
-                </td>
-              </tr>
-              <tr className={className(catalogStyles.tableRow)}>
-                <th
-                  className={className(catalogStyles.tableCell, catalogStyles.tableRowHead)}
-                  scope="row"
-                >
-                  Text input
-                </th>
-                <td className={className(catalogStyles.tableCell)}>Field</td>
-                <td className={className(catalogStyles.tableCell)}>4 / 4</td>
-                <td className={className(catalogStyles.tableCell)}>
-                  <span className={catalogClass('catalog-badge', 'catalog-badge-warning')}>
-                    Review
-                  </span>
-                </td>
-                <td className={className(catalogStyles.tableCell)}>
-                  <button className={catalogClass('catalog-table-action')} type="button">
-                    Compare
-                  </button>
-                </td>
-              </tr>
-              <tr className={className(catalogStyles.tableRow)}>
-                <th
-                  className={className(catalogStyles.tableCell, catalogStyles.tableRowHead)}
-                  scope="row"
-                >
-                  Data table
-                </th>
-                <td className={className(catalogStyles.tableCell)}>Structure</td>
-                <td className={className(catalogStyles.tableCell)}>2 / 4</td>
-                <td className={className(catalogStyles.tableCell)}>
-                  <span className={catalogClass('catalog-badge')}>Draft</span>
-                </td>
-                <td className={className(catalogStyles.tableCell)}>
-                  <button className={catalogClass('catalog-table-action')} type="button">
-                    Continue
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
+                  <td className={className(catalogStyles.tableCell)}>Command</td>
+                  <td className={className(catalogStyles.tableCell)}>4 / 4</td>
+                  <td className={className(catalogStyles.tableCell)}>
+                    <span className={catalogClass('catalog-badge', 'catalog-badge-positive')}>
+                      Ready
+                    </span>
+                  </td>
+                  <td className={className(catalogStyles.tableCell)}>
+                    <button className={catalogClass('catalog-table-action')} type="button">
+                      Inspect
+                    </button>
+                  </td>
+                </tr>
+                <tr className={className(catalogStyles.tableRow)}>
+                  <th
+                    className={className(catalogStyles.tableCell, catalogStyles.tableRowHead)}
+                    scope="row"
+                  >
+                    Text input
+                  </th>
+                  <td className={className(catalogStyles.tableCell)}>Field</td>
+                  <td className={className(catalogStyles.tableCell)}>4 / 4</td>
+                  <td className={className(catalogStyles.tableCell)}>
+                    <span className={catalogClass('catalog-badge', 'catalog-badge-warning')}>
+                      Review
+                    </span>
+                  </td>
+                  <td className={className(catalogStyles.tableCell)}>
+                    <button className={catalogClass('catalog-table-action')} type="button">
+                      Compare
+                    </button>
+                  </td>
+                </tr>
+                <tr className={className(catalogStyles.tableRow)}>
+                  <th
+                    className={className(catalogStyles.tableCell, catalogStyles.tableRowHead)}
+                    scope="row"
+                  >
+                    Data table
+                  </th>
+                  <td className={className(catalogStyles.tableCell)}>Structure</td>
+                  <td className={className(catalogStyles.tableCell)}>2 / 4</td>
+                  <td className={className(catalogStyles.tableCell)}>
+                    <span className={catalogClass('catalog-badge')}>Draft</span>
+                  </td>
+                  <td className={className(catalogStyles.tableCell)}>
+                    <button className={catalogClass('catalog-table-action')} type="button">
+                      Continue
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        )}
       </StyleguideSection>
 
       <StyleguideSection

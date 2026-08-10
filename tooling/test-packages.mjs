@@ -113,7 +113,12 @@ try {
 
   await writeFile(
     join(consumerDirectory, 'src/main.tsx'),
-    `import { KineticButton, KineticSurface, kineticThemeMaterials } from '@hifi/kinetic'
+    `import {
+  KineticButton,
+  KineticDenseTable,
+  KineticSurface,
+  kineticThemeMaterials,
+} from '@hifi/kinetic'
 import { LiquidSurface, liquidThemeMaterials } from '@hifi/liquid'
 import { PrintSurface, printThemeMaterials } from '@hifi/print'
 import { SignalSurface, signalThemeMaterials } from '@hifi/signal'
@@ -133,6 +138,19 @@ createRoot(root).render(
     <KineticSurface material={kineticThemeMaterials.precision}>
       <KineticButton material={kineticThemeMaterials.precision}>Kinetic</KineticButton>
     </KineticSurface>
+    <KineticDenseTable
+      ariaLabel="Package evidence"
+      columns={[
+        {
+          header: 'Subject',
+          id: 'subject',
+          render: (row) => row.id,
+          rowHeader: true,
+        },
+      ]}
+      getRowKey={(row) => row.id}
+      rows={[{ id: 'packed-consumer' }]}
+    />
   </main>,
 )
 `,
@@ -144,6 +162,7 @@ createRoot(root).render(
 import { defineGrammar } from '@hifi/core'
 import {
   KineticButton,
+  KineticDenseTable,
   KineticSurface,
   kineticThemeMaterials,
   parseKineticMaterial,
@@ -186,6 +205,7 @@ assert.equal(typeof PrintSurface, 'function')
 assert.equal(typeof SignalSurface, 'function')
 assert.equal(typeof KineticSurface, 'function')
 assert.equal(typeof KineticButton, 'function')
+assert.equal(typeof KineticDenseTable, 'function')
 assert.equal(liquidGrammarEntry.name, 'liquid')
 assert.equal(textureGrammarEntry.name, 'texture')
 assert.equal(printGrammarEntry.name, 'print')

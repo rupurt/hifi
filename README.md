@@ -80,7 +80,7 @@ The independently consumable packages are:
 | `@hifi/texture` | Tactile substrate and pattern surfaces | React 18.2–19 |
 | `@hifi/print` | Editorial composition and print surfaces | React 18.2–19 |
 | `@hifi/signal` | Emissive traces, analytical fields, and optional audio monitoring | React 18.2–19 |
-| `@hifi/kinetic` | Physical surfaces and controls driven by a response model | React 18.2–19 |
+| `@hifi/kinetic` | Physical surfaces, controls, and dense analytical tables driven by a response model | React 18.2–19 |
 
 All packages are ESM-only, support Node.js 20 or newer, publish TypeScript declarations, and expose versioned material parsers and serializers. Their package-level READMEs document the public entry points and basic use.
 

@@ -47,13 +47,16 @@ export function getKineticMaterialStyle(material: KineticMaterial): CSSPropertie
   const pressX = Math.max(0.5, press * 0.42)
 
   return {
+    '--kinetic-accent': material.accentColor,
     '--kinetic-actuation': material.actuation,
+    '--kinetic-background': material.backgroundColor,
     '--kinetic-control-press': `${press}px`,
     '--kinetic-control-press-x': `${pressX}px`,
     '--kinetic-damping': material.damping,
     '--kinetic-detents': material.detents,
     '--kinetic-edge-shadow': `color-mix(in srgb, ${material.foregroundColor} 20%, transparent)`,
     '--kinetic-friction': material.friction,
+    '--kinetic-foreground': material.foregroundColor,
     '--kinetic-hard-shadow': `color-mix(in srgb, ${material.foregroundColor} 34%, transparent)`,
     '--kinetic-light-highlight': 'color-mix(in srgb, white 56%, transparent)',
     '--kinetic-mass': material.mass,
