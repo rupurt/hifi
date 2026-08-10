@@ -86,7 +86,9 @@ All packages are ESM-only, support Node.js 20 or newer, publish TypeScript decla
 
 ## Styleguide
 
-The sample application is both a development harness and the living specification for the packages. It uses [TanStack Router](https://tanstack.com/router) and builds to static assets in `apps/styleguide/dist`.
+The sample application is both a development harness and the living specification for the packages. It uses [TanStack Router](https://tanstack.com/router), [StyleX](https://stylexjs.com/) for all authored application styles, and builds to static assets in `apps/styleguide/dist`.
+
+Style definitions live beside the components they describe in `apps/styleguide/src/stylex/*.stylex.ts`. The official StyleX Vite integration compiles them into a single atomic CSS asset in development and production; the repository does not maintain handwritten `.css` files. Runtime material values remain programmable data expressed through typed custom properties, while structural and stateful rules are composed with StyleX.
 
 Each grammar owns an explicit route component, its own art direction, and its own theme-responsive control treatment. The routes share a fourteen-section specimen contract—material, typography, color, spacing, layout, icons, buttons, forms, badges, cards, tables, lists, feedback, and composition—so the same interface vocabulary can be compared without forcing every grammar into the same page design.
 

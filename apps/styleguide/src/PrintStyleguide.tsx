@@ -7,14 +7,15 @@ import {
   printThemeMaterials,
 } from '@hifi/print'
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { type CSSProperties, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ControlCatalog } from './ControlCatalog'
 import { FoundationCatalog } from './FoundationCatalog'
 import { PrintMaterialLab } from './ProgrammableMaterialLabs'
 import { StyleguideNav } from './StyleguideNav'
 import { StyleguideSection } from './StyleguideSection'
 import { ThemePicker } from './ThemePicker'
-import './styles/print.css'
+import { printStyles } from './stylex/print.stylex'
+import { className, sharedStyles, stylexProps } from './stylex/shared.stylex'
 
 export function PrintStyleguide() {
   const { theme } = useSearch({ from: '/styleguide/print' })
@@ -29,68 +30,63 @@ export function PrintStyleguide() {
   const materialStyle = getPrintMaterialStyle(material)
   const controlShadow = `${material.shadowOffset}px ${material.shadowOffset}px 0 color-mix(in srgb, ${material.inkColor} 16%, transparent)`
   const controlSurface = `color-mix(in srgb, ${material.paperColor} 78%, transparent)`
-  const pageStyle = {
-    ...materialStyle,
-    '--control-accent': material.accentColor,
-    '--control-accent-contrast': material.paperColor,
-    '--control-border': material.inkColor,
-    '--control-shadow': controlShadow,
-    '--control-surface': controlSurface,
-    '--control-surface-strong': material.paperColor,
-    '--generated-control-accent': material.accentColor,
-    '--generated-control-accent-contrast': material.paperColor,
-    '--generated-control-border': material.inkColor,
-    '--generated-control-shadow': controlShadow,
-    '--generated-control-surface': controlSurface,
-    '--generated-control-surface-strong': material.paperColor,
-    '--generated-control-text': material.inkColor,
-    '--guide-display': materialStyle.fontFamily,
-    '--guide-font': materialStyle.fontFamily,
-    '--guide-ink': material.inkColor,
-    '--guide-line': material.inkColor,
-    '--guide-muted': `color-mix(in srgb, ${material.inkColor} 68%, transparent)`,
-    '--print-accent': material.accentColor,
-    '--print-heavy-rule': `${Math.max(3, material.ruleWeight * 3)}px`,
-    '--print-rule': `${Math.max(1, material.ruleWeight)}px`,
-    textTransform: material.uppercase ? 'uppercase' : undefined,
-  } as CSSProperties
+  const pageStyle = printStyles.generatedPage({
+    accent: material.accentColor,
+    backgroundColor: material.paperColor,
+    backgroundImage: materialStyle.backgroundImage,
+    backgroundSize:
+      materialStyle.backgroundSize === undefined ? undefined : String(materialStyle.backgroundSize),
+    controlShadow,
+    controlSurface,
+    fontFamily: String(materialStyle.fontFamily),
+    heavyRule: `${Math.max(3, material.ruleWeight * 3)}px`,
+    ink: material.inkColor,
+    rule: `${Math.max(1, material.ruleWeight)}px`,
+    textTransform: material.uppercase ? 'uppercase' : 'none',
+  })
 
   return (
     <main
-      className="grammar-page print-page"
+      {...stylexProps(sharedStyles.grammarPage, printStyles.page, pageStyle)}
       data-generated-theme="true"
       data-theme={selectedTheme.name}
-      style={pageStyle}
     >
-      <header className="print-masthead">
-        <div className="print-edition-line">
+      <header className={className(printStyles.masthead)}>
+        <div className={className(printStyles.editionLine)}>
           <span>Hifi specimen journal</span>
           <span>Vol. 01 / No. 003</span>
           <span>08 August 2026</span>
         </div>
-        <div className="print-nameplate">
-          <p className="grammar-kicker">03 / Editorial grammar</p>
-          <h1>PRINT</h1>
-          <p>Hierarchy you can scan. Rhythm you can trust.</p>
+        <div className={className(printStyles.nameplate)}>
+          <p className={className(sharedStyles.grammarKicker, printStyles.nameplateKicker)}>
+            03 / Editorial grammar
+          </p>
+          <h1 className={className(printStyles.nameplateTitle)}>PRINT</h1>
+          <p className={className(printStyles.nameplateTagline)}>
+            Hierarchy you can scan. Rhythm you can trust.
+          </p>
         </div>
       </header>
 
-      <section className="print-lede">
-        <div className="print-lede-copy">
-          <span className="print-dropcap">P</span>
+      <section className={className(printStyles.lede)}>
+        <div className={className(printStyles.ledeCopy)}>
+          <span className={className(printStyles.dropcap)}>P</span>
           <p>
             rint turns interface hierarchy into an editorial act. Rules, columns, scale, ink, and
             whitespace make every control part of a deliberate reading sequence.
           </p>
-          <a className="grammar-jump-link" href="#buttons-heading">
-            Read the specimens <span aria-hidden="true">↓</span>
+          <a className={className(sharedStyles.grammarJumpLink)} href="#buttons-heading">
+            Read the specimens{' '}
+            <span aria-hidden="true" className={className(sharedStyles.grammarJumpGlyph)}>
+              ↓
+            </span>
           </a>
         </div>
-        <PrintSurface className="print-cover" material={material}>
-          <div className="print-cover-copy">
-            <span>Special material issue</span>
-            <strong>{material.name}</strong>
-            <p>{selectedTheme.description}</p>
+        <PrintSurface className={className(printStyles.cover)} material={material}>
+          <div className={className(printStyles.coverCopy)}>
+            <span className={className(printStyles.coverMeta)}>Special material issue</span>
+            <strong className={className(printStyles.coverTitle)}>{material.name}</strong>
+            <p className={className(printStyles.coverDescription)}>{selectedTheme.description}</p>
           </div>
         </PrintSurface>
       </section>
@@ -104,6 +100,7 @@ export function PrintStyleguide() {
         title="Compose an editorial theme"
       >
         <ThemePicker
+          grammar="print"
           label="Starting edition"
           onChange={(name) => {
             void navigate({ replace: true, search: { theme: name } })

@@ -13,14 +13,16 @@
     "@hifi/kinetic": "workspace:*",
     "@hifi/liquid": "workspace:*",
     "@hifi/print": "workspace:*",
-    "@hifi/texture": "workspace:*",
     "@hifi/signal": "workspace:*",
+    "@hifi/texture": "workspace:*",
     "@liquid-dom/react": "^0.1.1",
+    "@stylexjs/stylex": "^0.19.0",
     "@tanstack/react-router": "^1.170.23",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@stylexjs/unplugin": "^0.19.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.5",

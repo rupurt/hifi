@@ -12,22 +12,39 @@ import { LiquidStyleguide } from './LiquidStyleguide'
 import { PrintStyleguide } from './PrintStyleguide'
 import { SignalStyleguide } from './SignalStyleguide'
 import { TextureStyleguide } from './TextureStyleguide'
+import { className, globalStyles, sharedStyles } from './stylex/shared.stylex'
 
 function RootLayout() {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
   const activeGrammar = grammarNames.find((grammar) => pathname === `/styleguide/${grammar}`)
 
   return (
-    <div className={`site-shell${activeGrammar ? ` site-shell-${activeGrammar}` : ''}`}>
-      <header className="site-header">
-        <Link className="wordmark" to="/">
+    <div className={className(sharedStyles.siteShell)}>
+      <header className={className(sharedStyles.siteHeader, headerStyle(activeGrammar))}>
+        <Link
+          className={className(
+            sharedStyles.wordmark,
+            activeGrammar === 'print' && sharedStyles.wordmarkPrint,
+            (activeGrammar === 'signal' || activeGrammar === 'kinetic') &&
+              sharedStyles.wordmarkInstrument,
+          )}
+          to="/"
+        >
           hifi
         </Link>
-        <nav aria-label="Grammar styleguides" className="site-nav">
+        <nav aria-label="Grammar styleguides" className={className(sharedStyles.siteNav)}>
           {grammarNames.map((grammar) => (
             <Link
-              activeProps={{ 'aria-current': 'page', className: 'nav-link nav-link-active' }}
-              className="nav-link"
+              activeProps={{
+                'aria-current': 'page',
+                className: className(
+                  sharedStyles.navLink,
+                  navStyle(activeGrammar),
+                  sharedStyles.navLinkActive,
+                  activeNavStyle(activeGrammar),
+                ),
+              }}
+              className={className(sharedStyles.navLink, navStyle(activeGrammar))}
               key={grammar}
               search={{ theme: undefined }}
               to={`/styleguide/${grammar}`}
@@ -45,35 +62,46 @@ function RootLayout() {
 function LandingPage() {
   return (
     <main>
-      <section className="hero">
-        <p className="eyebrow">Interface material studies</p>
-        <h1>High-fidelity design grammars</h1>
-        <p className="hero-copy">
+      <section className={className(sharedStyles.landingContainer, sharedStyles.landingHero)}>
+        <p className={className(sharedStyles.eyebrow)}>Interface material studies</p>
+        <h1 className={className(sharedStyles.landingTitle)}>High-fidelity design grammars</h1>
+        <p className={className(sharedStyles.landingCopy)}>
           hifi packages coherent visual languages as typed React libraries. Explore the material,
           themes, components, and behavior of each grammar.
         </p>
       </section>
 
-      <section aria-labelledby="grammar-heading" className="grammar-index">
-        <div className="section-heading">
-          <p className="eyebrow">The collection</p>
-          <h2 id="grammar-heading">Five material systems</h2>
+      <section
+        aria-labelledby="grammar-heading"
+        className={className(sharedStyles.landingContainer, sharedStyles.grammarIndex)}
+      >
+        <div className={className(sharedStyles.sectionHeading)}>
+          <p className={className(sharedStyles.eyebrow)}>The collection</p>
+          <h2 className={className(sharedStyles.sectionHeadingTitle)} id="grammar-heading">
+            Five material systems
+          </h2>
         </div>
-        <div className="grammar-grid">
+        <div className={className(sharedStyles.grammarGrid)}>
           {grammarNames.map((grammar) => {
             const definition = grammarRegistry[grammar]
 
             return (
               <Link
-                className={`grammar-card grammar-card-${grammar}`}
+                className={className(
+                  sharedStyles.grammarCard,
+                  grammar === 'liquid' || grammar === 'texture' || grammar === 'print'
+                    ? sharedStyles.grammarCardThird
+                    : sharedStyles.grammarCardHalf,
+                  grammarCardStyle(grammar),
+                )}
                 key={grammar}
                 search={{ theme: undefined }}
                 to={`/styleguide/${grammar}`}
               >
-                <span className="grammar-status">{definition.status}</span>
-                <h3>{definition.label}</h3>
-                <p>{definition.description}</p>
-                <span className="card-action">Open styleguide →</span>
+                <span className={className(sharedStyles.eyebrow)}>{definition.status}</span>
+                <h3 className={className(sharedStyles.grammarCardTitle)}>{definition.label}</h3>
+                <p className={className(sharedStyles.grammarCardCopy)}>{definition.description}</p>
+                <span className={className(sharedStyles.cardAction)}>Open styleguide →</span>
               </Link>
             )
           })}
@@ -86,13 +114,81 @@ function LandingPage() {
 const rootRoute = createRootRoute({
   component: RootLayout,
   notFoundComponent: () => (
-    <main className="not-found">
-      <p className="eyebrow">404</p>
-      <h1>That surface does not exist.</h1>
-      <Link to="/">Return to the grammar index</Link>
+    <main className={className(sharedStyles.landingContainer, sharedStyles.notFound)}>
+      <p className={className(sharedStyles.eyebrow)}>404</p>
+      <h1 className={className(sharedStyles.notFoundTitle)}>That surface does not exist.</h1>
+      <Link className={className(globalStyles.link)} to="/">
+        Return to the grammar index
+      </Link>
     </main>
   ),
 })
+
+function headerStyle(grammar: (typeof grammarNames)[number] | undefined) {
+  switch (grammar) {
+    case 'liquid':
+      return sharedStyles.headerLiquid
+    case 'texture':
+      return sharedStyles.headerTexture
+    case 'print':
+      return sharedStyles.headerPrint
+    case 'signal':
+      return sharedStyles.headerSignal
+    case 'kinetic':
+      return sharedStyles.headerKinetic
+    default:
+      return undefined
+  }
+}
+
+function navStyle(grammar: (typeof grammarNames)[number] | undefined) {
+  switch (grammar) {
+    case 'liquid':
+      return sharedStyles.navLiquid
+    case 'texture':
+      return sharedStyles.navTexture
+    case 'print':
+      return sharedStyles.navPrint
+    case 'signal':
+      return sharedStyles.navSignal
+    case 'kinetic':
+      return sharedStyles.navKinetic
+    default:
+      return undefined
+  }
+}
+
+function activeNavStyle(grammar: (typeof grammarNames)[number] | undefined) {
+  switch (grammar) {
+    case 'liquid':
+      return sharedStyles.navLiquidActive
+    case 'texture':
+      return sharedStyles.navTextureActive
+    case 'print':
+      return sharedStyles.navPrintActive
+    case 'signal':
+      return sharedStyles.navSignalActive
+    case 'kinetic':
+      return sharedStyles.navKineticActive
+    default:
+      return undefined
+  }
+}
+
+function grammarCardStyle(grammar: (typeof grammarNames)[number]) {
+  switch (grammar) {
+    case 'liquid':
+      return sharedStyles.cardLiquid
+    case 'texture':
+      return sharedStyles.cardTexture
+    case 'print':
+      return sharedStyles.cardPrint
+    case 'signal':
+      return sharedStyles.cardSignal
+    case 'kinetic':
+      return sharedStyles.cardKinetic
+  }
+}
 
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,

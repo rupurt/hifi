@@ -1,3 +1,5 @@
+import { className, sharedStyles } from './stylex/shared.stylex'
+
 export const grammarSections = [
   { id: 'material-heading', label: 'Material', group: 'Foundations' },
   { id: 'typography-heading', label: 'Typography', group: 'Foundations' },
@@ -19,19 +21,25 @@ const groups = ['Foundations', 'Controls', 'Structures'] as const
 
 export function StyleguideNav() {
   return (
-    <nav aria-label="Styleguide sections" className="grammar-section-nav">
-      <div className="grammar-section-nav-summary">
-        <span>Index</span>
-        <strong>{grammarSections.length} sections</strong>
+    <nav aria-label="Styleguide sections" className={className(sharedStyles.sectionNav)}>
+      <div className={className(sharedStyles.sectionNavSummary)}>
+        <span className={className(sharedStyles.sectionNavMeta)}>Index</span>
+        <strong className={className(sharedStyles.sectionNavTitle)}>
+          {grammarSections.length} sections
+        </strong>
       </div>
       {groups.map((group) => (
-        <div className="grammar-section-nav-group" key={group}>
-          <span>{group}</span>
-          <div>
+        <div key={group}>
+          <span className={className(sharedStyles.sectionNavMeta)}>{group}</span>
+          <div className={className(sharedStyles.sectionNavLinks)}>
             {grammarSections
               .filter((section) => section.group === group)
               .map((section) => (
-                <a href={`#${section.id}`} key={section.id}>
+                <a
+                  className={className(sharedStyles.sectionNavLink)}
+                  href={`#${section.id}`}
+                  key={section.id}
+                >
                   {section.label}
                 </a>
               ))}

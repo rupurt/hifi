@@ -1,0 +1,240 @@
+import * as stylex from '@stylexjs/stylex'
+
+const pageScan = stylex.keyframes({
+  from: { transform: 'translateY(-60px)' },
+  to: { transform: 'translateY(60px)' },
+})
+const radarSpin = stylex.keyframes({ to: { transform: 'rotate(360deg)' } })
+const targetPulse = stylex.keyframes({ from: { opacity: 0.25 }, to: { opacity: 1 } })
+
+export const signalStyles = stylex.create({
+  page: {
+    '--guide-display': '"Arial Narrow", "Roboto Condensed", ui-sans-serif, sans-serif',
+    '--guide-font': 'Inter, ui-sans-serif, sans-serif',
+    '--guide-mono': '"SFMono-Regular", Consolas, monospace',
+    backgroundColor: 'var(--signal-background)',
+    backgroundImage:
+      'repeating-linear-gradient(0deg, transparent 0 3px, rgb(255 255 255 / 0.012) 3px 4px), linear-gradient(var(--guide-line) 1px, transparent 1px), linear-gradient(90deg, var(--guide-line) 1px, transparent 1px)',
+    backgroundSize:
+      'auto, calc(var(--signal-grid) * 4) calc(var(--signal-grid) * 4), calc(var(--signal-grid) * 4) calc(var(--signal-grid) * 4)',
+    '::before': {
+      animationName: { default: pageScan, '@media (prefers-reduced-motion: reduce)': 'none' },
+      animationDuration: 'var(--signal-rate)',
+      animationIterationCount: 'infinite',
+      animationTimingFunction: 'linear',
+      backgroundImage: 'linear-gradient(90deg, transparent, var(--signal-emission), transparent)',
+      content: '""',
+      height: 1,
+      left: 0,
+      opacity: 0.35,
+      pointerEvents: 'none',
+      position: 'absolute',
+      right: 0,
+      top: '28vh',
+    },
+  },
+  generatedPage: (values: {
+    readonly background: string
+    readonly backgroundImage: string | undefined
+    readonly backgroundSize: string | undefined
+    readonly bloom: string
+    readonly boxShadow: string | undefined
+    readonly decay: string
+    readonly emission: string
+    readonly focus: number
+    readonly grid: string
+    readonly intensity: number
+    readonly noise: number
+    readonly rate: string
+    readonly secondary: string
+    readonly textShadow: string | undefined
+    readonly trace: string
+  }) => ({
+    '--control-accent': values.emission,
+    '--control-accent-contrast': values.background,
+    '--control-border': `color-mix(in srgb, ${values.emission} 30%, transparent)`,
+    '--control-radius': '2px',
+    '--control-shadow': `0 0 calc(${values.bloom} * 0.5) color-mix(in srgb, ${values.emission} 14%, transparent)`,
+    '--control-surface': `color-mix(in srgb, ${values.background} 88%, ${values.emission})`,
+    '--control-surface-strong': values.background,
+    '--generated-control-accent': values.emission,
+    '--generated-control-accent-contrast': values.background,
+    '--generated-control-border': `color-mix(in srgb, ${values.emission} 28%, transparent)`,
+    '--generated-control-muted': `color-mix(in srgb, ${values.secondary} 58%, transparent)`,
+    '--generated-control-shadow': `0 0 calc(${values.bloom} * 0.45) color-mix(in srgb, ${values.emission} 13%, transparent)`,
+    '--generated-control-surface': `color-mix(in srgb, ${values.background} 92%, ${values.emission})`,
+    '--generated-control-surface-strong': values.background,
+    '--generated-control-text': values.secondary,
+    '--guide-ink': values.secondary,
+    '--guide-line': `color-mix(in srgb, ${values.emission} 29%, transparent)`,
+    '--guide-muted': `color-mix(in srgb, ${values.secondary} 62%, transparent)`,
+    '--signal-background': values.background,
+    '--signal-bloom': values.bloom,
+    '--signal-decay': values.decay,
+    '--signal-emission': values.emission,
+    '--signal-focus': values.focus,
+    '--signal-grid': values.grid,
+    '--signal-intensity': values.intensity,
+    '--signal-noise': values.noise,
+    '--signal-rate': values.rate,
+    '--signal-secondary': values.secondary,
+    '--signal-trace': values.trace,
+    '--signal-trace-width': values.trace,
+    backgroundColor: values.background,
+    backgroundImage: values.backgroundImage,
+    backgroundSize: values.backgroundSize,
+    boxShadow: values.boxShadow,
+    color: values.secondary,
+    textShadow: values.textShadow,
+  }),
+  hero: {
+    display: 'grid',
+    gap: 'clamp(34px, 6vw, 100px)',
+    gridTemplateColumns: 'minmax(0, 0.82fr) minmax(460px, 1.18fr)',
+    minHeight: 'min(900px, calc(100vh - 72px))',
+    paddingBlock: 'clamp(65px, 8vw, 115px)',
+    '@media (max-width: 980px)': { gridTemplateColumns: '1fr' },
+  },
+  heroCopy: { alignSelf: 'center', position: 'relative', zIndex: 2 },
+  heroTitle: {
+    color: 'var(--signal-secondary)',
+    fontFamily: 'var(--guide-display)',
+    fontSize: 'clamp(4.2rem, 8vw, 9rem)',
+    fontStretch: 'condensed',
+    fontWeight: 900,
+    letterSpacing: '-0.075em',
+    lineHeight: 0.75,
+    margin: 0,
+    textShadow: '0 0 calc(var(--signal-bloom) * 0.5) var(--signal-emission)',
+    '@media (max-width: 600px)': { fontSize: 'clamp(3.4rem, 18vw, 5rem)' },
+  },
+  heroTitleTrace: {
+    color: 'transparent',
+    display: 'block',
+    fontSize: '0.59em',
+    letterSpacing: '0.025em',
+    marginTop: '0.28em',
+    WebkitTextStrokeColor: 'var(--signal-emission)',
+    WebkitTextStrokeWidth: 'var(--signal-trace-width)',
+  },
+  capabilities: {
+    borderLeftColor: 'var(--guide-line)',
+    borderLeftStyle: 'solid',
+    borderLeftWidth: 1,
+    display: 'grid',
+    gap: 7,
+    listStyle: 'none',
+    marginTop: 42,
+    paddingLeft: 16,
+  },
+  capability: {
+    fontFamily: 'var(--guide-mono)',
+    fontSize: '0.6rem',
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    '::before': {
+      color: 'var(--signal-emission)',
+      content: '"●"',
+      marginRight: 10,
+      textShadow: '0 0 var(--signal-bloom) var(--signal-emission)',
+    },
+  },
+  instrument: {
+    isolation: 'isolate',
+    minHeight: 650,
+    padding: 'clamp(28px, 4vw, 60px)',
+    '@media (max-width: 980px)': { minHeight: 570 },
+  },
+  radar: {
+    aspectRatio: '1',
+    borderColor: 'var(--guide-line)',
+    borderRadius: '50%',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    position: 'relative',
+    width: 'min(82%, 460px)',
+  },
+  radarRing: {
+    borderColor: 'var(--guide-line)',
+    borderRadius: '50%',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    inset: '18%',
+    position: 'absolute',
+  },
+  radarRingInner: { inset: '36%' },
+  radarHorizontal: {
+    borderTopColor: 'var(--guide-line)',
+    borderTopStyle: 'solid',
+    borderTopWidth: 1,
+    left: 0,
+    position: 'absolute',
+    right: 0,
+    top: '50%',
+  },
+  radarVertical: {
+    borderLeftColor: 'var(--guide-line)',
+    borderLeftStyle: 'solid',
+    borderLeftWidth: 1,
+    bottom: 0,
+    left: '50%',
+    position: 'absolute',
+    top: 0,
+  },
+  radarSweep: {
+    animationName: { default: radarSpin, '@media (prefers-reduced-motion: reduce)': 'none' },
+    animationDuration: 'calc(var(--signal-rate) * 3)',
+    animationIterationCount: 'infinite',
+    animationTimingFunction: 'linear',
+    backgroundImage: 'conic-gradient(from 20deg, transparent 0 74%, var(--signal-emission))',
+    borderRadius: '50%',
+    inset: '2%',
+    opacity: 0.35,
+    position: 'absolute',
+  },
+  radarTarget: {
+    animationDirection: 'alternate',
+    animationDuration: 'var(--signal-decay)',
+    animationIterationCount: 'infinite',
+    animationName: { default: targetPulse, '@media (prefers-reduced-motion: reduce)': 'none' },
+    animationTimingFunction: 'ease-in-out',
+    backgroundColor: 'var(--signal-emission)',
+    borderRadius: '50%',
+    boxShadow: '0 0 calc(var(--signal-bloom) * 1.4) var(--signal-emission)',
+    height: 7,
+    left: '72%',
+    position: 'absolute',
+    top: '31%',
+    width: 7,
+  },
+  readout: {
+    display: 'grid',
+    left: '50%',
+    position: 'absolute',
+    top: '50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  meta: {
+    fontFamily: 'var(--guide-mono)',
+    fontSize: '0.6rem',
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+  },
+  readoutValue: {
+    color: 'var(--signal-emission)',
+    fontFamily: 'var(--guide-mono)',
+    fontSize: 'clamp(3rem, 7vw, 6.5rem)',
+    fontWeight: 400,
+    letterSpacing: '-0.09em',
+    lineHeight: 1,
+    textShadow: '0 0 var(--signal-bloom) var(--signal-emission)',
+  },
+  heroFooter: {
+    bottom: 25,
+    display: 'flex',
+    justifyContent: 'space-between',
+    left: 28,
+    position: 'absolute',
+    right: 28,
+  },
+})

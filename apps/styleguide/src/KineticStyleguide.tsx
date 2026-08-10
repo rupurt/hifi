@@ -7,14 +7,15 @@ import {
   kineticThemeMaterials,
 } from '@hifi/kinetic'
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { type CSSProperties, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ControlCatalog } from './ControlCatalog'
 import { FoundationCatalog } from './FoundationCatalog'
 import { KineticMaterialLab } from './ProgrammableMaterialLabs'
 import { StyleguideNav } from './StyleguideNav'
 import { StyleguideSection } from './StyleguideSection'
 import { ThemePicker } from './ThemePicker'
-import './styles/kinetic.css'
+import { kineticStyles } from './stylex/kinetic.stylex'
+import { className, sharedStyles, stylexProps } from './stylex/shared.stylex'
 
 const MACHINE_RAIL_TICKS = ['0', '1', '2', '3', '4', '5', '6', '7', '8'] as const
 
@@ -32,89 +33,80 @@ export function KineticStyleguide() {
   const duration = Math.round(
     Math.min(500, Math.max(80, 56000 / material.stiffness + material.damping * 2.2)),
   )
-  const pageStyle = {
-    '--control-accent': material.accentColor,
-    '--control-accent-contrast': material.backgroundColor,
-    '--control-border': `color-mix(in srgb, ${material.foregroundColor} 38%, transparent)`,
-    '--control-radius': `${material.radius}px`,
-    '--control-shadow': `0 ${Math.max(2, material.travel * 0.5)}px 0 color-mix(in srgb, ${material.foregroundColor} 28%, transparent), 0 ${Math.max(5, material.travel)}px ${Math.max(10, material.mass * 8)}px color-mix(in srgb, ${material.foregroundColor} 16%, transparent)`,
-    '--control-surface': `color-mix(in srgb, ${material.backgroundColor} 91%, white)`,
-    '--control-surface-strong': material.backgroundColor,
-    '--generated-control-accent': material.accentColor,
-    '--generated-control-accent-contrast': material.backgroundColor,
-    '--generated-control-border': `color-mix(in srgb, ${material.foregroundColor} 38%, transparent)`,
-    '--generated-control-muted': `color-mix(in srgb, ${material.foregroundColor} 61%, transparent)`,
-    '--generated-control-shadow': `0 ${Math.max(2, material.travel * 0.45)}px 0 color-mix(in srgb, ${material.foregroundColor} 28%, transparent), 0 ${Math.max(5, material.travel)}px ${Math.max(10, material.mass * 7)}px color-mix(in srgb, ${material.foregroundColor} 14%, transparent)`,
-    '--generated-control-surface': `color-mix(in srgb, ${material.backgroundColor} 91%, white)`,
-    '--generated-control-surface-strong': material.backgroundColor,
-    '--generated-control-text': material.foregroundColor,
-    '--guide-ink': material.foregroundColor,
-    '--guide-line': `color-mix(in srgb, ${material.foregroundColor} 34%, transparent)`,
-    '--guide-muted': `color-mix(in srgb, ${material.foregroundColor} 63%, transparent)`,
-    '--kinetic-accent': material.accentColor,
-    '--kinetic-actuation': material.actuation,
-    '--kinetic-background': material.backgroundColor,
-    '--kinetic-damping': material.damping,
-    '--kinetic-detents': material.detents,
-    '--kinetic-duration': `${duration}ms`,
-    '--kinetic-foreground': material.foregroundColor,
-    '--kinetic-friction': material.friction,
-    '--kinetic-mass': material.mass,
-    '--kinetic-radius': `${material.radius}px`,
-    '--kinetic-restitution': material.restitution,
-    '--kinetic-stiffness': material.stiffness,
-    '--kinetic-travel': `${material.travel}px`,
-  } as CSSProperties
+  const pageStyle = kineticStyles.generatedPage({
+    accent: material.accentColor,
+    actuation: material.actuation,
+    background: material.backgroundColor,
+    controlShadow: `0 ${Math.max(2, material.travel * 0.5)}px 0 color-mix(in srgb, ${material.foregroundColor} 28%, transparent), 0 ${Math.max(5, material.travel)}px ${Math.max(10, material.mass * 8)}px color-mix(in srgb, ${material.foregroundColor} 16%, transparent)`,
+    damping: material.damping,
+    detents: material.detents,
+    duration: `${duration}ms`,
+    foreground: material.foregroundColor,
+    friction: material.friction,
+    generatedShadow: `0 ${Math.max(2, material.travel * 0.45)}px 0 color-mix(in srgb, ${material.foregroundColor} 28%, transparent), 0 ${Math.max(5, material.travel)}px ${Math.max(10, material.mass * 7)}px color-mix(in srgb, ${material.foregroundColor} 14%, transparent)`,
+    mass: material.mass,
+    radius: `${material.radius}px`,
+    restitution: material.restitution,
+    stiffness: material.stiffness,
+    surface: `color-mix(in srgb, ${material.backgroundColor} 91%, white)`,
+    travel: `${material.travel}px`,
+  })
 
   return (
     <main
-      className="grammar-page kinetic-page"
+      {...stylexProps(sharedStyles.grammarPage, kineticStyles.page, pageStyle)}
       data-generated-theme="true"
       data-theme={selectedTheme.name}
-      style={pageStyle}
     >
-      <header className="kinetic-hero">
-        <div className="kinetic-index" aria-hidden="true">
+      <header className={className(kineticStyles.hero)}>
+        <div className={className(kineticStyles.index)} aria-hidden="true">
           <span>FORCE</span>
-          <i />
+          <i className={className(kineticStyles.indexLine)} />
           <span>STATE</span>
         </div>
-        <div className="kinetic-hero-copy">
-          <p className="grammar-kicker">05 / Physical grammar</p>
-          <h1>
+        <div className={className(kineticStyles.heroCopy)}>
+          <p className={className(sharedStyles.grammarKicker)}>05 / Physical grammar</p>
+          <h1 className={className(kineticStyles.heroTitle)}>
             FORCE
-            <span>BECOMES STATE.</span>
+            <span className={className(kineticStyles.heroTitleAccent)}>BECOMES STATE.</span>
           </h1>
-          <p className="grammar-intro">
+          <p className={className(sharedStyles.grammarIntro)}>
             Kinetic gives controls mass, travel, resistance, thresholds, and consequence. Motion is
             not decoration here; it explains how an interface behaves.
           </p>
-          <a className="grammar-jump-link" href="#material-heading">
-            Enter the mechanism bench <span aria-hidden="true">↓</span>
+          <a className={className(sharedStyles.grammarJumpLink)} href="#material-heading">
+            Enter the mechanism bench{' '}
+            <span aria-hidden="true" className={className(sharedStyles.grammarJumpGlyph)}>
+              ↓
+            </span>
           </a>
         </div>
 
-        <KineticSurface className="kinetic-hero-machine" material={material}>
-          <div className="kinetic-machine-rail" aria-hidden="true">
+        <KineticSurface className={className(kineticStyles.machine)} material={material}>
+          <div className={className(kineticStyles.rail)} aria-hidden="true">
             {MACHINE_RAIL_TICKS.map((tick) => (
-              <i key={tick} />
+              <i className={className(kineticStyles.railTick)} key={tick} />
             ))}
           </div>
-          <div className="kinetic-machine-readout">
-            <span>ACTUATOR / A05</span>
-            <output>{String(count).padStart(3, '0')}</output>
-            <small>{material.response} response</small>
+          <div className={className(kineticStyles.readout)}>
+            <span className={className(kineticStyles.meta)}>ACTUATOR / A05</span>
+            <output className={className(kineticStyles.readoutValue)}>
+              {String(count).padStart(3, '0')}
+            </output>
+            <small className={className(kineticStyles.meta)}>{material.response} response</small>
           </div>
           <KineticButton
-            className="kinetic-hero-button"
+            className={className(kineticStyles.heroButton)}
             material={material}
             onClick={() => setCount((current) => current + 1)}
             type="button"
           >
-            <span>PRESS</span>
-            <small>{material.travel.toFixed(1)} mm travel</small>
+            <span className={className(kineticStyles.heroButtonLabel)}>PRESS</span>
+            <small className={className(kineticStyles.meta)}>
+              {material.travel.toFixed(1)} mm travel
+            </small>
           </KineticButton>
-          <div className="kinetic-machine-plate">
+          <div className={className(kineticStyles.plate, kineticStyles.meta)}>
             <span>m / {material.mass.toFixed(2)} kg</span>
             <span>k / {material.stiffness.toFixed(0)} N·m</span>
             <span>ζ / {material.damping.toFixed(0)}</span>
@@ -131,6 +123,7 @@ export function KineticStyleguide() {
         title="Engineer a response profile"
       >
         <ThemePicker
+          grammar="kinetic"
           label="Starting mechanism"
           onChange={(name) => {
             void navigate({ replace: true, search: { theme: name } })

@@ -1,10 +1,25 @@
+import stylex from '@stylexjs/unplugin'
 import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import { defineConfig, type Plugin } from 'vite'
 
 const fromStyleguide = (path: string) => new URL(path, import.meta.url).pathname
 
+function stylexCssTarget(): Plugin {
+  const resolvedId = '\0virtual:hifi-stylex.css'
+
+  return {
+    name: 'hifi-stylex-css-target',
+    resolveId(id) {
+      return id === 'virtual:hifi-stylex.css' ? resolvedId : undefined
+    },
+    load(id) {
+      return id === resolvedId ? '' : undefined
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [stylex.vite({ devMode: 'full', useCSSLayers: true }), stylexCssTarget(), react()],
   resolve: {
     alias: [
       {

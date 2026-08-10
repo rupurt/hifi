@@ -17,9 +17,10 @@ import {
   VStack,
   ZStack,
 } from '@liquid-dom/react'
-import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { StyleguideSection } from './StyleguideSection'
-import './styles/liquid-interactions.css'
+import { liquidInteractionStyles as styles } from './stylex/liquid-interactions.stylex'
+import { className, sharedStyles, stylexProps } from './stylex/shared.stylex'
 
 const CONTROL_SPRING = spring({ stiffness: 620, damping: 36 })
 const MORPH_SPRING = spring({ stiffness: 360, damping: 31 })
@@ -128,56 +129,46 @@ export function LiquidInteractionCatalog({
   const materialJson = useMemo(() => serializeLiquidMaterial(material), [material])
   const profileDirection = material.surfaceProfile === 'concave' ? -1 : 1
   const profileScale = material.surfaceProfile === 'concave' ? 0.94 : 1.04
-  const materialStyle = {
-    '--lab-bezel': `${material.bezelWidth}px`,
-    '--lab-bezel-inset': `${Math.max(5, material.bezelWidth * 0.42)}px`,
-    '--lab-bezel-stroke': `${Math.max(1, Math.min(3.5, material.bezelWidth * 0.075))}px`,
-    '--lab-blur': `${material.blur}px`,
-    '--lab-blur-feedback': `${material.blur * 0.32}px`,
-    '--lab-caustic-alpha': 0.1 + material.specularOpacity * 0.62,
-    '--lab-chroma': `${material.dispersion * 360}px`,
-    '--lab-chroma-negative': `${material.dispersion * -360}px`,
-    '--lab-control-blur': `${Math.max(2, material.blur * 0.72)}px`,
-    '--lab-control-fill': 0.035 + material.opacity * 0.07 + material.tint.a * 0.24,
-    '--lab-control-radius': `${Math.min(18, Math.max(5, material.cornerRadius * 0.32))}px`,
-    '--lab-depth': `${material.thickness}px`,
-    '--lab-depth-shadow-blur': `${18 + material.thickness * 0.82}px`,
-    '--lab-depth-shadow-y': `${4 + material.thickness * 0.46}px`,
-    '--lab-displacement': material.displacementFactor,
-    '--lab-displacement-x': `${(material.displacementFactor - 1) * 28}px`,
-    '--lab-distortion-scale': 0.88 + material.displacementFactor * 0.14,
-    '--lab-edge-alpha': 0.12 + material.specularOpacity * 0.38,
-    '--lab-highlight-alpha': 0.08 + material.specularOpacity * 0.28,
-    '--lab-ior': material.ior,
-    '--lab-copy-skew': `${(material.ior - 1) * -9}deg`,
-    '--lab-copy-x': `${
+  const materialStyle = styles.materialVariables({
+    bezel: `${material.bezelWidth}px`,
+    bezelInset: `${Math.max(5, material.bezelWidth * 0.42)}px`,
+    bezelStroke: `${Math.max(1, Math.min(3.5, material.bezelWidth * 0.075))}px`,
+    blur: `${material.blur}px`,
+    blurFeedback: `${material.blur * 0.32}px`,
+    causticAlpha: 0.1 + material.specularOpacity * 0.62,
+    chroma: `${material.dispersion * 360}px`,
+    chromaNegative: `${material.dispersion * -360}px`,
+    controlBlur: `${Math.max(2, material.blur * 0.72)}px`,
+    controlFill: 0.035 + material.opacity * 0.07 + material.tint.a * 0.24,
+    controlRadius: `${Math.min(18, Math.max(5, material.cornerRadius * 0.32))}px`,
+    copySkew: `${(material.ior - 1) * -9}deg`,
+    copyX: `${
       ((material.ior - 1) * 46 + (material.displacementFactor - 1) * 28) * profileDirection
     }px`,
-    '--lab-copy-y': `${(material.ior - 1) * -20 * profileDirection}px`,
-    '--lab-ior-shift': `${(material.ior - 1) * 16}px`,
-    '--lab-ior-shift-diagonal': `${(material.ior - 1) * 12}px`,
-    '--lab-ior-scale': 0.76 + material.ior * 0.18,
-    '--lab-lens-scale': 0.88 + material.displacementFactor * 0.14,
-    '--lab-refract-x': `${(material.ior - 1) * 46}px`,
-    '--lab-refract-y': `${(material.ior - 1) * -20}px`,
-    '--lab-map-blur': `${material.displacementBlur * 0.12}px`,
-    '--lab-opacity': materialEnabled ? material.opacity : 0.08,
-    '--lab-panel-radius': `${Math.min(34, Math.max(14, material.cornerRadius * 0.72))}px`,
-    '--lab-probe-size': `${30 + material.thickness * 0.75}px`,
-    '--lab-profile-scale': material.surfaceProfile === 'lip' ? 1.02 : profileScale,
-    '--lab-rail-height': `${Math.min(8, Math.max(4, material.bezelWidth * 0.16))}px`,
-    '--lab-shadow-blur': `${28 + material.thickness * 0.7}px`,
-    '--lab-shadow-y': `${material.thickness * 0.38}px`,
-    '--lab-shape-radius': `${material.cornerRadius}px`,
-    '--lab-specular': material.specularOpacity,
-    '--lab-specular-alpha': 0.18 + material.specularOpacity * 0.4,
-    '--lab-thumb-height': `${Math.min(22, Math.max(14, 11 + material.thickness * 0.2))}px`,
-    '--lab-thumb-width': `${Math.min(17, Math.max(9, 7 + material.bezelWidth * 0.2))}px`,
-    '--lab-tint': toCssTint(material.tint),
-    '--lab-tint-b': Math.round(material.tint.b * 255),
-    '--lab-tint-g': Math.round(material.tint.g * 255),
-    '--lab-tint-r': Math.round(material.tint.r * 255),
-  } as CSSProperties
+    copyY: `${(material.ior - 1) * -20 * profileDirection}px`,
+    depth: `${material.thickness}px`,
+    edgeAlpha: 0.12 + material.specularOpacity * 0.38,
+    highlightAlpha: 0.08 + material.specularOpacity * 0.28,
+    iorShift: `${(material.ior - 1) * 16}px`,
+    iorShiftDiagonal: `${(material.ior - 1) * 12}px`,
+    lensScale: 0.88 + material.displacementFactor * 0.14,
+    mapBlur: `${material.displacementBlur * 0.12}px`,
+    opacity: materialEnabled ? material.opacity : 0.08,
+    panelRadius: `${Math.min(34, Math.max(14, material.cornerRadius * 0.72))}px`,
+    profileScale: material.surfaceProfile === 'lip' ? 1.02 : profileScale,
+    railHeight: `${Math.min(8, Math.max(4, material.bezelWidth * 0.16))}px`,
+    shadowBlur: `${28 + material.thickness * 0.7}px`,
+    shadowY: `${material.thickness * 0.38}px`,
+    shapeRadius: `${material.cornerRadius}px`,
+    specular: material.specularOpacity,
+    specularAlpha: 0.18 + material.specularOpacity * 0.4,
+    thumbHeight: `${Math.min(22, Math.max(14, 11 + material.thickness * 0.2))}px`,
+    thumbWidth: `${Math.min(17, Math.max(9, 7 + material.bezelWidth * 0.2))}px`,
+    tint: toCssTint(material.tint),
+    tintB: Math.round(material.tint.b * 255),
+    tintG: Math.round(material.tint.g * 255),
+    tintR: Math.round(material.tint.r * 255),
+  })
 
   useEffect(() => {
     setBezelWidth(themeMaterial.bezelWidth)
@@ -282,7 +273,7 @@ export function LiquidInteractionCatalog({
   }
 
   return (
-    <div className="liquid-interaction-catalog">
+    <div {...stylexProps(styles.root)}>
       <StyleguideSection
         description="A family of refractive controls shares one optical field. Hover, press, and open states drive liquid-dom transforms while native buttons preserve keyboard and assistive-technology behavior."
         id="buttons-heading"
@@ -290,7 +281,7 @@ export function LiquidInteractionCatalog({
         title="Buttons in a light field"
       >
         <article
-          className="liquid-demo-stage liquid-button-stage"
+          className={className(styles.stage)}
           data-liquid-renderer={canRender ? 'webgpu' : 'css-fallback'}
         >
           <LiquidBackdrop label="Interactive control field" />
@@ -300,11 +291,11 @@ export function LiquidInteractionCatalog({
             title="One field. Many intentions."
           />
 
-          <div className="liquid-button-render-layer">
+          <div {...stylexProps(styles.buttonRenderLayer)}>
             {canRender ? (
               <LiquidCanvas
-                className="liquid-demo-canvas"
-                canvasClassName="liquid-demo-canvas-element"
+                className={className(styles.canvas)}
+                canvasClassName={className(styles.canvas)}
                 maxDpr={1.5}
                 onError={() => setRendererFailed(true)}
               >
@@ -408,23 +399,31 @@ export function LiquidInteractionCatalog({
               </LiquidCanvas>
             ) : null}
 
-            <div className="liquid-button-overlay">
-              <div className="liquid-button-row">
+            <div {...stylexProps(styles.buttonOverlay)}>
+              <div {...stylexProps(styles.buttonRow)}>
                 <button
-                  className="liquid-command liquid-command-primary"
+                  className={className(
+                    styles.command,
+                    !canRender && styles.fallbackGlass,
+                    styles.commandPrimary,
+                  )}
                   type="button"
                   {...interactionProps('launch')}
                 >
-                  <span className="liquid-command-light" aria-hidden="true" />
-                  <span>
-                    <small>Primary command</small>
+                  <span {...stylexProps(styles.commandLight)} aria-hidden="true" />
+                  <span {...stylexProps(styles.commandCopy)}>
+                    <small {...stylexProps(styles.commandMeta)}>Primary command</small>
                     Launch field
                   </span>
                   <ArrowIcon />
                 </button>
                 <button
                   aria-label="Tune material"
-                  className="liquid-command liquid-command-compact"
+                  className={className(
+                    styles.command,
+                    !canRender && styles.fallbackGlass,
+                    styles.commandCompact,
+                  )}
                   type="button"
                   {...interactionProps('tune')}
                 >
@@ -434,7 +433,12 @@ export function LiquidInteractionCatalog({
                 <button
                   aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
                   aria-pressed={favorite}
-                  className="liquid-command liquid-command-icon"
+                  className={className(
+                    styles.command,
+                    !canRender && styles.fallbackGlass,
+                    styles.commandIcon,
+                    favorite && styles.commandFavorite,
+                  )}
                   onClick={() => setFavorite((current) => !current)}
                   type="button"
                   {...interactionProps('favorite')}
@@ -443,42 +447,67 @@ export function LiquidInteractionCatalog({
                 </button>
                 <button
                   aria-expanded={addExpanded}
-                  className="liquid-command liquid-command-add"
+                  className={className(
+                    styles.command,
+                    !canRender && styles.fallbackGlass,
+                    styles.commandAdd,
+                    addExpanded && styles.commandAddOpen,
+                  )}
                   onClick={() => setAddExpanded((current) => !current)}
                   type="button"
                   {...interactionProps('add')}
                 >
                   <PlusIcon />
-                  <span>New layer</span>
+                  <span
+                    className={className(
+                      styles.commandAddLabel,
+                      addExpanded && styles.commandAddLabelOpen,
+                    )}
+                  >
+                    New layer
+                  </span>
                 </button>
               </div>
 
-              <fieldset className="liquid-layer-control" data-layer={layer.toLowerCase()}>
-                <legend className="visually-hidden">Composition layer</legend>
+              <fieldset
+                className={className(styles.layerControl, !canRender && styles.fallbackGlass)}
+                data-layer={layer.toLowerCase()}
+              >
+                <legend className={className(sharedStyles.visuallyHidden)}>
+                  Composition layer
+                </legend>
                 {(['Surface', 'Content', 'Signal'] as const).map((candidate) => {
                   const buttonKey = candidate.toLowerCase() as ButtonKey
 
                   return (
                     <button
                       aria-pressed={layer === candidate}
+                      className={className(styles.layerButton)}
                       key={candidate}
                       onClick={() => setLayer(candidate)}
                       type="button"
                       {...interactionProps(buttonKey)}
                     >
-                      <span>{candidate}</span>
-                      <small>
+                      <span {...stylexProps(styles.layerLabel)}>{candidate}</span>
+                      <small {...stylexProps(styles.layerMeta)}>
                         {candidate === layer ? 'Lens active' : layerDescriptions[candidate]}
                       </small>
+                      {candidate === layer ? (
+                        <i {...stylexProps(styles.activeDot)} aria-hidden="true" />
+                      ) : null}
                     </button>
                   )
                 })}
               </fieldset>
 
-              <div className="liquid-special-button-row">
+              <div {...stylexProps(styles.specialRow)}>
                 <button
                   aria-label={confirmed ? 'Deletion confirmed' : 'Hold to confirm deletion'}
-                  className="liquid-hold-button"
+                  className={className(
+                    styles.specialControl,
+                    styles.holdButton,
+                    !canRender && styles.fallbackGlass,
+                  )}
                   data-confirmed={confirmed}
                   data-holding={holding}
                   onClick={(event) => {
@@ -496,29 +525,54 @@ export function LiquidInteractionCatalog({
                   onPointerUp={stopHold}
                   type="button"
                 >
-                  <span className="liquid-hold-progress" aria-hidden="true" />
-                  <span className="liquid-hold-icon" aria-hidden="true">
+                  <span
+                    className={className(
+                      styles.holdProgress,
+                      holding && styles.holdProgressActive,
+                      confirmed && styles.holdProgressConfirmed,
+                    )}
+                    aria-hidden="true"
+                  />
+                  <span
+                    className={className(styles.holdForeground, styles.holdIcon)}
+                    aria-hidden="true"
+                  >
                     {confirmed ? '✓' : '×'}
                   </span>
-                  <span>
-                    <strong>{confirmed ? 'Confirmed' : 'Hold to dissolve'}</strong>
-                    <small>{confirmed ? 'Action ready' : 'Intentional action'}</small>
+                  <span {...stylexProps(styles.holdForeground)}>
+                    <strong {...stylexProps(styles.holdTitle)}>
+                      {confirmed ? 'Confirmed' : 'Hold to dissolve'}
+                    </strong>
+                    <small {...stylexProps(styles.holdMeta)}>
+                      {confirmed ? 'Action ready' : 'Intentional action'}
+                    </small>
                   </span>
                 </button>
 
                 <button
                   aria-label={recording ? 'Stop recording' : 'Start recording'}
                   aria-pressed={recording}
-                  className="liquid-record-button"
+                  className={className(
+                    styles.specialControl,
+                    styles.recordButton,
+                    !canRender && styles.fallbackGlass,
+                  )}
                   onClick={() => setRecording((current) => !current)}
                   type="button"
                   {...interactionProps('record')}
                 >
-                  <span aria-hidden="true" />
+                  <span
+                    className={className(styles.recordIndicator, recording && styles.recordActive)}
+                    aria-hidden="true"
+                  />
                 </button>
 
                 <fieldset
-                  className="liquid-stepper"
+                  className={className(
+                    styles.specialControl,
+                    styles.stepper,
+                    !canRender && styles.fallbackGlass,
+                  )}
                   onBlur={() => setHovered((current) => (current === 'stepper' ? null : current))}
                   onFocus={() => setHovered('stepper')}
                   onPointerEnter={() => setHovered('stepper')}
@@ -531,21 +585,25 @@ export function LiquidInteractionCatalog({
                     setPressed((current) => (current === 'stepper' ? null : current))
                   }
                 >
-                  <legend className="visually-hidden">Layer density</legend>
+                  <legend className={className(sharedStyles.visuallyHidden)}>Layer density</legend>
                   <button
                     aria-label="Decrease layer density"
+                    className={className(styles.stepperButton, styles.stepperLeft)}
                     disabled={density === 1}
                     onClick={() => setDensity((current) => Math.max(1, current - 1))}
                     type="button"
                   >
                     −
                   </button>
-                  <span>
-                    <small>Density</small>
-                    <output>{density.toString().padStart(2, '0')}</output>
+                  <span {...stylexProps(styles.stepperValue)}>
+                    <small {...stylexProps(styles.stepperMeta)}>Density</small>
+                    <output {...stylexProps(styles.stepperOutput)}>
+                      {density.toString().padStart(2, '0')}
+                    </output>
                   </span>
                   <button
                     aria-label="Increase layer density"
+                    className={className(styles.stepperButton, styles.stepperRight)}
                     disabled={density === 9}
                     onClick={() => setDensity((current) => Math.min(9, current + 1))}
                     type="button"
@@ -571,11 +629,10 @@ export function LiquidInteractionCatalog({
         title="Generate a liquid theme"
       >
         <article
-          className="liquid-demo-stage liquid-form-stage"
+          {...stylexProps(styles.stage, styles.formStage, materialStyle)}
           data-material-enabled={materialEnabled}
           data-liquid-renderer={canRender ? 'webgpu' : 'css-fallback'}
           data-surface-profile={material.surfaceProfile}
-          style={materialStyle}
         >
           <LiquidBackdrop label="Optical calibration field" />
           <StageHeader
@@ -584,26 +641,31 @@ export function LiquidInteractionCatalog({
             title="Tune the grammar."
           />
 
-          <div className="liquid-form-render-layer">
-            <section aria-label="Optical instrument planes" className="liquid-material-playground">
-              <section className="liquid-specimen liquid-result-specimen">
-                <header>
-                  <span>01 / Refracted result</span>
-                  <small>
+          <div {...stylexProps(styles.formRenderLayer)}>
+            <section
+              aria-label="Optical instrument planes"
+              className={className(styles.materialPlayground)}
+            >
+              <section {...stylexProps(styles.specimen)}>
+                <header {...stylexProps(styles.specimenHeader)}>
+                  <span className={className(styles.specimenMeta, styles.specimenMetaStrong)}>
+                    01 / Refracted result
+                  </span>
+                  <small className={className(styles.specimenMeta, styles.specimenMuted)}>
                     {material.blur.toFixed(0)}px blur · {material.thickness.toFixed(0)}px depth
                   </small>
                 </header>
-                <div className="liquid-specimen-source" aria-hidden="true">
-                  <span>Optical field 024</span>
-                  <strong>
+                <div {...stylexProps(styles.specimenSource)} aria-hidden="true">
+                  <span {...stylexProps(styles.sourceMeta)}>Optical field 024</span>
+                  <strong {...stylexProps(styles.sourceTitle)}>
                     LIGHT
                     <br />
                     BENDS
                     <br />
                     HERE
                   </strong>
-                  <i />
-                  <i />
+                  <i {...stylexProps(styles.sourceCircle)} />
+                  <i {...stylexProps(styles.sourceCircle, styles.sourceCircleSmall)} />
                 </div>
                 <MaterialSpecimenCanvas
                   canRender={canRender}
@@ -611,20 +673,26 @@ export function LiquidInteractionCatalog({
                   material={material}
                   onError={() => setRendererFailed(true)}
                 />
-                <footer>
-                  <span>IOR {material.ior.toFixed(2)}</span>
-                  <span>{material.surfaceProfile}</span>
+                <footer {...stylexProps(styles.specimenFooter)}>
+                  <span className={className(styles.specimenMeta, styles.specimenMuted)}>
+                    IOR {material.ior.toFixed(2)}
+                  </span>
+                  <span className={className(styles.specimenMeta, styles.specimenMuted)}>
+                    {material.surfaceProfile}
+                  </span>
                 </footer>
               </section>
 
-              <section className="liquid-specimen liquid-map-specimen">
-                <header>
-                  <span>02 / Displacement map</span>
-                  <small>
+              <section {...stylexProps(styles.specimen)}>
+                <header {...stylexProps(styles.specimenHeader)}>
+                  <span className={className(styles.specimenMeta, styles.specimenMetaStrong)}>
+                    02 / Displacement map
+                  </span>
+                  <small className={className(styles.specimenMeta, styles.specimenMuted)}>
                     D {material.displacementFactor.toFixed(2)} · B {material.bezelWidth.toFixed(0)}
                   </small>
                 </header>
-                <div className="liquid-map-source" aria-hidden="true" />
+                <div {...stylexProps(styles.mapSource)} aria-hidden="true" />
                 <MaterialSpecimenCanvas
                   canRender={canRender}
                   debug
@@ -632,15 +700,19 @@ export function LiquidInteractionCatalog({
                   material={material}
                   onError={() => setRendererFailed(true)}
                 />
-                <footer>
-                  <span>R / horizontal</span>
-                  <span>G / vertical</span>
+                <footer {...stylexProps(styles.specimenFooter)}>
+                  <span className={className(styles.specimenMeta, styles.specimenMuted)}>
+                    R / horizontal
+                  </span>
+                  <span className={className(styles.specimenMeta, styles.specimenMuted)}>
+                    G / vertical
+                  </span>
                 </footer>
               </section>
             </section>
 
             <form
-              className="liquid-optics-form"
+              className={className(styles.opticsForm, !materialEnabled && styles.opticsDisabled)}
               onSubmit={(event) => {
                 event.preventDefault()
                 downloadMaterial()
@@ -652,35 +724,45 @@ export function LiquidInteractionCatalog({
                 material={material}
                 onError={() => setRendererFailed(true)}
               />
-              <header>
+              <header {...stylexProps(styles.opticsHeader)}>
                 <div>
-                  <span>Theme profile</span>
-                  <strong>{theme} glass</strong>
+                  <span {...stylexProps(styles.opticsEyebrow)}>Theme profile</span>
+                  <strong {...stylexProps(styles.opticsTitle)}>{theme} glass</strong>
                 </div>
                 <button
                   aria-checked={materialEnabled}
                   aria-label="Enable live liquid material"
-                  className="liquid-material-switch"
+                  className={className(
+                    styles.materialSwitch,
+                    materialEnabled && styles.materialSwitchOn,
+                  )}
                   onClick={() => setMaterialEnabled((current) => !current)}
                   role="switch"
                   type="button"
                 >
-                  <span />
+                  <span
+                    className={className(
+                      styles.materialSwitchThumb,
+                      materialEnabled && styles.materialSwitchThumbOn,
+                    )}
+                  />
                 </button>
               </header>
 
-              <div className="liquid-form-fields">
-                <label>
-                  <span>Study name</span>
+              <div {...stylexProps(styles.formFields)}>
+                <label {...stylexProps(styles.formField)}>
+                  <span {...stylexProps(styles.fieldLabel)}>Study name</span>
                   <input
+                    {...stylexProps(styles.fieldControl)}
                     onChange={(event) => setStudyName(event.currentTarget.value)}
                     type="text"
                     value={studyName}
                   />
                 </label>
-                <label>
-                  <span>Profile</span>
+                <label {...stylexProps(styles.formField)}>
+                  <span {...stylexProps(styles.fieldLabel)}>Profile</span>
                   <select
+                    {...stylexProps(styles.fieldControl, styles.selectControl)}
                     onChange={(event) =>
                       setSurfaceProfile(event.currentTarget.value as LiquidSurfaceProfile)
                     }
@@ -691,9 +773,10 @@ export function LiquidInteractionCatalog({
                     <option value="lip">Rimmed lip</option>
                   </select>
                 </label>
-                <label className="liquid-form-color">
-                  <span>Glass tint</span>
+                <label {...stylexProps(styles.formField)}>
+                  <span {...stylexProps(styles.fieldLabel)}>Glass tint</span>
                   <input
+                    {...stylexProps(styles.fieldControl, styles.colorControl)}
                     onChange={(event) => setTintColor(event.currentTarget.value)}
                     type="color"
                     value={tintColor}
@@ -701,7 +784,7 @@ export function LiquidInteractionCatalog({
                 </label>
               </div>
 
-              <div className="liquid-range-stack">
+              <div {...stylexProps(styles.rangeStack)}>
                 <RangeControl
                   label="Refraction"
                   max={2.1}
@@ -776,27 +859,45 @@ export function LiquidInteractionCatalog({
                 />
               </div>
 
-              <section className="liquid-material-export" aria-label="Exported theme JSON">
-                <header>
-                  <span>liquid-theme.json</span>
-                  <small>application/json · live</small>
+              <section {...stylexProps(styles.materialExport)} aria-label="Exported theme JSON">
+                <header {...stylexProps(styles.exportHeader)}>
+                  <span {...stylexProps(styles.exportMeta)}>liquid-theme.json</span>
+                  <small className={className(styles.exportMeta, styles.exportMuted)}>
+                    application/json · live
+                  </small>
                 </header>
-                <pre>{materialJson}</pre>
+                <pre {...stylexProps(styles.exportPre)}>{materialJson}</pre>
               </section>
 
-              <footer>
-                <span>
-                  <i aria-hidden="true" />
+              <footer {...stylexProps(styles.opticsFooter)}>
+                <span {...stylexProps(styles.exportStatus)}>
+                  <i
+                    className={className(styles.statusLight, !canRender && styles.statusFallback)}
+                    aria-hidden="true"
+                  />
                   {exportStatus}
                 </span>
-                <div>
-                  <button onClick={resetToPreset} type="button">
+                <div {...stylexProps(styles.exportActions)}>
+                  <button
+                    className={className(styles.formButton)}
+                    onClick={resetToPreset}
+                    type="button"
+                  >
                     Reset
                   </button>
-                  <button onClick={() => void copyMaterial()} type="button">
+                  <button
+                    className={className(styles.formButton)}
+                    onClick={() => void copyMaterial()}
+                    type="button"
+                  >
                     Copy JSON
                   </button>
-                  <button type="submit">Download</button>
+                  <button
+                    className={className(styles.formButton, styles.formButtonPrimary)}
+                    type="submit"
+                  >
+                    Download
+                  </button>
                 </div>
               </footer>
             </form>
@@ -826,23 +927,45 @@ function MaterialSpecimenCanvas({
   readonly onError: () => void
 }) {
   if (!canRender) {
+    const concave = material.surfaceProfile === 'concave'
+    const lip = material.surfaceProfile === 'lip'
+
     return (
       <div
         aria-hidden="true"
-        className={`liquid-specimen-fallback${debug ? ' liquid-specimen-fallback-map' : ''}`}
+        className={className(
+          styles.fallbackSpecimen,
+          !enabled && styles.materialDisabled,
+          concave && styles.fallbackConcave,
+          debug && styles.fallbackMap,
+          debug && concave && styles.fallbackMapConcave,
+          debug && lip && styles.fallbackMapLip,
+        )}
         data-surface-profile={material.surfaceProfile}
       >
         {debug ? null : (
           <>
-            <span className="liquid-fallback-copy">
+            <span {...stylexProps(styles.fallbackCopy)}>
               LIGHT
               <br />
               BENDS
               <br />
               HERE
             </span>
-            <span className="liquid-fallback-caustic" />
-            <span className="liquid-fallback-bezel" />
+            <span
+              className={className(
+                styles.fallbackInset,
+                styles.fallbackCaustic,
+                concave && styles.fallbackCausticConcave,
+              )}
+            />
+            <span
+              className={className(
+                styles.fallbackInset,
+                styles.fallbackBezel,
+                lip && styles.fallbackBezelLip,
+              )}
+            />
           </>
         )}
       </div>
@@ -851,8 +974,8 @@ function MaterialSpecimenCanvas({
 
   return (
     <LiquidCanvas
-      className="liquid-specimen-canvas"
-      canvasClassName="liquid-demo-canvas-element"
+      className={className(styles.specimenCanvas, !enabled && styles.materialDisabled)}
+      canvasClassName={className(styles.canvas)}
       maxDpr={1.5}
       onError={onError}
     >
@@ -920,8 +1043,8 @@ function MaterialControlCanvas({
   return (
     <LiquidCanvas
       aria-hidden="true"
-      className="liquid-control-material-canvas"
-      canvasClassName="liquid-demo-canvas-element"
+      className={className(styles.controlCanvas, !enabled && styles.materialDisabled)}
+      canvasClassName={className(styles.canvas)}
       maxDpr={1.5}
       onError={onError}
     >
@@ -1055,21 +1178,20 @@ function RangeControl({
 }) {
   return (
     <label
-      className="liquid-range-control"
-      style={
-        {
-          '--range-position': `${((value - min) / (max - min)) * 100}%`,
-        } as CSSProperties
-      }
+      {...stylexProps(
+        styles.rangeControl,
+        styles.rangePosition(`${((value - min) / (max - min)) * 100}%`),
+      )}
     >
-      <span>
+      <span {...stylexProps(styles.rangeHeader)}>
         {label}
-        <output>
+        <output {...stylexProps(styles.rangeOutput)}>
           {value.toFixed(precision ?? (step < 0.01 ? 3 : step < 1 ? 2 : 0))}
           {suffix}
         </output>
       </span>
       <input
+        {...stylexProps(styles.rangeInput)}
         aria-label={label}
         max={max}
         min={min}
@@ -1117,14 +1239,20 @@ function toFileName(name: string) {
 }
 
 function LiquidBackdrop({ label }: { readonly label: string }) {
+  const form = label === 'Optical calibration field'
+
   return (
-    <div aria-label={label} className="liquid-demo-backdrop" role="img">
-      <span className="liquid-backdrop-ribbon liquid-backdrop-ribbon-a" />
-      <span className="liquid-backdrop-ribbon liquid-backdrop-ribbon-b" />
-      <span className="liquid-backdrop-ribbon liquid-backdrop-ribbon-c" />
-      <span className="liquid-backdrop-orb liquid-backdrop-orb-a" />
-      <span className="liquid-backdrop-orb liquid-backdrop-orb-b" />
-      <span className="liquid-backdrop-grid" />
+    <div
+      className={className(styles.backdrop, form && styles.formBackdrop)}
+      aria-label={label}
+      role="img"
+    >
+      <span className={className(styles.ribbon, styles.ribbonA, form && styles.formRibbonA)} />
+      <span className={className(styles.ribbon, styles.ribbonB, form && styles.hidden)} />
+      <span className={className(styles.hidden)} />
+      <span className={className(styles.orb, styles.orbA, form && styles.formOrb)} />
+      <span className={className(styles.orb, styles.orbB, form && styles.formOrb)} />
+      <span {...stylexProps(styles.backdropGrid)} />
     </div>
   )
 }
@@ -1139,13 +1267,16 @@ function StageHeader({
   readonly title: string
 }) {
   return (
-    <header className="liquid-stage-header">
+    <header {...stylexProps(styles.stageHeader)}>
       <div>
-        <span>{eyebrow}</span>
-        <strong>{title}</strong>
+        <span {...stylexProps(styles.stageEyebrow)}>{eyebrow}</span>
+        <strong {...stylexProps(styles.stageTitle)}>{title}</strong>
       </div>
-      <span className="liquid-renderer-chip">
-        <i aria-hidden="true" />
+      <span {...stylexProps(styles.rendererChip)}>
+        <i
+          className={className(styles.statusLight, !canRender && styles.statusFallback)}
+          aria-hidden="true"
+        />
         {canRender ? 'WebGPU live' : 'CSS fallback'}
       </span>
     </header>
@@ -1154,10 +1285,15 @@ function StageHeader({
 
 function StageFooter({ detail, renderer }: { readonly detail: string; readonly renderer: string }) {
   return (
-    <footer className="liquid-stage-footer">
+    <footer {...stylexProps(styles.stageFooter)}>
       <span>{detail}</span>
-      <span>{renderer}</span>
-      <a href="https://liquid-dom-showcase.vercel.app/" rel="noreferrer" target="_blank">
+      <span {...stylexProps(styles.footerSecondary)}>{renderer}</span>
+      <a
+        {...stylexProps(styles.footerLink)}
+        href="https://liquid-dom-showcase.vercel.app/"
+        rel="noreferrer"
+        target="_blank"
+      >
         Upstream showcase <span aria-hidden="true">↗</span>
       </a>
     </footer>
@@ -1166,7 +1302,12 @@ function StageFooter({ detail, renderer }: { readonly detail: string; readonly r
 
 function ArrowIcon() {
   return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+    <svg
+      {...stylexProps(styles.commandIconSvg, styles.commandArrow)}
+      aria-hidden="true"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
       <path d="M5 12h13M13 6l6 6-6 6" />
     </svg>
   )
@@ -1174,7 +1315,7 @@ function ArrowIcon() {
 
 function TuneIcon() {
   return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+    <svg {...stylexProps(styles.commandIconSvg)} aria-hidden="true" fill="none" viewBox="0 0 24 24">
       <path d="M4 7h10M18 7h2M4 17h2M10 17h10" />
       <circle cx="16" cy="7" r="2" />
       <circle cx="8" cy="17" r="2" />
@@ -1184,7 +1325,12 @@ function TuneIcon() {
 
 function HeartIcon({ filled }: { readonly filled: boolean }) {
   return (
-    <svg aria-hidden="true" fill={filled ? 'currentColor' : 'none'} viewBox="0 0 24 24">
+    <svg
+      {...stylexProps(styles.commandIconSvg)}
+      aria-hidden="true"
+      fill={filled ? 'currentColor' : 'none'}
+      viewBox="0 0 24 24"
+    >
       <path d="m12 20-1.3-1.18C6.1 14.65 3 11.82 3 8.35 3 5.52 5.24 3.3 8.08 3.3c1.6 0 3.14.74 3.92 1.9.78-1.16 2.32-1.9 3.92-1.9C18.76 3.3 21 5.52 21 8.35c0 3.47-3.1 6.3-7.7 10.48Z" />
     </svg>
   )
@@ -1192,7 +1338,7 @@ function HeartIcon({ filled }: { readonly filled: boolean }) {
 
 function PlusIcon() {
   return (
-    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+    <svg {...stylexProps(styles.commandIconSvg)} aria-hidden="true" fill="none" viewBox="0 0 24 24">
       <path d="M12 5v14M5 12h14" />
     </svg>
   )

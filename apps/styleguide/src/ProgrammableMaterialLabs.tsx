@@ -26,7 +26,8 @@ import {
   TextureSurface,
 } from '@hifi/texture'
 import { useEffect, useRef, useState } from 'react'
-import './styles/material-workbench.css'
+import { className, stylexProps } from './stylex/shared.stylex'
+import { workbenchClass, workbenchStyles } from './stylex/workbench.stylex'
 
 const SIGNAL_SPECTRUM_BINS = [
   '01',
@@ -64,51 +65,70 @@ export function SignalMaterialLab({
   }
 
   return (
-    <div className="material-workbench" data-workbench="signal">
-      <SignalSurface className="material-workbench-preview" material={material}>
-        <div className="signal-workbench-specimen">
-          <header>
+    <div className={workbenchClass('material-workbench')} data-workbench="signal">
+      <SignalSurface
+        className={className(workbenchStyles.preview, workbenchStyles.signalPreview)}
+        material={material}
+      >
+        <div className={workbenchClass('signal-workbench-specimen')}>
+          <header className={className(workbenchStyles.specimenRow, workbenchStyles.specimenMeta)}>
             <span>Channel 05 / {material.mode}</span>
             <span>{material.scanRate.toFixed(0)} Hz</span>
           </header>
-          <div className="signal-instrument-row">
-            <section aria-label="Generated waveform" className="signal-waveform-plane">
-              <svg aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 600 160">
-                <path d={getWaveformPath(material.waveform)} />
+          <div className={workbenchClass('signal-instrument-row')}>
+            <section
+              aria-label="Generated waveform"
+              className={workbenchClass('signal-waveform-plane')}
+            >
+              <svg
+                {...stylexProps(workbenchStyles.waveformSvg)}
+                aria-hidden="true"
+                preserveAspectRatio="none"
+                viewBox="0 0 600 160"
+              >
                 <path
-                  className="signal-waveform-afterimage"
+                  {...stylexProps(workbenchStyles.waveform)}
+                  d={getWaveformPath(material.waveform)}
+                />
+                <path
+                  className={className(
+                    workbenchStyles.waveform,
+                    workbenchStyles.waveformAfterimage,
+                  )}
                   d={getWaveformPath(material.waveform)}
                 />
               </svg>
-              <span>01 / waveform</span>
+              <span {...stylexProps(workbenchStyles.planeLabel)}>01 / waveform</span>
             </section>
-            <section aria-label="Generated spectrum" className="signal-spectrum-plane">
-              <div aria-hidden="true">
-                {SIGNAL_SPECTRUM_BINS.map((bin, index) => (
-                  <i
-                    key={bin}
-                    style={{
-                      height: `${
-                        18 +
-                        Math.abs(Math.sin(index * 0.82 + material.noise * 8)) *
-                          material.intensity *
-                          76
-                      }%`,
-                    }}
-                  />
-                ))}
+            <section
+              aria-label="Generated spectrum"
+              className={workbenchClass('signal-spectrum-plane')}
+            >
+              <div {...stylexProps(workbenchStyles.spectrum)} aria-hidden="true">
+                {SIGNAL_SPECTRUM_BINS.map((bin, index) => {
+                  const height = `${
+                    18 +
+                    Math.abs(Math.sin(index * 0.82 + material.noise * 8)) * material.intensity * 76
+                  }%`
+
+                  return <i {...stylexProps(workbenchStyles.spectrumBar(height))} key={bin} />
+                })}
               </div>
-              <span>02 / spectrum</span>
+              <span {...stylexProps(workbenchStyles.planeLabel)}>02 / spectrum</span>
             </section>
           </div>
-          <footer>
+          <footer className={className(workbenchStyles.specimenRow, workbenchStyles.specimenMeta)}>
             <div>
-              <strong>{material.name}</strong>
-              <small>
+              <strong {...stylexProps(workbenchStyles.block)}>{material.name}</strong>
+              <small {...stylexProps(workbenchStyles.muted)}>
                 Decay {material.decay.toFixed(2)}s · focus {Math.round(material.focus * 100)}%
               </small>
             </div>
             <button
+              className={className(
+                workbenchStyles.monitorButton,
+                active && workbenchStyles.monitorActive,
+              )}
               aria-pressed={active}
               disabled={!available}
               onClick={() => void toggle()}
@@ -253,65 +273,84 @@ export function KineticMaterialLab({
   }
 
   return (
-    <div className="material-workbench" data-workbench="kinetic">
-      <KineticSurface className="material-workbench-preview" material={material}>
-        <div className="kinetic-workbench-specimen">
-          <header>
+    <div className={workbenchClass('material-workbench')} data-workbench="kinetic">
+      <KineticSurface
+        className={className(workbenchStyles.preview, workbenchStyles.kineticPreview)}
+        material={material}
+      >
+        <div className={workbenchClass('kinetic-workbench-specimen')}>
+          <header className={className(workbenchStyles.specimenRow, workbenchStyles.specimenMeta)}>
             <span>Mechanism bench / {material.response}</span>
             <button
               aria-pressed={feedbackEnabled}
+              className={className(
+                workbenchStyles.feedbackButton,
+                feedbackEnabled && workbenchStyles.feedbackActive,
+              )}
               onClick={() => setFeedbackEnabled((current) => !current)}
               type="button"
             >
               Feedback {feedbackEnabled ? 'on' : 'off'}
             </button>
           </header>
-          <div className="kinetic-mechanisms">
-            <section className="kinetic-actuator-plane">
-              <span>01 / linear actuator</span>
+          <div className={workbenchClass('kinetic-mechanisms')}>
+            <section className={workbenchClass('kinetic-actuator-plane')}>
+              <span {...stylexProps(workbenchStyles.specimenMeta)}>01 / linear actuator</span>
               <KineticButton
+                className={className(workbenchStyles.actuatorButton)}
                 material={material}
                 onClick={() => void triggerFeedback()}
                 type="button"
               >
-                <small>Travel {material.travel.toFixed(1)} mm</small>
-                <strong>ACTUATE</strong>
+                <small {...stylexProps(workbenchStyles.specimenMeta)}>
+                  Travel {material.travel.toFixed(1)} mm
+                </small>
+                <strong {...stylexProps(workbenchStyles.actuatorTitle)}>ACTUATE</strong>
               </KineticButton>
-              <output>{Math.round(material.actuation * 100)}% threshold</output>
+              <output {...stylexProps(workbenchStyles.specimenMeta)}>
+                {Math.round(material.actuation * 100)}% threshold
+              </output>
             </section>
-            <section className="kinetic-encoder-plane">
-              <span>02 / rotary encoder</span>
-              <div className="kinetic-encoder-control">
+            <section className={workbenchClass('kinetic-encoder-plane')}>
+              <span {...stylexProps(workbenchStyles.specimenMeta)}>02 / rotary encoder</span>
+              <div className={workbenchClass('kinetic-encoder-control')}>
                 <button
                   aria-label="Rotate encoder counterclockwise"
+                  className={className(workbenchStyles.encoderStep)}
                   onClick={() => setEncoder((current) => current - 1)}
                   type="button"
                 >
                   −
                 </button>
                 <div
+                  {...stylexProps(
+                    workbenchStyles.encoder,
+                    workbenchStyles.encoderRotation(encoder * detentAngle),
+                  )}
                   aria-hidden="true"
-                  className="kinetic-encoder"
-                  style={{ transform: `rotate(${encoder * detentAngle}deg)` }}
                 >
-                  <i />
+                  <i {...stylexProps(workbenchStyles.encoderMark)} />
                 </div>
                 <button
                   aria-label="Rotate encoder clockwise"
+                  className={className(workbenchStyles.encoderStep)}
                   onClick={() => setEncoder((current) => current + 1)}
                   type="button"
                 >
                   +
                 </button>
               </div>
-              <output>{material.detents.toFixed(0)} detents / revolution</output>
+              <output {...stylexProps(workbenchStyles.specimenMeta)}>
+                {material.detents.toFixed(0)} detents / revolution
+              </output>
             </section>
           </div>
-          <label className="kinetic-fader">
-            <span>
+          <label className={workbenchClass('kinetic-fader')}>
+            <span className={className(workbenchStyles.specimenRow, workbenchStyles.specimenMeta)}>
               Force transfer <output>{fader}%</output>
             </span>
             <input
+              {...stylexProps(workbenchStyles.range)}
               max="100"
               min="0"
               onChange={(event) => setFader(event.currentTarget.valueAsNumber)}
@@ -319,7 +358,7 @@ export function KineticMaterialLab({
               value={fader}
             />
           </label>
-          <footer>
+          <footer className={className(workbenchStyles.specimenRow, workbenchStyles.specimenMeta)}>
             <span>Mass {material.mass.toFixed(2)} kg</span>
             <span>k {material.stiffness.toFixed(0)} N/m</span>
             <span>ζ {material.damping.toFixed(0)}</span>
@@ -457,18 +496,20 @@ export function TextureMaterialLab({
   }
 
   return (
-    <div className="material-workbench" data-workbench="texture">
-      <TextureSurface className="material-workbench-preview" material={material}>
-        <div className="texture-workbench-specimen">
-          <span>Live substrate / {material.pattern}</span>
-          <strong>Texture is information.</strong>
-          <p>
+    <div className={workbenchClass('material-workbench')} data-workbench="texture">
+      <TextureSurface className={workbenchClass('material-workbench-preview')} material={material}>
+        <div className={workbenchClass('texture-workbench-specimen')}>
+          <span {...stylexProps(workbenchStyles.specimenMeta)}>
+            Live substrate / {material.pattern}
+          </span>
+          <strong {...stylexProps(workbenchStyles.specimenTitle)}>Texture is information.</strong>
+          <p {...stylexProps(workbenchStyles.specimenCopy)}>
             Scale {material.scale}px · intensity {Math.round(material.intensity * 100)}%
           </p>
-          <div aria-hidden="true">
-            <i />
-            <i />
-            <i />
+          <div {...stylexProps(workbenchStyles.textureShapes)} aria-hidden="true">
+            <i {...stylexProps(workbenchStyles.textureShape)} />
+            <i {...stylexProps(workbenchStyles.textureShape, workbenchStyles.textureCircle)} />
+            <i {...stylexProps(workbenchStyles.textureShape, workbenchStyles.textureDiamond)} />
           </div>
         </div>
       </TextureSurface>
@@ -560,14 +601,18 @@ export function PrintMaterialLab({
   }
 
   return (
-    <div className="material-workbench" data-workbench="print">
-      <PrintSurface className="material-workbench-preview" material={material}>
-        <div className="print-workbench-specimen">
-          <span>Hifi material proof / 08.08.26</span>
-          <strong>The medium sets the rhythm.</strong>
-          <p>Live paper, ink, grid, type, rules, and composition.</p>
-          <hr />
-          <small>
+    <div className={workbenchClass('material-workbench')} data-workbench="print">
+      <PrintSurface className={workbenchClass('material-workbench-preview')} material={material}>
+        <div className={workbenchClass('print-workbench-specimen')}>
+          <span {...stylexProps(workbenchStyles.specimenMeta)}>Hifi material proof / 08.08.26</span>
+          <strong {...stylexProps(workbenchStyles.specimenTitle)}>
+            The medium sets the rhythm.
+          </strong>
+          <p {...stylexProps(workbenchStyles.specimenCopy)}>
+            Live paper, ink, grid, type, rules, and composition.
+          </p>
+          <hr {...stylexProps(workbenchStyles.printRule)} />
+          <small {...stylexProps(workbenchStyles.specimenMeta)}>
             {material.composition} / {material.typeface}
           </small>
         </div>
@@ -634,7 +679,7 @@ export function PrintMaterialLab({
         />
         <button
           aria-pressed={material.uppercase}
-          className="material-workbench-toggle"
+          className={workbenchClass('material-workbench-toggle')}
           onClick={() => update({ uppercase: !material.uppercase })}
           type="button"
         >
@@ -671,30 +716,41 @@ function WorkbenchControls({
 
   return (
     <form
-      className="material-workbench-controls"
+      className={workbenchClass('material-workbench-controls')}
       onSubmit={(event) => {
         event.preventDefault()
         downloadJson(fileName, json)
         setStatus('JSON exported')
       }}
     >
-      <header>
-        <span>{label}</span>
-        <small>{status}</small>
+      <header className={className(workbenchStyles.row, workbenchStyles.controlsHeader)}>
+        <span className={className(workbenchStyles.meta, workbenchStyles.metaStrong)}>{label}</span>
+        <small className={className(workbenchStyles.meta, workbenchStyles.muted)}>{status}</small>
       </header>
-      <div className="material-workbench-fields">{children}</div>
-      <details>
-        <summary>Theme JSON</summary>
-        <pre>{json}</pre>
+      <div className={workbenchClass('material-workbench-fields')}>{children}</div>
+      <details {...stylexProps(workbenchStyles.details)}>
+        <summary className={className(workbenchStyles.summary, workbenchStyles.meta)}>
+          Theme JSON
+        </summary>
+        <pre {...stylexProps(workbenchStyles.pre)}>{json}</pre>
       </details>
-      <footer>
-        <button onClick={onReset} type="button">
+      <footer className={className(workbenchStyles.row, workbenchStyles.controlsFooter)}>
+        <button className={className(workbenchStyles.footerButton)} onClick={onReset} type="button">
           Reset preset
         </button>
-        <button onClick={() => void copy()} type="button">
+        <button
+          className={className(workbenchStyles.footerButton)}
+          onClick={() => void copy()}
+          type="button"
+        >
           Copy JSON
         </button>
-        <button type="submit">Download</button>
+        <button
+          className={className(workbenchStyles.footerButton, workbenchStyles.footerPrimary)}
+          type="submit"
+        >
+          Download
+        </button>
       </footer>
     </form>
   )
@@ -716,12 +772,13 @@ function WorkbenchRange({
   readonly value: number
 }) {
   return (
-    <label className="material-workbench-range">
-      <span>
+    <label className={workbenchClass('material-workbench-range')}>
+      <span className={className(workbenchStyles.fieldLabel, workbenchStyles.meta)}>
         {label}
         <output>{value.toFixed(step < 1 ? 2 : 0)}</output>
       </span>
       <input
+        {...stylexProps(workbenchStyles.range)}
         max={max}
         min={min}
         onChange={(event) => onChange(event.currentTarget.valueAsNumber)}
@@ -743,12 +800,17 @@ function WorkbenchColor({
   readonly value: string
 }) {
   return (
-    <label className="material-workbench-color">
-      <span>
+    <label className={workbenchClass('material-workbench-color')}>
+      <span className={className(workbenchStyles.fieldLabel, workbenchStyles.meta)}>
         {label}
         <output>{value}</output>
       </span>
-      <input onChange={(event) => onChange(event.currentTarget.value)} type="color" value={value} />
+      <input
+        {...stylexProps(workbenchStyles.colorControl)}
+        onChange={(event) => onChange(event.currentTarget.value)}
+        type="color"
+        value={value}
+      />
     </label>
   )
 }
@@ -763,9 +825,14 @@ function WorkbenchText({
   readonly value: string
 }) {
   return (
-    <label className="material-workbench-text">
-      <span>{label}</span>
-      <input onChange={(event) => onChange(event.currentTarget.value)} type="text" value={value} />
+    <label className={workbenchClass('material-workbench-text')}>
+      <span className={className(workbenchStyles.fieldLabel, workbenchStyles.meta)}>{label}</span>
+      <input
+        {...stylexProps(workbenchStyles.fieldControl)}
+        onChange={(event) => onChange(event.currentTarget.value)}
+        type="text"
+        value={value}
+      />
     </label>
   )
 }
@@ -782,9 +849,13 @@ function WorkbenchSelect({
   readonly value: string
 }) {
   return (
-    <label className="material-workbench-select">
-      <span>{label}</span>
-      <select onChange={(event) => onChange(event.currentTarget.value)} value={value}>
+    <label className={workbenchClass('material-workbench-select')}>
+      <span className={className(workbenchStyles.fieldLabel, workbenchStyles.meta)}>{label}</span>
+      <select
+        {...stylexProps(workbenchStyles.fieldControl, workbenchStyles.capitalize)}
+        onChange={(event) => onChange(event.currentTarget.value)}
+        value={value}
+      >
         {options.map((option) => (
           <option key={option}>{option}</option>
         ))}

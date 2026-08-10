@@ -1,9 +1,11 @@
 import { fileURLToPath } from 'node:url'
+import stylex from '@stylexjs/unplugin'
 import { defineConfig } from 'vitest/config'
 
 const fromRoot = (path: string) => fileURLToPath(new URL(path, import.meta.url))
 
 export default defineConfig({
+  plugins: [stylex.rollup({ devMode: 'full', useCSSLayers: true })],
   resolve: {
     alias: {
       '@hifi/core': fromRoot('./packages/core/src/index.ts'),

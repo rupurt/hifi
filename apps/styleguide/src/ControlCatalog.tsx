@@ -1,6 +1,7 @@
 import { useId, useState } from 'react'
 import { StyleguideSection } from './StyleguideSection'
-import './styles/catalog.css'
+import { catalogClass, catalogStyles } from './stylex/catalog.stylex'
+import { className, stylexProps } from './stylex/shared.stylex'
 
 interface ControlCatalogProps {
   readonly grammarLabel: string
@@ -19,7 +20,7 @@ export function ControlCatalog({
   const [range, setRange] = useState(68)
 
   return (
-    <div className="control-catalog">
+    <div className={catalogClass('control-catalog')}>
       {hideInteractionSections ? null : (
         <>
           <StyleguideSection
@@ -28,43 +29,67 @@ export function ControlCatalog({
             index="07"
             title="Buttons"
           >
-            <div className="catalog-grid catalog-grid-actions">
-              <article className="catalog-specimen catalog-specimen-wide">
-                <header>
-                  <span>Command hierarchy</span>
-                  <code>default states</code>
+            <div className={catalogClass('catalog-grid', 'catalog-grid-actions')}>
+              <article className={catalogClass('catalog-specimen', 'catalog-specimen-wide')}>
+                <header
+                  className={className(catalogStyles.rowHeader, catalogStyles.specimenHeader)}
+                >
+                  <span className={className(catalogStyles.label)}>Command hierarchy</span>
+                  <code className={className(catalogStyles.code)}>default states</code>
                 </header>
-                <div className="catalog-control-row">
-                  <button className="catalog-button catalog-button-primary" type="button">
+                <div className={catalogClass('catalog-control-row')}>
+                  <button
+                    className={catalogClass('catalog-button', 'catalog-button-primary')}
+                    type="button"
+                  >
                     Continue
                   </button>
-                  <button className="catalog-button" type="button">
+                  <button className={catalogClass('catalog-button')} type="button">
                     Save draft
                   </button>
-                  <button className="catalog-button catalog-button-danger" type="button">
+                  <button
+                    className={catalogClass('catalog-button', 'catalog-button-danger')}
+                    type="button"
+                  >
                     Remove
                   </button>
-                  <button className="catalog-button" disabled type="button">
+                  <button className={catalogClass('catalog-button')} disabled type="button">
                     Disabled
                   </button>
-                  <button aria-label="Add item" className="catalog-icon-button" type="button">
-                    <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+                  <button
+                    aria-label="Add item"
+                    className={catalogClass('catalog-icon-button')}
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className={className(catalogStyles.icon)}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
                       <path d="M12 5v14M5 12h14" />
                     </svg>
                   </button>
                 </div>
               </article>
 
-              <article className="catalog-specimen">
-                <header>
-                  <span>Segmented control</span>
-                  <code>single select</code>
+              <article className={catalogClass('catalog-specimen')}>
+                <header
+                  className={className(catalogStyles.rowHeader, catalogStyles.specimenHeader)}
+                >
+                  <span className={className(catalogStyles.label)}>Segmented control</span>
+                  <code className={className(catalogStyles.code)}>single select</code>
                 </header>
-                <fieldset className="catalog-segmented">
-                  <legend className="visually-hidden">Composition layer</legend>
+                <fieldset className={catalogClass('catalog-segmented')}>
+                  <legend className={catalogClass('visually-hidden')}>Composition layer</legend>
                   {layers.map((candidate) => (
                     <button
                       aria-pressed={candidate === layer}
+                      className={className(
+                        catalogStyles.interactive,
+                        catalogStyles.segmentedButton,
+                        candidate === layer && catalogStyles.segmentedActive,
+                      )}
                       key={candidate}
                       onClick={() => setLayer(candidate)}
                       type="button"
@@ -75,25 +100,40 @@ export function ControlCatalog({
                 </fieldset>
               </article>
 
-              <article className="catalog-specimen">
-                <header>
-                  <span>Binary control</span>
-                  <code>switch</code>
+              <article className={catalogClass('catalog-specimen')}>
+                <header
+                  className={className(catalogStyles.rowHeader, catalogStyles.specimenHeader)}
+                >
+                  <span className={className(catalogStyles.label)}>Binary control</span>
+                  <code className={className(catalogStyles.code)}>switch</code>
                 </header>
-                <div className="catalog-switch-row">
+                <div className={catalogClass('catalog-switch-row')}>
                   <button
                     aria-checked={enabled}
                     aria-label="Enable live material"
-                    className="catalog-switch"
+                    className={className(
+                      catalogStyles.interactive,
+                      catalogStyles.switch,
+                      enabled && catalogStyles.switchActive,
+                    )}
                     onClick={() => setEnabled((current) => !current)}
                     role="switch"
                     type="button"
                   >
-                    <span />
+                    <span
+                      className={className(
+                        catalogStyles.switchThumb,
+                        enabled && catalogStyles.switchThumbActive,
+                      )}
+                    />
                   </button>
                   <div>
-                    <strong>{enabled ? 'Material active' : 'Material quiet'}</strong>
-                    <small>Preserves a familiar binary state.</small>
+                    <strong className={className(catalogStyles.stackBlock)}>
+                      {enabled ? 'Material active' : 'Material quiet'}
+                    </strong>
+                    <small className={className(catalogStyles.mutedSmall)}>
+                      Preserves a familiar binary state.
+                    </small>
                   </div>
                 </div>
               </article>
@@ -106,98 +146,157 @@ export function ControlCatalog({
             index="08"
             title="Forms"
           >
-            <form className="catalog-form" onSubmit={(event) => event.preventDefault()}>
-              <div className="catalog-field-grid">
-                <label className="catalog-field">
-                  <span>Text input</span>
-                  <input defaultValue="High fidelity" type="text" />
-                  <small>Free-form content</small>
+            <form
+              className={catalogClass('catalog-form')}
+              onSubmit={(event) => event.preventDefault()}
+            >
+              <div className={catalogClass('catalog-field-grid')}>
+                <label className={catalogClass('catalog-field')}>
+                  <span className={className(catalogStyles.fieldLabel)}>Text input</span>
+                  <input
+                    className={className(catalogStyles.input)}
+                    defaultValue="High fidelity"
+                    type="text"
+                  />
+                  <small className={className(catalogStyles.fieldHelp)}>Free-form content</small>
                 </label>
-                <label className="catalog-field">
-                  <span>Search</span>
-                  <input defaultValue="material grammar" type="search" />
-                  <small>Query with native clearing behavior</small>
+                <label className={catalogClass('catalog-field')}>
+                  <span className={className(catalogStyles.fieldLabel)}>Search</span>
+                  <input
+                    className={className(catalogStyles.input)}
+                    defaultValue="material grammar"
+                    type="search"
+                  />
+                  <small className={className(catalogStyles.fieldHelp)}>
+                    Query with native clearing behavior
+                  </small>
                 </label>
-                <label className="catalog-field">
-                  <span>Number</span>
-                  <input defaultValue="24" min="0" type="number" />
-                  <small>Numeric input with steppers</small>
+                <label className={catalogClass('catalog-field')}>
+                  <span className={className(catalogStyles.fieldLabel)}>Number</span>
+                  <input
+                    className={className(catalogStyles.input)}
+                    defaultValue="24"
+                    min="0"
+                    type="number"
+                  />
+                  <small className={className(catalogStyles.fieldHelp)}>
+                    Numeric input with steppers
+                  </small>
                 </label>
-                <label className="catalog-field">
-                  <span>Select</span>
-                  <select defaultValue="medium">
+                <label className={catalogClass('catalog-field')}>
+                  <span className={className(catalogStyles.fieldLabel)}>Select</span>
+                  <select className={className(catalogStyles.input)} defaultValue="medium">
                     <option value="subtle">Subtle</option>
                     <option value="medium">Medium</option>
                     <option value="expressive">Expressive</option>
                   </select>
-                  <small>Bounded native selection</small>
+                  <small className={className(catalogStyles.fieldHelp)}>
+                    Bounded native selection
+                  </small>
                 </label>
-                <label className="catalog-field catalog-field-wide">
-                  <span>Textarea</span>
-                  <textarea defaultValue="A coherent visual language should hold together from the smallest control to the broadest application surface." />
-                  <small>Longer composition and notes</small>
+                <label className={catalogClass('catalog-field', 'catalog-field-wide')}>
+                  <span className={className(catalogStyles.fieldLabel)}>Textarea</span>
+                  <textarea
+                    className={className(catalogStyles.input, catalogStyles.textarea)}
+                    defaultValue="A coherent visual language should hold together from the smallest control to the broadest application surface."
+                  />
+                  <small className={className(catalogStyles.fieldHelp)}>
+                    Longer composition and notes
+                  </small>
                 </label>
-                <label className="catalog-field catalog-range-field">
-                  <span>
+                <label className={catalogClass('catalog-field', 'catalog-range-field')}>
+                  <span className={className(catalogStyles.fieldLabel)}>
                     Range
-                    <output>{range}%</output>
+                    <output className={className(catalogStyles.fieldHelp)}>{range}%</output>
                   </span>
                   <input
+                    className={className(catalogStyles.range)}
                     max="100"
                     min="0"
                     onChange={(event) => setRange(event.currentTarget.valueAsNumber)}
                     type="range"
                     value={range}
                   />
-                  <small>Continuous bounded value</small>
+                  <small className={className(catalogStyles.fieldHelp)}>
+                    Continuous bounded value
+                  </small>
                 </label>
               </div>
 
-              <div className="catalog-choice-grid">
-                <fieldset className="catalog-choice-group">
-                  <legend>Checkboxes</legend>
-                  <label>
-                    <input defaultChecked type="checkbox" />
+              <div className={catalogClass('catalog-choice-grid')}>
+                <fieldset className={catalogClass('catalog-choice-group')}>
+                  <legend className={className(catalogStyles.choiceLegend)}>Checkboxes</legend>
+                  <label className={className(catalogStyles.choiceLabel)}>
+                    <input
+                      className={className(catalogStyles.choiceInput)}
+                      defaultChecked
+                      type="checkbox"
+                    />
                     <span>Show material effects</span>
                   </label>
-                  <label>
-                    <input type="checkbox" />
+                  <label className={className(catalogStyles.choiceLabel)}>
+                    <input className={className(catalogStyles.choiceInput)} type="checkbox" />
                     <span>Increase contrast</span>
                   </label>
-                  <label>
-                    <input disabled type="checkbox" />
+                  <label className={className(catalogStyles.choiceLabel)}>
+                    <input
+                      className={className(catalogStyles.choiceInput)}
+                      disabled
+                      type="checkbox"
+                    />
                     <span>Unavailable option</span>
                   </label>
                 </fieldset>
 
-                <fieldset className="catalog-choice-group">
-                  <legend>Radio choices</legend>
-                  <label>
-                    <input defaultChecked name={radioName} type="radio" />
+                <fieldset className={catalogClass('catalog-choice-group')}>
+                  <legend className={className(catalogStyles.choiceLegend)}>Radio choices</legend>
+                  <label className={className(catalogStyles.choiceLabel)}>
+                    <input
+                      className={className(catalogStyles.choiceInput)}
+                      defaultChecked
+                      name={radioName}
+                      type="radio"
+                    />
                     <span>Automatic</span>
                   </label>
-                  <label>
-                    <input name={radioName} type="radio" />
+                  <label className={className(catalogStyles.choiceLabel)}>
+                    <input
+                      className={className(catalogStyles.choiceInput)}
+                      name={radioName}
+                      type="radio"
+                    />
                     <span>Light</span>
                   </label>
-                  <label>
-                    <input name={radioName} type="radio" />
+                  <label className={className(catalogStyles.choiceLabel)}>
+                    <input
+                      className={className(catalogStyles.choiceInput)}
+                      name={radioName}
+                      type="radio"
+                    />
                     <span>Dark</span>
                   </label>
                 </fieldset>
 
-                <div className="catalog-picker-group">
-                  <label className="catalog-field">
-                    <span>Color</span>
-                    <input defaultValue="#6558f5" type="color" />
+                <div className={catalogClass('catalog-picker-group')}>
+                  <label className={catalogClass('catalog-field')}>
+                    <span className={className(catalogStyles.fieldLabel)}>Color</span>
+                    <input
+                      className={className(catalogStyles.colorInput)}
+                      defaultValue="#6558f5"
+                      type="color"
+                    />
                   </label>
-                  <label className="catalog-field">
-                    <span>Date</span>
-                    <input defaultValue="2026-08-08" type="date" />
+                  <label className={catalogClass('catalog-field')}>
+                    <span className={className(catalogStyles.fieldLabel)}>Date</span>
+                    <input
+                      className={className(catalogStyles.input)}
+                      defaultValue="2026-08-08"
+                      type="date"
+                    />
                   </label>
-                  <label className="catalog-field">
-                    <span>File</span>
-                    <input type="file" />
+                  <label className={catalogClass('catalog-field')}>
+                    <span className={className(catalogStyles.fieldLabel)}>File</span>
+                    <input className={className(catalogStyles.fileInput)} type="file" />
                   </label>
                 </div>
               </div>
@@ -212,30 +311,30 @@ export function ControlCatalog({
         index="09"
         title="Badges"
       >
-        <div className="catalog-badge-board">
-          <article>
-            <span>Semantic status</span>
-            <div className="catalog-control-row">
-              <span className="catalog-badge catalog-badge-positive">Ready</span>
-              <span className="catalog-badge catalog-badge-warning">Review</span>
-              <span className="catalog-badge catalog-badge-danger">Blocked</span>
-              <span className="catalog-badge">Draft</span>
+        <div className={catalogClass('catalog-badge-board')}>
+          <article className={className(catalogStyles.badgeBoardItem)}>
+            <span className={className(catalogStyles.badgeBoardLabel)}>Semantic status</span>
+            <div className={catalogClass('catalog-control-row')}>
+              <span className={catalogClass('catalog-badge', 'catalog-badge-positive')}>Ready</span>
+              <span className={catalogClass('catalog-badge', 'catalog-badge-warning')}>Review</span>
+              <span className={catalogClass('catalog-badge', 'catalog-badge-danger')}>Blocked</span>
+              <span className={catalogClass('catalog-badge')}>Draft</span>
             </div>
           </article>
-          <article>
-            <span>Classification</span>
-            <div className="catalog-control-row">
-              <span className="catalog-badge catalog-badge-solid">Liquid</span>
-              <span className="catalog-badge">React</span>
-              <span className="catalog-badge">Stable API</span>
+          <article className={className(catalogStyles.badgeBoardItem)}>
+            <span className={className(catalogStyles.badgeBoardLabel)}>Classification</span>
+            <div className={catalogClass('catalog-control-row')}>
+              <span className={catalogClass('catalog-badge', 'catalog-badge-solid')}>Liquid</span>
+              <span className={catalogClass('catalog-badge')}>React</span>
+              <span className={catalogClass('catalog-badge')}>Stable API</span>
             </div>
           </article>
-          <article>
-            <span>Counts</span>
-            <div className="catalog-control-row">
-              <span className="catalog-count-badge">3</span>
-              <span className="catalog-count-badge">12</span>
-              <span className="catalog-count-badge">99+</span>
+          <article className={className(catalogStyles.badgeBoardItem)}>
+            <span className={className(catalogStyles.badgeBoardLabel)}>Counts</span>
+            <div className={catalogClass('catalog-control-row')}>
+              <span className={catalogClass('catalog-count-badge')}>3</span>
+              <span className={catalogClass('catalog-count-badge')}>12</span>
+              <span className={catalogClass('catalog-count-badge')}>99+</span>
             </div>
           </article>
         </div>
@@ -247,42 +346,58 @@ export function ControlCatalog({
         index="10"
         title="Cards"
       >
-        <div className="catalog-card-grid">
-          <article className="catalog-object-card">
-            <header>
-              <span>Featured object</span>
-              <span className="catalog-badge catalog-badge-positive">Live</span>
+        <div className={catalogClass('catalog-card-grid')}>
+          <article
+            className={className(
+              catalogStyles.surface,
+              catalogStyles.card,
+              catalogStyles.cardFirstWide,
+            )}
+          >
+            <header className={className(catalogStyles.rowHeader)}>
+              <span className={className(catalogStyles.label)}>Featured object</span>
+              <span className={catalogClass('catalog-badge', 'catalog-badge-positive')}>Live</span>
             </header>
-            <strong>Material study 024</strong>
-            <p>A composed object with identity, supporting copy, state, and a clear next action.</p>
-            <div className="catalog-card-meter" aria-hidden="true">
-              <span />
+            <strong className={className(catalogStyles.cardTitle)}>Material study 024</strong>
+            <p className={className(catalogStyles.cardCopy)}>
+              A composed object with identity, supporting copy, state, and a clear next action.
+            </p>
+            <div className={catalogClass('catalog-card-meter')} aria-hidden="true">
+              <span className={className(catalogStyles.meterValue)} />
             </div>
-            <button className="catalog-text-action" type="button">
+            <button className={catalogClass('catalog-text-action')} type="button">
               Open study <span aria-hidden="true">→</span>
             </button>
           </article>
 
-          <article className="catalog-metric-card">
-            <span>System coverage</span>
-            <strong>86%</strong>
-            <p>Six new component states documented this week.</p>
-            <div className="catalog-sparkline" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-              <i />
-              <i />
-              <i />
-              <i />
+          <article className={catalogClass('catalog-metric-card')}>
+            <span className={className(catalogStyles.cardEyebrow)}>System coverage</span>
+            <strong className={className(catalogStyles.metric)}>86%</strong>
+            <p className={className(catalogStyles.cardCopy)}>
+              Six new component states documented this week.
+            </p>
+            <div className={catalogClass('catalog-sparkline')} aria-hidden="true">
+              {['28%', '48%', '39%', '62%', '55%', '78%', '100%'].map((height) => (
+                <i key={height} {...stylexProps(catalogStyles.sparkBar(height))} />
+              ))}
             </div>
           </article>
 
-          <article className="catalog-action-card">
-            <span>Next calibration</span>
-            <strong>Reduced transparency</strong>
-            <p>Verify that depth and hierarchy survive when material effects are unavailable.</p>
-            <button className="catalog-button catalog-button-primary" type="button">
+          <article className={catalogClass('catalog-action-card')}>
+            <span className={className(catalogStyles.cardEyebrow)}>Next calibration</span>
+            <strong className={className(catalogStyles.actionTitle)}>Reduced transparency</strong>
+            <p className={className(catalogStyles.cardCopy)}>
+              Verify that depth and hierarchy survive when material effects are unavailable.
+            </p>
+            <button
+              className={className(
+                catalogStyles.interactive,
+                catalogStyles.button,
+                catalogStyles.primaryButton,
+                catalogStyles.actionButton,
+              )}
+              type="button"
+            >
               Start review
             </button>
           </article>
@@ -295,62 +410,89 @@ export function ControlCatalog({
         index="11"
         title="Tables"
       >
-        <section aria-label="Component readiness" className="catalog-table-shell">
-          <div className="catalog-table-heading">
+        <section aria-label="Component readiness" className={catalogClass('catalog-table-shell')}>
+          <div className={catalogClass('catalog-table-heading')}>
             <div>
-              <span>Component inventory</span>
-              <strong>Grammar readiness</strong>
+              <span className={className(catalogStyles.code, catalogStyles.stackBlock)}>
+                Component inventory
+              </span>
+              <strong className={className(catalogStyles.tableHeadingTitle)}>
+                Grammar readiness
+              </strong>
             </div>
-            <button className="catalog-button" type="button">
+            <button className={catalogClass('catalog-button')} type="button">
               Filter
             </button>
           </div>
-          <table className="catalog-table">
+          <table className={catalogClass('catalog-table')}>
             <thead>
               <tr>
-                <th scope="col">Primitive</th>
-                <th scope="col">Family</th>
-                <th scope="col">Theme coverage</th>
-                <th scope="col">State</th>
-                <th scope="col">Action</th>
+                {['Primitive', 'Family', 'Theme coverage', 'State', 'Action'].map((heading) => (
+                  <th
+                    className={className(catalogStyles.tableCell, catalogStyles.tableHead)}
+                    key={heading}
+                    scope="col"
+                  >
+                    {heading}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">Button</th>
-                <td>Command</td>
-                <td>4 / 4</td>
-                <td>
-                  <span className="catalog-badge catalog-badge-positive">Ready</span>
+              <tr className={className(catalogStyles.tableRow)}>
+                <th
+                  className={className(catalogStyles.tableCell, catalogStyles.tableRowHead)}
+                  scope="row"
+                >
+                  Button
+                </th>
+                <td className={className(catalogStyles.tableCell)}>Command</td>
+                <td className={className(catalogStyles.tableCell)}>4 / 4</td>
+                <td className={className(catalogStyles.tableCell)}>
+                  <span className={catalogClass('catalog-badge', 'catalog-badge-positive')}>
+                    Ready
+                  </span>
                 </td>
-                <td>
-                  <button className="catalog-table-action" type="button">
+                <td className={className(catalogStyles.tableCell)}>
+                  <button className={catalogClass('catalog-table-action')} type="button">
                     Inspect
                   </button>
                 </td>
               </tr>
-              <tr>
-                <th scope="row">Text input</th>
-                <td>Field</td>
-                <td>4 / 4</td>
-                <td>
-                  <span className="catalog-badge catalog-badge-warning">Review</span>
+              <tr className={className(catalogStyles.tableRow)}>
+                <th
+                  className={className(catalogStyles.tableCell, catalogStyles.tableRowHead)}
+                  scope="row"
+                >
+                  Text input
+                </th>
+                <td className={className(catalogStyles.tableCell)}>Field</td>
+                <td className={className(catalogStyles.tableCell)}>4 / 4</td>
+                <td className={className(catalogStyles.tableCell)}>
+                  <span className={catalogClass('catalog-badge', 'catalog-badge-warning')}>
+                    Review
+                  </span>
                 </td>
-                <td>
-                  <button className="catalog-table-action" type="button">
+                <td className={className(catalogStyles.tableCell)}>
+                  <button className={catalogClass('catalog-table-action')} type="button">
                     Compare
                   </button>
                 </td>
               </tr>
-              <tr>
-                <th scope="row">Data table</th>
-                <td>Structure</td>
-                <td>2 / 4</td>
-                <td>
-                  <span className="catalog-badge">Draft</span>
+              <tr className={className(catalogStyles.tableRow)}>
+                <th
+                  className={className(catalogStyles.tableCell, catalogStyles.tableRowHead)}
+                  scope="row"
+                >
+                  Data table
+                </th>
+                <td className={className(catalogStyles.tableCell)}>Structure</td>
+                <td className={className(catalogStyles.tableCell)}>2 / 4</td>
+                <td className={className(catalogStyles.tableCell)}>
+                  <span className={catalogClass('catalog-badge')}>Draft</span>
                 </td>
-                <td>
-                  <button className="catalog-table-action" type="button">
+                <td className={className(catalogStyles.tableCell)}>
+                  <button className={catalogClass('catalog-table-action')} type="button">
                     Continue
                   </button>
                 </td>
@@ -366,59 +508,81 @@ export function ControlCatalog({
         index="12"
         title="Lists"
       >
-        <div className="catalog-list-grid">
-          <article className="catalog-list-card">
-            <header>
-              <span>Ordered work</span>
-              <small>3 items</small>
+        <div className={catalogClass('catalog-list-grid')}>
+          <article className={catalogClass('catalog-list-card')}>
+            <header className={className(catalogStyles.rowHeader)}>
+              <span className={className(catalogStyles.label)}>Ordered work</span>
+              <small className={className(catalogStyles.code)}>3 items</small>
             </header>
-            <ol>
-              <li data-state="complete">
-                <span>01</span>
+            <ol className={className(catalogStyles.list)}>
+              <li className={className(catalogStyles.listItem)} data-state="complete">
+                <span className={className(catalogStyles.listIndex)}>01</span>
                 <div>
-                  <strong>Choose a grammar</strong>
-                  <small>Material premise established</small>
+                  <strong
+                    className={className(catalogStyles.stackBlock, catalogStyles.listTitleComplete)}
+                  >
+                    Choose a grammar
+                  </strong>
+                  <small className={className(catalogStyles.mutedSmall)}>
+                    Material premise established
+                  </small>
                 </div>
               </li>
-              <li data-state="active">
-                <span>02</span>
+              <li className={className(catalogStyles.listItem)} data-state="active">
+                <span className={className(catalogStyles.listIndex, catalogStyles.listIndexActive)}>
+                  02
+                </span>
                 <div>
-                  <strong>Calibrate controls</strong>
-                  <small>Current specimen family</small>
+                  <strong className={className(catalogStyles.stackBlock)}>
+                    Calibrate controls
+                  </strong>
+                  <small className={className(catalogStyles.mutedSmall)}>
+                    Current specimen family
+                  </small>
                 </div>
               </li>
-              <li>
-                <span>03</span>
+              <li className={className(catalogStyles.listItem)}>
+                <span className={className(catalogStyles.listIndex)}>03</span>
                 <div>
-                  <strong>Compose an interface</strong>
-                  <small>Pending system validation</small>
+                  <strong className={className(catalogStyles.stackBlock)}>
+                    Compose an interface
+                  </strong>
+                  <small className={className(catalogStyles.mutedSmall)}>
+                    Pending system validation
+                  </small>
                 </div>
               </li>
             </ol>
           </article>
 
-          <article className="catalog-list-card catalog-navigation-list">
-            <header>
-              <span>Navigation list</span>
-              <small>Active state</small>
+          <article className={catalogClass('catalog-list-card', 'catalog-navigation-list')}>
+            <header className={className(catalogStyles.rowHeader)}>
+              <span className={className(catalogStyles.label)}>Navigation list</span>
+              <small className={className(catalogStyles.code)}>Active state</small>
             </header>
-            <ul>
-              <li>
-                <button type="button">
+            <ul className={className(catalogStyles.list)}>
+              <li className={className(catalogStyles.navigationItem)}>
+                <button className={className(catalogStyles.navigationButton)} type="button">
                   <span>Foundations</span>
-                  <small>6 sections</small>
+                  <small className={className(catalogStyles.mutedSmall)}>6 sections</small>
                 </button>
               </li>
-              <li data-state="active">
-                <button type="button">
+              <li className={className(catalogStyles.navigationItem)} data-state="active">
+                <button
+                  className={className(
+                    catalogStyles.navigationButton,
+                    catalogStyles.navigationActive,
+                  )}
+                  type="button"
+                >
                   <span>Controls</span>
-                  <small>3 sections</small>
+                  <small className={className(catalogStyles.mutedSmall)}>3 sections</small>
                 </button>
               </li>
-              <li>
-                <button type="button">
+              <li className={className(catalogStyles.navigationItem)}>
+                <button className={className(catalogStyles.navigationButton)} type="button">
                   <span>Structures</span>
-                  <small>5 sections</small>
+                  <small className={className(catalogStyles.mutedSmall)}>5 sections</small>
                 </button>
               </li>
             </ul>
@@ -432,37 +596,59 @@ export function ControlCatalog({
         index="13"
         title="Feedback"
       >
-        <div className="catalog-feedback-grid">
-          <article className="catalog-feedback-card" role="status">
-            <span className="catalog-feedback-mark" aria-hidden="true">
+        <div className={catalogClass('catalog-feedback-grid')}>
+          <article className={catalogClass('catalog-feedback-card')} role="status">
+            <span className={className(catalogStyles.feedbackMark)} aria-hidden="true">
               i
             </span>
             <div>
               <strong>Theme applied successfully</strong>
-              <p>The current material tokens are active across every specimen on this route.</p>
+              <p className={className(catalogStyles.feedbackCopy)}>
+                The current material tokens are active across every specimen on this route.
+              </p>
             </div>
-            <button aria-label="Dismiss message" type="button">
+            <button
+              aria-label="Dismiss message"
+              className={className(catalogStyles.interactive, catalogStyles.dismiss)}
+              type="button"
+            >
               ×
             </button>
           </article>
-          <article className="catalog-feedback-card catalog-feedback-positive" role="status">
-            <span className="catalog-feedback-mark" aria-hidden="true">
+          <article
+            className={catalogClass('catalog-feedback-card', 'catalog-feedback-positive')}
+            role="status"
+          >
+            <span
+              className={className(catalogStyles.feedbackMark, catalogStyles.feedbackMarkPositive)}
+              aria-hidden="true"
+            >
               ✓
             </span>
             <div>
               <strong>All checks passed</strong>
-              <p>Contrast, keyboard focus, and reduced-motion behavior are ready.</p>
+              <p className={className(catalogStyles.feedbackCopy)}>
+                Contrast, keyboard focus, and reduced-motion behavior are ready.
+              </p>
             </div>
           </article>
-          <article className="catalog-feedback-card catalog-feedback-warning" role="alert">
-            <span className="catalog-feedback-mark" aria-hidden="true">
+          <article
+            className={catalogClass('catalog-feedback-card', 'catalog-feedback-warning')}
+            role="alert"
+          >
+            <span
+              className={className(catalogStyles.feedbackMark, catalogStyles.feedbackMarkWarning)}
+              aria-hidden="true"
+            >
               !
             </span>
             <div>
               <strong>Fallback needs review</strong>
-              <p>Verify this surface without blur or GPU rendering before publishing.</p>
+              <p className={className(catalogStyles.feedbackCopy)}>
+                Verify this surface without blur or GPU rendering before publishing.
+              </p>
             </div>
-            <button className="catalog-text-action" type="button">
+            <button className={catalogClass('catalog-text-action')} type="button">
               Review
             </button>
           </article>
@@ -475,20 +661,29 @@ export function ControlCatalog({
         index="14"
         title="Composition"
       >
-        <article className="catalog-composition">
-          <header className="catalog-composition-header">
+        <article className={catalogClass('catalog-composition')}>
+          <header className={catalogClass('catalog-composition-header')}>
             <div>
-              <span>Hifi / Grammar lab</span>
-              <strong>Material workspace</strong>
+              <span className={className(catalogStyles.compositionMeta)}>Hifi / Grammar lab</span>
+              <strong className={className(catalogStyles.compositionHeaderTitle)}>
+                Material workspace
+              </strong>
             </div>
-            <div className="catalog-composition-actions">
-              <span className="catalog-badge catalog-badge-positive">Synced</span>
+            <div className={catalogClass('catalog-composition-actions')}>
+              <span className={catalogClass('catalog-badge', 'catalog-badge-positive')}>
+                Synced
+              </span>
               <button
                 aria-label="More workspace actions"
-                className="catalog-icon-button"
+                className={catalogClass('catalog-icon-button')}
                 type="button"
               >
-                <svg aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
+                <svg
+                  aria-hidden="true"
+                  className={className(catalogStyles.icon)}
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <circle cx="5" cy="12" r="1.5" />
                   <circle cx="12" cy="12" r="1.5" />
                   <circle cx="19" cy="12" r="1.5" />
@@ -496,65 +691,105 @@ export function ControlCatalog({
               </button>
             </div>
           </header>
-          <div className="catalog-composition-body">
-            <nav aria-label="Composition preview">
-              <span>Workspace</span>
-              <a aria-current="page" href="#composition-heading">
+          <div className={catalogClass('catalog-composition-body')}>
+            <nav
+              aria-label="Composition preview"
+              className={className(catalogStyles.compositionNav)}
+            >
+              <span
+                className={className(
+                  catalogStyles.compositionMeta,
+                  catalogStyles.compositionNavHeading,
+                )}
+              >
+                Workspace
+              </span>
+              <a
+                aria-current="page"
+                className={className(
+                  catalogStyles.compositionNavLink,
+                  catalogStyles.compositionNavActive,
+                )}
+                href="#composition-heading"
+              >
                 Overview
               </a>
-              <a href="#material-heading">Material</a>
-              <a href="#forms-heading">Controls</a>
-              <a href="#feedback-heading">Checks</a>
+              <a className={className(catalogStyles.compositionNavLink)} href="#material-heading">
+                Material
+              </a>
+              <a className={className(catalogStyles.compositionNavLink)} href="#forms-heading">
+                Controls
+              </a>
+              <a className={className(catalogStyles.compositionNavLink)} href="#feedback-heading">
+                Checks
+              </a>
             </nav>
-            <div className="catalog-composition-main">
-              <div className="catalog-composition-title">
+            <div className={catalogClass('catalog-composition-main')}>
+              <div className={catalogClass('catalog-composition-title')}>
                 <div>
-                  <span>Current grammar</span>
-                  <strong>{grammarLabel}</strong>
+                  <span className={className(catalogStyles.compositionMeta)}>Current grammar</span>
+                  <strong className={className(catalogStyles.compositionTitleStrong)}>
+                    {grammarLabel}
+                  </strong>
                 </div>
-                <button className="catalog-button catalog-button-primary" type="button">
+                <button
+                  className={catalogClass('catalog-button', 'catalog-button-primary')}
+                  type="button"
+                >
                   Publish changes
                 </button>
               </div>
-              <div className="catalog-composition-metrics">
-                <article>
-                  <span>Sections</span>
-                  <strong>14</strong>
-                  <small>Shared contract</small>
+              <div className={catalogClass('catalog-composition-metrics')}>
+                <article className={className(catalogStyles.metricCard)}>
+                  <span className={className(catalogStyles.compositionMeta)}>Sections</span>
+                  <strong className={className(catalogStyles.metricValue)}>14</strong>
+                  <small className={className(catalogStyles.mutedSmall)}>Shared contract</small>
                 </article>
-                <article>
-                  <span>Coverage</span>
-                  <strong>86%</strong>
-                  <small>+8 this week</small>
+                <article className={className(catalogStyles.metricCard)}>
+                  <span className={className(catalogStyles.compositionMeta)}>Coverage</span>
+                  <strong className={className(catalogStyles.metricValue)}>86%</strong>
+                  <small className={className(catalogStyles.mutedSmall)}>+8 this week</small>
                 </article>
-                <article>
-                  <span>Open checks</span>
-                  <strong>03</strong>
-                  <small>2 accessibility</small>
+                <article className={className(catalogStyles.metricCard)}>
+                  <span className={className(catalogStyles.compositionMeta)}>Open checks</span>
+                  <strong className={className(catalogStyles.metricValue)}>03</strong>
+                  <small className={className(catalogStyles.mutedSmall)}>2 accessibility</small>
                 </article>
               </div>
-              <div className="catalog-composition-activity">
-                <header>
+              <div className={catalogClass('catalog-composition-activity')}>
+                <header className={className(catalogStyles.activityHeader)}>
                   <strong>Recent calibration</strong>
-                  <button className="catalog-text-action" type="button">
+                  <button className={catalogClass('catalog-text-action')} type="button">
                     View all
                   </button>
                 </header>
-                <div>
-                  <span className="catalog-count-badge">01</span>
-                  <p>
-                    <strong>Focus state tuned</strong>
-                    <small>Buttons · just now</small>
+                <div className={className(catalogStyles.activityRow)}>
+                  <span className={catalogClass('catalog-count-badge')}>01</span>
+                  <p className={className(catalogStyles.activityCopy)}>
+                    <strong className={className(catalogStyles.stackBlock)}>
+                      Focus state tuned
+                    </strong>
+                    <small className={className(catalogStyles.mutedSmall)}>
+                      Buttons · just now
+                    </small>
                   </p>
-                  <span className="catalog-badge catalog-badge-positive">Ready</span>
+                  <span className={catalogClass('catalog-badge', 'catalog-badge-positive')}>
+                    Ready
+                  </span>
                 </div>
-                <div>
-                  <span className="catalog-count-badge">02</span>
-                  <p>
-                    <strong>Material fallback added</strong>
-                    <small>Cards · 18 min ago</small>
+                <div className={className(catalogStyles.activityRow)}>
+                  <span className={catalogClass('catalog-count-badge')}>02</span>
+                  <p className={className(catalogStyles.activityCopy)}>
+                    <strong className={className(catalogStyles.stackBlock)}>
+                      Material fallback added
+                    </strong>
+                    <small className={className(catalogStyles.mutedSmall)}>
+                      Cards · 18 min ago
+                    </small>
                   </p>
-                  <span className="catalog-badge catalog-badge-warning">Review</span>
+                  <span className={catalogClass('catalog-badge', 'catalog-badge-warning')}>
+                    Review
+                  </span>
                 </div>
               </div>
             </div>

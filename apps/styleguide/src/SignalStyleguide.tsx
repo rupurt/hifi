@@ -7,14 +7,15 @@ import {
   signalThemeMaterials,
 } from '@hifi/signal'
 import { useNavigate, useSearch } from '@tanstack/react-router'
-import { type CSSProperties, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ControlCatalog } from './ControlCatalog'
 import { FoundationCatalog } from './FoundationCatalog'
 import { SignalMaterialLab } from './ProgrammableMaterialLabs'
 import { StyleguideNav } from './StyleguideNav'
 import { StyleguideSection } from './StyleguideSection'
 import { ThemePicker } from './ThemePicker'
-import './styles/signal.css'
+import { className, sharedStyles, stylexProps } from './stylex/shared.stylex'
+import { signalStyles } from './stylex/signal.stylex'
 
 export function SignalStyleguide() {
   const { theme } = useSearch({ from: '/styleguide/signal' })
@@ -27,70 +28,66 @@ export function SignalStyleguide() {
   useEffect(() => setMaterial(preset), [preset])
 
   const materialStyle = getSignalMaterialStyle(material)
-  const pageStyle = {
-    ...materialStyle,
-    '--control-accent': material.emissionColor,
-    '--control-accent-contrast': material.backgroundColor,
-    '--control-border': `color-mix(in srgb, ${material.emissionColor} 30%, transparent)`,
-    '--control-radius': '2px',
-    '--control-shadow': `0 0 ${Math.max(4, material.bloom * 0.5)}px color-mix(in srgb, ${material.emissionColor} 14%, transparent)`,
-    '--control-surface': `color-mix(in srgb, ${material.backgroundColor} 88%, ${material.emissionColor})`,
-    '--control-surface-strong': material.backgroundColor,
-    '--generated-control-accent': material.emissionColor,
-    '--generated-control-accent-contrast': material.backgroundColor,
-    '--generated-control-border': `color-mix(in srgb, ${material.emissionColor} 28%, transparent)`,
-    '--generated-control-muted': `color-mix(in srgb, ${material.secondaryColor} 58%, transparent)`,
-    '--generated-control-shadow': `0 0 ${Math.max(4, material.bloom * 0.45)}px color-mix(in srgb, ${material.emissionColor} 13%, transparent)`,
-    '--generated-control-surface': `color-mix(in srgb, ${material.backgroundColor} 92%, ${material.emissionColor})`,
-    '--generated-control-surface-strong': material.backgroundColor,
-    '--generated-control-text': material.secondaryColor,
-    '--guide-ink': material.secondaryColor,
-    '--guide-line': `color-mix(in srgb, ${material.emissionColor} 29%, transparent)`,
-    '--guide-muted': `color-mix(in srgb, ${material.secondaryColor} 62%, transparent)`,
-    '--signal-background': material.backgroundColor,
-    '--signal-emission': material.emissionColor,
-    '--signal-secondary': material.secondaryColor,
-    '--signal-trace-width': `${material.traceWidth}px`,
-  } as CSSProperties
+  const pageStyle = signalStyles.generatedPage({
+    background: material.backgroundColor,
+    backgroundImage: materialStyle.backgroundImage,
+    backgroundSize:
+      materialStyle.backgroundSize === undefined ? undefined : String(materialStyle.backgroundSize),
+    bloom: `${material.bloom}px`,
+    boxShadow: materialStyle.boxShadow,
+    decay: `${material.decay}s`,
+    emission: material.emissionColor,
+    focus: material.focus,
+    grid: `${material.gridSize}px`,
+    intensity: material.intensity,
+    noise: material.noise,
+    rate: `${Math.max(0.3, 60 / material.scanRate)}s`,
+    secondary: material.secondaryColor,
+    textShadow: materialStyle.textShadow,
+    trace: `${material.traceWidth}px`,
+  })
 
   return (
     <main
-      className="grammar-page signal-page"
+      {...stylexProps(sharedStyles.grammarPage, signalStyles.page, pageStyle)}
       data-generated-theme="true"
       data-theme={selectedTheme.name}
-      style={pageStyle}
     >
-      <header className="signal-hero">
-        <div className="signal-hero-copy">
-          <p className="grammar-kicker">04 / Emissive grammar</p>
-          <h1>
+      <header className={className(signalStyles.hero)}>
+        <div className={className(signalStyles.heroCopy)}>
+          <p className={className(sharedStyles.grammarKicker)}>04 / Emissive grammar</p>
+          <h1 className={className(signalStyles.heroTitle)}>
             INFORMATION
-            <span>LEAVES A TRACE</span>
+            <span className={className(signalStyles.heroTitleTrace)}>LEAVES A TRACE</span>
           </h1>
-          <p className="grammar-intro">
+          <p className={className(sharedStyles.grammarIntro)}>
             Signal treats light, frequency, persistence, and silence as interface material. It is a
             grammar for instruments that must be read in motion.
           </p>
-          <ul aria-label="Rendering capabilities" className="signal-capabilities">
-            <li>SDR baseline</li>
-            <li>HDR progressive</li>
-            <li>Audio opt-in</li>
+          <ul aria-label="Rendering capabilities" className={className(signalStyles.capabilities)}>
+            <li className={className(signalStyles.capability)}>SDR baseline</li>
+            <li className={className(signalStyles.capability)}>HDR progressive</li>
+            <li className={className(signalStyles.capability)}>Audio opt-in</li>
           </ul>
         </div>
 
-        <SignalSurface className="signal-hero-instrument" material={material}>
-          <div className="signal-radar" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-            <b />
+        <SignalSurface className={className(signalStyles.instrument)} material={material}>
+          <div className={className(signalStyles.radar)} aria-hidden="true">
+            <i className={className(signalStyles.radarRing)} />
+            <i className={className(signalStyles.radarRing, signalStyles.radarRingInner)} />
+            <i className={className(signalStyles.radarHorizontal)} />
+            <i className={className(signalStyles.radarVertical)} />
+            <i className={className(signalStyles.radarSweep)} />
+            <b className={className(signalStyles.radarTarget)} />
           </div>
-          <div className="signal-hero-readout">
-            <span>LIVE / CH 04</span>
-            <strong>{material.scanRate.toFixed(0)}.0</strong>
-            <small>cycles per field</small>
+          <div className={className(signalStyles.readout)}>
+            <span className={className(signalStyles.meta)}>LIVE / CH 04</span>
+            <strong className={className(signalStyles.readoutValue)}>
+              {material.scanRate.toFixed(0)}.0
+            </strong>
+            <small className={className(signalStyles.meta)}>cycles per field</small>
           </div>
-          <div className="signal-hero-footer">
+          <div className={className(signalStyles.heroFooter, signalStyles.meta)}>
             <span>{material.name}</span>
             <span>Persistence {material.decay.toFixed(2)} s</span>
           </div>
@@ -106,6 +103,7 @@ export function SignalStyleguide() {
         title="Calibrate an emissive field"
       >
         <ThemePicker
+          grammar="signal"
           label="Starting instrument"
           onChange={(name) => {
             void navigate({ replace: true, search: { theme: name } })

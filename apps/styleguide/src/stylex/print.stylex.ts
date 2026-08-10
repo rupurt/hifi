@@ -1,0 +1,144 @@
+import * as stylex from '@stylexjs/stylex'
+
+export const printStyles = stylex.create({
+  page: {
+    '--guide-display': 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif',
+    '--guide-font': 'Georgia, "Times New Roman", serif',
+    '--guide-mono': '"SFMono-Regular", Consolas, monospace',
+    backgroundColor: '#f2eddf',
+  },
+  generatedPage: (values: {
+    readonly accent: string
+    readonly backgroundColor: string
+    readonly backgroundImage: string | undefined
+    readonly backgroundSize: string | undefined
+    readonly controlShadow: string
+    readonly controlSurface: string
+    readonly fontFamily: string
+    readonly heavyRule: string
+    readonly ink: string
+    readonly rule: string
+    readonly textTransform: 'none' | 'uppercase'
+  }) => ({
+    '--control-accent': values.accent,
+    '--control-accent-contrast': values.backgroundColor,
+    '--control-border': values.ink,
+    '--control-shadow': values.controlShadow,
+    '--control-surface': values.controlSurface,
+    '--control-surface-strong': values.backgroundColor,
+    '--generated-control-accent': values.accent,
+    '--generated-control-accent-contrast': values.backgroundColor,
+    '--generated-control-border': values.ink,
+    '--generated-control-shadow': values.controlShadow,
+    '--generated-control-surface': values.controlSurface,
+    '--generated-control-surface-strong': values.backgroundColor,
+    '--generated-control-text': values.ink,
+    '--guide-display': values.fontFamily,
+    '--guide-font': values.fontFamily,
+    '--guide-ink': values.ink,
+    '--guide-line': values.ink,
+    '--guide-muted': `color-mix(in srgb, ${values.ink} 68%, transparent)`,
+    '--print-accent': values.accent,
+    '--print-heavy-rule': values.heavyRule,
+    '--print-rule': values.rule,
+    backgroundColor: values.backgroundColor,
+    backgroundImage: values.backgroundImage,
+    backgroundSize: values.backgroundSize,
+    color: values.ink,
+    fontFamily: values.fontFamily,
+    textTransform: values.textTransform,
+  }),
+  masthead: {
+    borderBottomColor: 'var(--guide-ink)',
+    borderBottomStyle: 'solid',
+    borderBottomWidth: 'var(--print-heavy-rule)',
+    paddingBlock: '54px 32px',
+  },
+  editionLine: {
+    borderBlockColor: 'var(--guide-ink)',
+    borderBlockStyle: 'solid',
+    borderBlockWidth: 'var(--print-rule)',
+    display: 'flex',
+    fontFamily: 'var(--guide-mono)',
+    fontSize: '0.62rem',
+    justifyContent: 'space-between',
+    letterSpacing: '0.08em',
+    paddingBlock: 9,
+    textTransform: 'uppercase',
+  },
+  nameplate: {
+    alignItems: 'end',
+    display: 'grid',
+    gap: 18,
+    gridTemplateColumns: '1fr auto',
+    paddingBlock: 30,
+    '@media (max-width: 680px)': { alignItems: 'start', gridTemplateColumns: '1fr' },
+  },
+  nameplateKicker: { margin: 0 },
+  nameplateTitle: {
+    fontFamily: 'var(--guide-display)',
+    fontSize: 'clamp(7rem, 22vw, 20rem)',
+    fontWeight: 900,
+    letterSpacing: '-0.075em',
+    lineHeight: 0.7,
+    margin: 0,
+    textTransform: 'uppercase',
+  },
+  nameplateTagline: {
+    fontFamily: 'var(--guide-mono)',
+    fontSize: '0.65rem',
+    letterSpacing: '0.1em',
+    margin: 0,
+    maxWidth: 200,
+    textTransform: 'uppercase',
+  },
+  lede: {
+    borderBottomColor: 'var(--guide-ink)',
+    borderBottomStyle: 'solid',
+    borderBottomWidth: 'var(--print-heavy-rule)',
+    display: 'grid',
+    gap: 32,
+    gridTemplateColumns: '0.85fr 1.15fr',
+    paddingBlock: 40,
+    '@media (max-width: 980px)': { gridTemplateColumns: '1fr' },
+  },
+  ledeCopy: {
+    alignSelf: 'center',
+    fontSize: 'clamp(1.25rem, 2.4vw, 2.1rem)',
+    lineHeight: 1.45,
+    maxWidth: 600,
+  },
+  dropcap: {
+    float: 'left',
+    fontFamily: 'var(--guide-display)',
+    fontSize: '6.5rem',
+    fontWeight: 900,
+    lineHeight: 0.72,
+    marginRight: 9,
+    marginTop: 12,
+  },
+  cover: { minHeight: 480 },
+  coverCopy: { maxWidth: 480, textAlign: 'left' },
+  coverMeta: {
+    borderBlockColor: 'currentColor',
+    borderBlockStyle: 'solid',
+    borderBlockWidth: 1,
+    display: 'block',
+    fontFamily: 'var(--guide-mono)',
+    fontSize: '0.62rem',
+    letterSpacing: '0.1em',
+    paddingBlock: 9,
+    textTransform: 'uppercase',
+  },
+  coverTitle: {
+    display: 'block',
+    fontFamily: 'var(--guide-display)',
+    fontSize: 'clamp(4rem, 8vw, 8rem)',
+    fontWeight: 900,
+    letterSpacing: '-0.07em',
+    lineHeight: 0.8,
+    marginBlock: '70px 24px',
+    textTransform: 'uppercase',
+  },
+  coverDescription: { lineHeight: 1.55, maxWidth: 340 },
+})

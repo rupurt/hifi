@@ -1,5 +1,6 @@
 import { StyleguideSection } from './StyleguideSection'
-import './styles/foundations.css'
+import { foundationStyles } from './stylex/foundations.stylex'
+import { className, stylexProps } from './stylex/shared.stylex'
 
 const spacingTokens = [4, 8, 12, 16, 24, 32, 48, 64] as const
 const layoutColumns = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12] as const
@@ -70,67 +71,95 @@ const icons = [
 
 export function FoundationCatalog() {
   return (
-    <div className="foundation-catalog">
+    <div className={className(foundationStyles.catalog)}>
       <StyleguideSection
         description="Display, reading, numeric, and machine-text roles establish the grammar's voice before components add meaning."
         id="typography-heading"
         index="02"
         title="Typography"
       >
-        <div className="type-role-grid">
-          <article className="type-role-card type-role-display">
-            <header>
-              <span>Display</span>
-              <code>--guide-display</code>
+        <div className={className(foundationStyles.typeRoleGrid)}>
+          <article className={className(foundationStyles.surface, foundationStyles.typeRoleCard)}>
+            <header className={className(foundationStyles.typeRoleHeader)}>
+              <span className={className(foundationStyles.metaLabel)}>Display</span>
+              <code className={className(foundationStyles.metaCode)}>--guide-display</code>
             </header>
-            <strong>Aa</strong>
-            <p>Landmarks, section titles, and moments that establish the grammar's character.</p>
+            <strong
+              className={className(foundationStyles.typeRoleStrong, foundationStyles.displayType)}
+            >
+              Aa
+            </strong>
+            <p className={className(foundationStyles.typeRoleCopy)}>
+              Landmarks, section titles, and moments that establish the grammar's character.
+            </p>
           </article>
-          <article className="type-role-card type-role-reading">
-            <header>
-              <span>Reading</span>
-              <code>--guide-font</code>
+          <article className={className(foundationStyles.surface, foundationStyles.typeRoleCard)}>
+            <header className={className(foundationStyles.typeRoleHeader)}>
+              <span className={className(foundationStyles.metaLabel)}>Reading</span>
+              <code className={className(foundationStyles.metaCode)}>--guide-font</code>
             </header>
-            <strong>The quick brown fox moves through twelve layers.</strong>
-            <p>Body copy and controls prioritize rhythm, clarity, and comfortable scanning.</p>
+            <strong
+              className={className(foundationStyles.typeRoleStrong, foundationStyles.readingType)}
+            >
+              The quick brown fox moves through twelve layers.
+            </strong>
+            <p className={className(foundationStyles.typeRoleCopy)}>
+              Body copy and controls prioritize rhythm, clarity, and comfortable scanning.
+            </p>
           </article>
-          <article className="type-role-card type-role-numeric">
-            <header>
-              <span>Numeric</span>
-              <code>tabular-nums</code>
+          <article className={className(foundationStyles.surface, foundationStyles.typeRoleCard)}>
+            <header className={className(foundationStyles.typeRoleHeader)}>
+              <span className={className(foundationStyles.metaLabel)}>Numeric</span>
+              <code className={className(foundationStyles.metaCode)}>tabular-nums</code>
             </header>
-            <strong>0123456789</strong>
-            <p>Measurements and changing values remain aligned and comparable.</p>
+            <strong
+              className={className(foundationStyles.typeRoleStrong, foundationStyles.numericType)}
+            >
+              0123456789
+            </strong>
+            <p className={className(foundationStyles.typeRoleCopy)}>
+              Measurements and changing values remain aligned and comparable.
+            </p>
           </article>
-          <article className="type-role-card type-role-machine">
-            <header>
-              <span>Machine</span>
-              <code>--guide-mono</code>
+          <article className={className(foundationStyles.surface, foundationStyles.typeRoleCard)}>
+            <header className={className(foundationStyles.typeRoleHeader)}>
+              <span className={className(foundationStyles.metaLabel)}>Machine</span>
+              <code className={className(foundationStyles.metaCode)}>--guide-mono</code>
             </header>
-            <strong>theme.material.depth</strong>
-            <p>Tokens, identifiers, paths, and implementation details use a distinct voice.</p>
+            <strong
+              className={className(foundationStyles.typeRoleStrong, foundationStyles.machineType)}
+            >
+              theme.material.depth
+            </strong>
+            <p className={className(foundationStyles.typeRoleCopy)}>
+              Tokens, identifiers, paths, and implementation details use a distinct voice.
+            </p>
           </article>
         </div>
-        <section className="type-ladder" aria-label="Heading hierarchy">
-          <div>
-            <span>Display</span>
-            <strong>Grammar landmark</strong>
+        <section className={className(foundationStyles.typeLadder)} aria-label="Heading hierarchy">
+          <div className={className(foundationStyles.typeLadderRow)}>
+            <span className={className(foundationStyles.ladderMeta)}>Display</span>
+            <strong className={className(foundationStyles.ladderDisplay)}>Grammar landmark</strong>
           </div>
-          <div>
-            <span>Heading 1</span>
-            <strong>Interface section</strong>
+          <div className={className(foundationStyles.typeLadderRow)}>
+            <span className={className(foundationStyles.ladderMeta)}>Heading 1</span>
+            <strong className={className(foundationStyles.ladderH1)}>Interface section</strong>
           </div>
-          <div>
-            <span>Heading 2</span>
-            <strong>Component family</strong>
+          <div className={className(foundationStyles.typeLadderRow)}>
+            <span className={className(foundationStyles.ladderMeta)}>Heading 2</span>
+            <strong className={className(foundationStyles.ladderH2)}>Component family</strong>
           </div>
-          <div>
-            <span>Body</span>
-            <p>Supporting copy explains behavior without competing with the control itself.</p>
+          <div className={className(foundationStyles.typeLadderRow)}>
+            <span className={className(foundationStyles.ladderMeta)}>Body</span>
+            <p className={className(foundationStyles.ladderContent)}>
+              Supporting copy explains behavior without competing with the control itself.
+            </p>
           </div>
-          <div>
-            <span>Label</span>
-            <small>Compact interface metadata</small>
+          <div className={className(foundationStyles.typeLadderRow)}>
+            <span className={className(foundationStyles.ladderMeta)}>Label</span>
+            <small className={className(foundationStyles.ladderContent)}>
+              Compact interface metadata
+            </small>
           </div>
         </section>
       </StyleguideSection>
@@ -141,36 +170,36 @@ export function FoundationCatalog() {
         index="03"
         title="Color"
       >
-        <div className="foundation-color-grid">
-          <article className="foundation-swatch foundation-swatch-field">
-            <span>Field</span>
-            <strong>Surface</strong>
-            <code>--control-surface</code>
+        <div className={className(foundationStyles.colorGrid)}>
+          <article className={className(foundationStyles.swatch, foundationStyles.swatchField)}>
+            <span className={className(foundationStyles.swatchLabel)}>Field</span>
+            <strong className={className(foundationStyles.swatchName)}>Surface</strong>
+            <code className={className(foundationStyles.swatchCode)}>--control-surface</code>
           </article>
-          <article className="foundation-swatch foundation-swatch-ink">
-            <span>Ink</span>
-            <strong>Foreground</strong>
-            <code>--guide-ink</code>
+          <article className={className(foundationStyles.swatch, foundationStyles.swatchInk)}>
+            <span className={className(foundationStyles.swatchLabel)}>Ink</span>
+            <strong className={className(foundationStyles.swatchName)}>Foreground</strong>
+            <code className={className(foundationStyles.swatchCode)}>--guide-ink</code>
           </article>
-          <article className="foundation-swatch foundation-swatch-accent">
-            <span>Accent</span>
-            <strong>Focus</strong>
-            <code>--control-accent</code>
+          <article className={className(foundationStyles.swatch, foundationStyles.swatchAccent)}>
+            <span className={className(foundationStyles.swatchLabel)}>Accent</span>
+            <strong className={className(foundationStyles.swatchName)}>Focus</strong>
+            <code className={className(foundationStyles.swatchCode)}>--control-accent</code>
           </article>
-          <article className="foundation-swatch foundation-swatch-positive">
-            <span>Positive</span>
-            <strong>Confirmed</strong>
-            <code>--control-positive</code>
+          <article className={className(foundationStyles.swatch, foundationStyles.swatchPositive)}>
+            <span className={className(foundationStyles.swatchLabel)}>Positive</span>
+            <strong className={className(foundationStyles.swatchName)}>Confirmed</strong>
+            <code className={className(foundationStyles.swatchCode)}>--control-positive</code>
           </article>
-          <article className="foundation-swatch foundation-swatch-warning">
-            <span>Warning</span>
-            <strong>Attention</strong>
-            <code>--control-warning</code>
+          <article className={className(foundationStyles.swatch, foundationStyles.swatchWarning)}>
+            <span className={className(foundationStyles.swatchLabel)}>Warning</span>
+            <strong className={className(foundationStyles.swatchName)}>Attention</strong>
+            <code className={className(foundationStyles.swatchCode)}>--control-warning</code>
           </article>
-          <article className="foundation-swatch foundation-swatch-danger">
-            <span>Danger</span>
-            <strong>Interrupted</strong>
-            <code>--control-danger</code>
+          <article className={className(foundationStyles.swatch, foundationStyles.swatchDanger)}>
+            <span className={className(foundationStyles.swatchLabel)}>Danger</span>
+            <strong className={className(foundationStyles.swatchName)}>Interrupted</strong>
+            <code className={className(foundationStyles.swatchCode)}>--control-danger</code>
           </article>
         </div>
       </StyleguideSection>
@@ -181,14 +210,17 @@ export function FoundationCatalog() {
         index="04"
         title="Spacing"
       >
-        <div className="foundation-spacing-grid">
+        <div className={className(foundationStyles.spacingGrid)}>
           {spacingTokens.map((value, index) => (
-            <article className="foundation-space-token" key={value}>
-              <div>
-                <span>Space {index + 1}</span>
-                <strong>{value}px</strong>
+            <article
+              className={className(foundationStyles.surface, foundationStyles.spaceToken)}
+              key={value}
+            >
+              <div className={className(foundationStyles.spaceTokenCopy)}>
+                <span className={className(foundationStyles.spaceLabel)}>Space {index + 1}</span>
+                <strong className={className(foundationStyles.spaceValue)}>{value}px</strong>
               </div>
-              <i aria-hidden="true" className={`foundation-space-ruler space-ruler-${value}`} />
+              <i aria-hidden="true" {...stylexProps(foundationStyles.spaceRuler(`${value}px`))} />
             </article>
           ))}
         </div>
@@ -200,42 +232,48 @@ export function FoundationCatalog() {
         index="05"
         title="Layout"
       >
-        <div className="foundation-layout-board">
-          <div aria-hidden="true" className="foundation-column-grid">
+        <div className={className(foundationStyles.surface, foundationStyles.layoutBoard)}>
+          <div aria-hidden="true" className={className(foundationStyles.columnGrid)}>
             {layoutColumns.map((column) => (
-              <span key={column}>{column}</span>
+              <span className={className(foundationStyles.column)} key={column}>
+                {column}
+              </span>
             ))}
           </div>
-          <div className="foundation-layout-examples">
-            <article className="layout-example layout-example-rail">
-              <span>3 columns</span>
-              <strong>Navigation rail</strong>
+          <div className={className(foundationStyles.layoutExamples)}>
+            <article className={className(foundationStyles.layoutExample)}>
+              <span className={className(foundationStyles.layoutExampleMeta)}>3 columns</span>
+              <strong className={className(foundationStyles.layoutExampleTitle)}>
+                Navigation rail
+              </strong>
             </article>
-            <article className="layout-example layout-example-main">
-              <span>6 columns</span>
-              <strong>Primary work</strong>
+            <article className={className(foundationStyles.layoutExample)}>
+              <span className={className(foundationStyles.layoutExampleMeta)}>6 columns</span>
+              <strong className={className(foundationStyles.layoutExampleTitle)}>
+                Primary work
+              </strong>
             </article>
-            <article className="layout-example layout-example-detail">
-              <span>3 columns</span>
-              <strong>Inspector</strong>
+            <article className={className(foundationStyles.layoutExample)}>
+              <span className={className(foundationStyles.layoutExampleMeta)}>3 columns</span>
+              <strong className={className(foundationStyles.layoutExampleTitle)}>Inspector</strong>
             </article>
           </div>
-          <dl className="foundation-layout-tokens">
-            <div>
-              <dt>Columns</dt>
-              <dd>12</dd>
+          <dl className={className(foundationStyles.layoutTokens)}>
+            <div className={className(foundationStyles.layoutToken)}>
+              <dt className={className(foundationStyles.layoutTokenTerm)}>Columns</dt>
+              <dd className={className(foundationStyles.layoutTokenValue)}>12</dd>
             </div>
-            <div>
-              <dt>Gutter</dt>
-              <dd>16px</dd>
+            <div className={className(foundationStyles.layoutToken)}>
+              <dt className={className(foundationStyles.layoutTokenTerm)}>Gutter</dt>
+              <dd className={className(foundationStyles.layoutTokenValue)}>16px</dd>
             </div>
-            <div>
-              <dt>Readable lane</dt>
-              <dd>680px</dd>
+            <div className={className(foundationStyles.layoutToken)}>
+              <dt className={className(foundationStyles.layoutTokenTerm)}>Readable lane</dt>
+              <dd className={className(foundationStyles.layoutTokenValue)}>680px</dd>
             </div>
-            <div>
-              <dt>Maximum frame</dt>
-              <dd>1380px</dd>
+            <div className={className(foundationStyles.layoutToken)}>
+              <dt className={className(foundationStyles.layoutTokenTerm)}>Maximum frame</dt>
+              <dd className={className(foundationStyles.layoutTokenValue)}>1380px</dd>
             </div>
           </dl>
         </div>
@@ -247,15 +285,27 @@ export function FoundationCatalog() {
         index="06"
         title="Icons"
       >
-        <div className="foundation-icon-grid">
+        <div className={className(foundationStyles.iconGrid)}>
           {icons.map((icon) => (
-            <article className="foundation-icon-specimen" key={icon.label}>
-              <button aria-label={icon.label} type="button">
-                <svg aria-hidden="true" fill="none" viewBox="0 0 24 24">
+            <article
+              className={className(foundationStyles.surface, foundationStyles.iconSpecimen)}
+              key={icon.label}
+            >
+              <button
+                aria-label={icon.label}
+                className={className(foundationStyles.iconButton)}
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className={className(foundationStyles.icon)}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
                   {icon.path}
                 </svg>
               </button>
-              <span>{icon.label}</span>
+              <span className={className(foundationStyles.iconLabel)}>{icon.label}</span>
             </article>
           ))}
         </div>
