@@ -10,11 +10,9 @@ import {
   Frame,
   Glass,
   GlassContainer,
-  HStack,
   LiquidCanvas,
   spring,
   Transform,
-  VStack,
   ZStack,
 } from '@liquid-dom/react'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -22,39 +20,164 @@ import { StyleguideSection } from './StyleguideSection'
 import { liquidInteractionStyles as styles } from './stylex/liquid-interactions.stylex'
 import { className, sharedStyles, stylexProps } from './stylex/shared.stylex'
 
-const CONTROL_SPRING = spring({ stiffness: 620, damping: 36 })
 const MORPH_SPRING = spring({ stiffness: 360, damping: 31 })
+const FERROUS_SPRING = spring({ stiffness: 610, damping: 22 })
 
-type ButtonKey =
-  | 'launch'
-  | 'tune'
-  | 'favorite'
-  | 'add'
-  | 'surface'
-  | 'content'
-  | 'signal'
-  | 'hold'
-  | 'record'
-  | 'stepper'
+type ButtonKey = 'launch' | 'tune' | 'favorite' | 'add' | 'layers' | 'hold' | 'record' | 'stepper'
 type Layer = 'Surface' | 'Content' | 'Signal'
 
-const layerDescriptions: Record<Layer, string> = {
-  Surface: 'Material',
-  Content: 'Reading',
-  Signal: 'Urgency',
+interface FieldControl {
+  readonly activeHeight: number
+  readonly activeRadius: number
+  readonly activeWidth: number
+  readonly compactLabel: string
+  readonly dockX: number
+  readonly dockY: number
+  readonly height: number
+  readonly key: ButtonKey
+  readonly label: string
+  readonly radius: number
+  readonly width: number
 }
 
-interface GlassShapeProps {
-  readonly active?: boolean
-  readonly buttonKey: ButtonKey
-  readonly height: number
-  readonly hovered: ButtonKey | null
-  readonly pressed: ButtonKey | null
-  readonly radius: number
-  readonly smoothing?: number
-  readonly width: number
-  readonly widthTransition?: boolean
-}
+const FIELD_CONTROLS: readonly FieldControl[] = [
+  {
+    activeHeight: 68,
+    activeRadius: 32,
+    activeWidth: 244,
+    compactLabel: 'Launch',
+    dockX: -236,
+    dockY: -36,
+    height: 52,
+    key: 'launch',
+    label: 'Launch field',
+    radius: 24,
+    width: 128,
+  },
+  {
+    activeHeight: 68,
+    activeRadius: 32,
+    activeWidth: 112,
+    compactLabel: 'Tune',
+    dockX: -112,
+    dockY: -36,
+    height: 48,
+    key: 'tune',
+    label: 'Tune material',
+    radius: 22,
+    width: 88,
+  },
+  {
+    activeHeight: 68,
+    activeRadius: 32,
+    activeWidth: 76,
+    compactLabel: 'Favorite',
+    dockX: -43,
+    dockY: -36,
+    height: 50,
+    key: 'favorite',
+    label: 'Favorite',
+    radius: 25,
+    width: 50,
+  },
+  {
+    activeHeight: 68,
+    activeRadius: 32,
+    activeWidth: 172,
+    compactLabel: 'New',
+    dockX: 10,
+    dockY: -36,
+    height: 54,
+    key: 'add',
+    label: 'New layer',
+    radius: 27,
+    width: 54,
+  },
+  {
+    activeHeight: 64,
+    activeRadius: 22,
+    activeWidth: 366,
+    compactLabel: 'Layers',
+    dockX: -90,
+    dockY: 34,
+    height: 50,
+    key: 'layers',
+    label: 'Composition layer',
+    radius: 18,
+    width: 264,
+  },
+  {
+    activeHeight: 58,
+    activeRadius: 26,
+    activeWidth: 230,
+    compactLabel: 'Hold',
+    dockX: 105,
+    dockY: -36,
+    height: 48,
+    key: 'hold',
+    label: 'Hold to dissolve',
+    radius: 20,
+    width: 118,
+  },
+  {
+    activeHeight: 58,
+    activeRadius: 26,
+    activeWidth: 76,
+    compactLabel: 'Record',
+    dockX: 200,
+    dockY: -36,
+    height: 50,
+    key: 'record',
+    label: 'Record signal',
+    radius: 25,
+    width: 50,
+  },
+  {
+    activeHeight: 58,
+    activeRadius: 26,
+    activeWidth: 250,
+    compactLabel: 'Density',
+    dockX: 130,
+    dockY: 34,
+    height: 48,
+    key: 'stepper',
+    label: 'Layer density',
+    radius: 20,
+    width: 122,
+  },
+]
+
+const SCATTER_SLOTS = [
+  { x: -285, y: -145 },
+  { x: -90, y: -200 },
+  { x: 135, y: -190 },
+  { x: 285, y: -145 },
+  { x: 312, y: 58 },
+  { x: 205, y: 184 },
+  { x: -205, y: 184 },
+] as const
+
+const GROUP_EDGE_SLOTS = [
+  { x: -220, y: -150 },
+  { x: 0, y: -194 },
+  { x: 220, y: -150 },
+  { x: 258, y: 0 },
+  { x: 220, y: 150 },
+  { x: 0, y: 190 },
+  { x: -220, y: 150 },
+  { x: -258, y: 0 },
+] as const
+
+const COMPACT_EDGE_SLOTS = [
+  { x: -275, y: -145 },
+  { x: -85, y: -202 },
+  { x: 135, y: -190 },
+  { x: 310, y: -75 },
+  { x: 255, y: 155 },
+  { x: 50, y: 205 },
+  { x: -205, y: 180 },
+  { x: -320, y: 35 },
+] as const
 
 export function LiquidInteractionCatalog({
   onMaterialChange,
@@ -67,6 +190,7 @@ export function LiquidInteractionCatalog({
   const [rendererFailed, setRendererFailed] = useState(false)
   const [hovered, setHovered] = useState<ButtonKey | null>(null)
   const [pressed, setPressed] = useState<ButtonKey | null>(null)
+  const [activeControl, setActiveControl] = useState<ButtonKey | null>(null)
   const [favorite, setFavorite] = useState(false)
   const [addExpanded, setAddExpanded] = useState(false)
   const [layer, setLayer] = useState<Layer>('Content')
@@ -127,6 +251,57 @@ export function LiquidInteractionCatalog({
     ],
   )
   const materialJson = useMemo(() => serializeLiquidMaterial(material), [material])
+  const fieldPositions = useMemo(() => {
+    if (activeControl === null) {
+      return FIELD_CONTROLS.map((control) => ({ x: control.dockX, y: control.dockY }))
+    }
+
+    const activeIndex = FIELD_CONTROLS.findIndex((control) => control.key === activeControl)
+
+    if (activeControl !== 'layers') {
+      const releasedControls = FIELD_CONTROLS.filter(
+        (control) => control.key !== activeControl && control.key !== 'layers',
+      )
+      const groupPosition = GROUP_EDGE_SLOTS[(activeIndex * 3) % GROUP_EDGE_SLOTS.length] ?? {
+        x: 0,
+        y: 190,
+      }
+      const occupiedSlots = new Set(
+        COMPACT_EDGE_SLOTS.map((position, positionIndex) => ({
+          distance: Math.hypot(position.x - groupPosition.x, position.y - groupPosition.y),
+          positionIndex,
+        }))
+          .sort((left, right) => left.distance - right.distance)
+          .slice(0, 2)
+          .map(({ positionIndex }) => positionIndex),
+      )
+      const availableSlots = COMPACT_EDGE_SLOTS.filter(
+        (_, positionIndex) => !occupiedSlots.has(positionIndex),
+      )
+
+      return FIELD_CONTROLS.map((control) => {
+        if (control.key === activeControl) return { x: 0, y: 0 }
+        if (control.key === 'layers') return groupPosition
+
+        const releasedIndex = releasedControls.findIndex(
+          (candidate) => candidate.key === control.key,
+        )
+        return (
+          availableSlots[(releasedIndex + activeIndex) % availableSlots.length] ?? {
+            x: 0,
+            y: 0,
+          }
+        )
+      })
+    }
+
+    return FIELD_CONTROLS.map((control, controlIndex) => {
+      if (control.key === activeControl) return { x: 0, y: 0 }
+
+      const releasedIndex = controlIndex < activeIndex ? controlIndex : controlIndex - 1
+      return SCATTER_SLOTS[(releasedIndex + activeIndex) % SCATTER_SLOTS.length] ?? { x: 0, y: 0 }
+    })
+  }, [activeControl])
   const profileDirection = material.surfaceProfile === 'concave' ? -1 : 1
   const profileScale = material.surfaceProfile === 'concave' ? 0.94 : 1.04
   const materialStyle = styles.materialVariables({
@@ -234,6 +409,32 @@ export function LiquidInteractionCatalog({
     }
   }
 
+  function activateControl(buttonKey: ButtonKey) {
+    setActiveControl(buttonKey)
+
+    if (buttonKey === 'favorite') {
+      setFavorite((current) => !current)
+    } else if (buttonKey === 'add') {
+      setAddExpanded((current) => !current)
+    } else if (buttonKey === 'record') {
+      setRecording((current) => !current)
+    } else if (buttonKey === 'stepper') {
+      setDensity((current) => (current === 9 ? 1 : current + 1))
+    }
+  }
+
+  function controlStatus(buttonKey: ButtonKey) {
+    if (buttonKey === 'favorite') return favorite ? 'Held in memory' : 'Ready to hold'
+    if (buttonKey === 'add') return addExpanded ? 'Body expanded' : 'Body compact'
+    if (buttonKey === 'record') return recording ? 'Signal live' : 'Signal idle'
+    if (buttonKey === 'stepper') return `Density ${density.toString().padStart(2, '0')}`
+    if (buttonKey === 'hold') return confirmed ? 'Intent confirmed' : 'Pressure waiting'
+    if (buttonKey === 'layers') return `${layer} lens selected`
+    if (buttonKey === 'tune') return 'Optics ready'
+
+    return 'Field armed'
+  }
+
   function resetToPreset() {
     setBezelWidth(themeMaterial.bezelWidth)
     setBlur(themeMaterial.blur)
@@ -275,358 +476,319 @@ export function LiquidInteractionCatalog({
   return (
     <div {...stylexProps(styles.root)}>
       <StyleguideSection
-        description="A family of refractive controls shares one optical field. Hover, press, and open states drive liquid-dom transforms while native buttons preserve keyboard and assistive-technology behavior."
+        description="A composed set of controls rests as one liquid assembly. Choose an intention and its control holds the center while every other body releases toward the boundary."
         id="buttons-heading"
         index="07"
         title="Buttons in a light field"
       >
         <article
-          className={className(styles.stage)}
+          {...stylexProps(styles.stage, styles.buttonStage, materialStyle)}
           data-liquid-renderer={canRender ? 'webgpu' : 'css-fallback'}
         >
           <LiquidBackdrop label="Interactive control field" />
           <StageHeader
             canRender={canRender}
             eyebrow="Control study / 07"
-            title="One field. Many intentions."
+            title="Choose an intention."
           />
 
           <div {...stylexProps(styles.buttonRenderLayer)}>
-            {canRender ? (
-              <LiquidCanvas
-                className={className(styles.canvas)}
-                canvasClassName={className(styles.canvas)}
-                maxDpr={1.5}
-                onError={() => setRendererFailed(true)}
-              >
-                <Frame maxHeight={Infinity} maxWidth={Infinity}>
-                  <GlassContainer
-                    bezelWidth={material.bezelWidth}
-                    blur={material.blur}
-                    dispersion={material.dispersion}
-                    displacementBlur={material.displacementBlur}
-                    displacementFactor={material.displacementFactor}
-                    ior={material.ior}
-                    opacity={material.opacity}
-                    shadowBlur={22}
-                    shadowColor={{ r: 0.02, g: 0.03, b: 0.12, a: 0.32 }}
-                    shadowOffsetY={9}
-                    spacing={14}
-                    specularOpacity={material.specularOpacity}
-                    specularSharpness={material.specularSharpness}
-                    specularStrength={material.specularStrength}
-                    surfaceProfile={material.surfaceProfile}
-                    thickness={material.thickness}
-                    tint={material.tint}
-                  >
-                    <VStack spacing={14}>
-                      <HStack spacing={14}>
-                        <GlassShape
-                          buttonKey="launch"
-                          height={68}
-                          hovered={hovered}
-                          pressed={pressed}
-                          radius={Math.min(material.cornerRadius, 32)}
-                          smoothing={material.cornerSmoothing}
-                          width={244}
-                        />
-                        <GlassShape
-                          buttonKey="tune"
-                          height={68}
-                          hovered={hovered}
-                          pressed={pressed}
-                          radius={Math.min(material.cornerRadius, 32)}
-                          smoothing={material.cornerSmoothing}
-                          width={112}
-                        />
-                        <GlassShape
-                          active={favorite}
-                          buttonKey="favorite"
-                          height={68}
-                          hovered={hovered}
-                          pressed={pressed}
-                          radius={Math.min(material.cornerRadius, 32)}
-                          smoothing={material.cornerSmoothing}
-                          width={76}
-                        />
-                        <GlassShape
-                          active={addExpanded}
-                          buttonKey="add"
-                          height={68}
-                          hovered={hovered}
-                          pressed={pressed}
-                          radius={Math.min(material.cornerRadius, 32)}
-                          smoothing={material.cornerSmoothing}
-                          width={addExpanded ? 172 : 76}
-                          widthTransition
-                        />
-                      </HStack>
-                      <LiquidSelectorShape hovered={hovered} layer={layer} pressed={pressed} />
-                      <HStack spacing={14}>
-                        <GlassShape
-                          active={confirmed}
-                          buttonKey="hold"
-                          height={58}
-                          hovered={hovered}
-                          pressed={pressed}
-                          radius={Math.min(material.cornerRadius, 26)}
-                          smoothing={material.cornerSmoothing}
-                          width={230}
-                        />
-                        <GlassShape
-                          active={recording}
-                          buttonKey="record"
-                          height={58}
-                          hovered={hovered}
-                          pressed={pressed}
-                          radius={Math.min(material.cornerRadius, 26)}
-                          smoothing={material.cornerSmoothing}
-                          width={76}
-                        />
-                        <GlassShape
-                          buttonKey="stepper"
-                          height={58}
-                          hovered={hovered}
-                          pressed={pressed}
-                          radius={Math.min(material.cornerRadius, 26)}
-                          smoothing={material.cornerSmoothing}
-                          width={250}
-                        />
-                      </HStack>
-                    </VStack>
-                  </GlassContainer>
-                </Frame>
-              </LiquidCanvas>
-            ) : null}
+            <div {...stylexProps(styles.buttonFieldScene)}>
+              {canRender ? (
+                <LiquidCanvas
+                  className={className(styles.canvas)}
+                  canvasClassName={className(styles.canvas)}
+                  maxDpr={1.5}
+                  onError={() => setRendererFailed(true)}
+                >
+                  <Frame maxHeight={Infinity} maxWidth={Infinity}>
+                    <GlassContainer
+                      bezelWidth={material.bezelWidth}
+                      blur={material.blur}
+                      dispersion={material.dispersion}
+                      displacementBlur={material.displacementBlur}
+                      displacementFactor={material.displacementFactor}
+                      ior={material.ior}
+                      opacity={material.opacity}
+                      shadowBlur={30}
+                      shadowColor={{ r: 0.02, g: 0.03, b: 0.12, a: 0.38 }}
+                      shadowOffsetY={10}
+                      spacing={activeControl === null ? 42 : 54}
+                      specularOpacity={material.specularOpacity}
+                      specularSharpness={material.specularSharpness}
+                      specularStrength={material.specularStrength}
+                      surfaceProfile={material.surfaceProfile}
+                      thickness={material.thickness}
+                      tint={material.tint}
+                      transition={{ spacing: FERROUS_SPRING }}
+                    >
+                      <ZStack alignment="center">
+                        {FIELD_CONTROLS.map((control, controlIndex) => {
+                          const active = activeControl === control.key
+                          const position = fieldPositions[controlIndex] ?? { x: 0, y: 0 }
+                          const activeWidth =
+                            control.key === 'add' && !addExpanded ? 76 : control.activeWidth
+                          const controlWidth = active ? activeWidth : control.width
+                          const controlHeight = active ? control.activeHeight : control.height
+                          const scale =
+                            pressed === control.key
+                              ? 0.965
+                              : hovered === control.key
+                                ? active
+                                  ? 1.018
+                                  : 1.075
+                                : 1
 
-            <div {...stylexProps(styles.buttonOverlay)}>
-              <div {...stylexProps(styles.buttonRow)}>
-                <button
-                  className={className(
-                    styles.command,
-                    !canRender && styles.fallbackGlass,
-                    styles.commandPrimary,
-                  )}
-                  type="button"
-                  {...interactionProps('launch')}
-                >
-                  <span {...stylexProps(styles.commandLight)} aria-hidden="true" />
-                  <span {...stylexProps(styles.commandCopy)}>
-                    <small {...stylexProps(styles.commandMeta)}>Primary command</small>
-                    Launch field
-                  </span>
-                  <ArrowIcon />
-                </button>
-                <button
-                  aria-label="Tune material"
-                  className={className(
-                    styles.command,
-                    !canRender && styles.fallbackGlass,
-                    styles.commandCompact,
-                  )}
-                  type="button"
-                  {...interactionProps('tune')}
-                >
-                  <TuneIcon />
-                  <span>Tune</span>
-                </button>
-                <button
-                  aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
-                  aria-pressed={favorite}
-                  className={className(
-                    styles.command,
-                    !canRender && styles.fallbackGlass,
-                    styles.commandIcon,
-                    favorite && styles.commandFavorite,
-                  )}
-                  onClick={() => setFavorite((current) => !current)}
-                  type="button"
-                  {...interactionProps('favorite')}
-                >
-                  <HeartIcon filled={favorite} />
-                </button>
-                <button
-                  aria-expanded={addExpanded}
-                  className={className(
-                    styles.command,
-                    !canRender && styles.fallbackGlass,
-                    styles.commandAdd,
-                    addExpanded && styles.commandAddOpen,
-                  )}
-                  onClick={() => setAddExpanded((current) => !current)}
-                  type="button"
-                  {...interactionProps('add')}
-                >
-                  <PlusIcon />
-                  <span
-                    className={className(
-                      styles.commandAddLabel,
-                      addExpanded && styles.commandAddLabelOpen,
-                    )}
-                  >
-                    New layer
-                  </span>
-                </button>
-              </div>
+                          return (
+                            <Transform
+                              key={control.key}
+                              origin={{ x: 0.5, y: 0.5 }}
+                              scaleX={scale}
+                              scaleY={scale}
+                              transition={{
+                                scaleX: FERROUS_SPRING,
+                                scaleY: FERROUS_SPRING,
+                                x: FERROUS_SPRING,
+                                y: FERROUS_SPRING,
+                              }}
+                              x={position.x}
+                              y={position.y}
+                            >
+                              {control.key === 'layers' ? (
+                                <ZStack alignment="center">
+                                  <Frame
+                                    height={controlHeight}
+                                    transition={{ height: FERROUS_SPRING, width: FERROUS_SPRING }}
+                                    width={controlWidth}
+                                  >
+                                    <Glass
+                                      cornerRadius={
+                                        active
+                                          ? Math.min(material.cornerRadius, control.activeRadius)
+                                          : Math.min(material.cornerRadius, control.radius)
+                                      }
+                                      cornerSmoothing={material.cornerSmoothing}
+                                      transition={{ cornerRadius: FERROUS_SPRING }}
+                                      zIndex={active ? 5 : 1}
+                                    />
+                                  </Frame>
+                                  <Transform
+                                    transition={{ x: FERROUS_SPRING }}
+                                    x={
+                                      layer === 'Surface'
+                                        ? -controlWidth / 3
+                                        : layer === 'Signal'
+                                          ? controlWidth / 3
+                                          : 0
+                                    }
+                                  >
+                                    <Frame
+                                      height={controlHeight - 10}
+                                      transition={{
+                                        height: FERROUS_SPRING,
+                                        width: FERROUS_SPRING,
+                                      }}
+                                      width={controlWidth / 3 - 8}
+                                    >
+                                      <Glass
+                                        cornerRadius={Math.min(
+                                          material.cornerRadius,
+                                          active ? 17 : 13,
+                                        )}
+                                        cornerSmoothing={material.cornerSmoothing}
+                                        transition={{ cornerRadius: FERROUS_SPRING }}
+                                        zIndex={active ? 7 : 3}
+                                      />
+                                    </Frame>
+                                  </Transform>
+                                </ZStack>
+                              ) : (
+                                <Frame
+                                  height={controlHeight}
+                                  transition={{ height: FERROUS_SPRING, width: FERROUS_SPRING }}
+                                  width={controlWidth}
+                                >
+                                  <Glass
+                                    cornerRadius={
+                                      active
+                                        ? Math.min(material.cornerRadius, control.activeRadius)
+                                        : Math.min(material.cornerRadius, control.radius)
+                                    }
+                                    cornerSmoothing={material.cornerSmoothing}
+                                    transition={{ cornerRadius: FERROUS_SPRING }}
+                                    zIndex={active ? 5 : 1}
+                                  />
+                                </Frame>
+                              )}
+                            </Transform>
+                          )
+                        })}
+                      </ZStack>
+                    </GlassContainer>
+                  </Frame>
+                </LiquidCanvas>
+              ) : null}
 
-              <fieldset
-                className={className(styles.layerControl, !canRender && styles.fallbackGlass)}
-                data-layer={layer.toLowerCase()}
-              >
-                <legend className={className(sharedStyles.visuallyHidden)}>
-                  Composition layer
-                </legend>
-                {!canRender ? (
-                  <span
-                    className={className(
-                      styles.layerIndicator,
-                      layer === 'Content' && styles.layerIndicatorContent,
-                      layer === 'Signal' && styles.layerIndicatorSignal,
-                    )}
-                    aria-hidden="true"
-                  />
-                ) : null}
-                {(['Surface', 'Content', 'Signal'] as const).map((candidate) => {
-                  const buttonKey = candidate.toLowerCase() as ButtonKey
+              <div {...stylexProps(styles.buttonOverlay)}>
+                {FIELD_CONTROLS.map((control, controlIndex) => {
+                  const active = activeControl === control.key
+                  const fieldPosition = fieldPositions[controlIndex] ?? { x: 0, y: 0 }
+                  const activeWidth =
+                    control.key === 'add' && !addExpanded ? 76 : control.activeWidth
+                  const controlPosition = styles.fieldControlPosition({
+                    height: `${active ? control.activeHeight : control.height}px`,
+                    radius: active
+                      ? `${Math.min(material.cornerRadius, control.activeRadius)}px`
+                      : `${Math.min(material.cornerRadius, control.radius)}px`,
+                    width: `${active ? activeWidth : control.width}px`,
+                    x: `${fieldPosition.x}px`,
+                    y: `${fieldPosition.y}px`,
+                  })
+                  const props = interactionProps(control.key)
+
+                  if (control.key === 'layers') {
+                    return (
+                      <fieldset
+                        {...stylexProps(
+                          styles.ferrousControl,
+                          styles.fieldLayerSelector,
+                          controlPosition,
+                          active && styles.ferrousControlActive,
+                          !canRender && styles.fieldFallbackGlass,
+                        )}
+                        data-control={control.key}
+                        key={control.key}
+                        onBlur={() =>
+                          setHovered((current) => (current === 'layers' ? null : current))
+                        }
+                        onFocus={() => setHovered('layers')}
+                        onPointerDown={props.onPointerDown}
+                        onPointerEnter={props.onPointerEnter}
+                        onPointerLeave={props.onPointerLeave}
+                        onPointerUp={props.onPointerUp}
+                      >
+                        <legend className={className(sharedStyles.visuallyHidden)}>
+                          Composition layer
+                        </legend>
+                        {(['Surface', 'Content', 'Signal'] as const).map((candidate) => (
+                          <button
+                            aria-pressed={layer === candidate}
+                            className={className(
+                              styles.fieldLayerOption,
+                              layer === candidate && styles.fieldLayerOptionSelected,
+                            )}
+                            key={candidate}
+                            onClick={() => {
+                              setActiveControl('layers')
+                              setLayer(candidate)
+                            }}
+                            type="button"
+                          >
+                            <span {...stylexProps(styles.fieldLayerOptionLabel)}>{candidate}</span>
+                            <small {...stylexProps(styles.fieldLayerOptionMeta)}>
+                              {layer === candidate ? 'Selected' : 'Available'}
+                            </small>
+                            {layer === candidate ? (
+                              <i {...stylexProps(styles.fieldLayerOptionDot)} />
+                            ) : null}
+                          </button>
+                        ))}
+                      </fieldset>
+                    )
+                  }
 
                   return (
                     <button
-                      aria-pressed={layer === candidate}
-                      className={className(styles.layerButton)}
-                      key={candidate}
-                      onClick={() => setLayer(candidate)}
+                      {...stylexProps(
+                        styles.ferrousControl,
+                        controlPosition,
+                        active && styles.ferrousControlActive,
+                        !canRender && styles.fieldFallbackGlass,
+                        control.key === 'favorite' && favorite && styles.fieldFavorite,
+                      )}
+                      aria-label={`${control.label}. ${controlStatus(control.key)}`}
+                      aria-pressed={active}
+                      data-control={control.key}
+                      key={control.key}
+                      onClick={(event) => {
+                        if (control.key === 'hold') {
+                          setActiveControl('hold')
+                          if (event.detail === 0) setConfirmed(true)
+                          return
+                        }
+                        activateControl(control.key)
+                      }}
+                      onPointerCancel={control.key === 'hold' ? stopHold : undefined}
+                      onPointerDown={() => {
+                        if (control.key === 'hold') startHold()
+                        else props.onPointerDown()
+                      }}
+                      onPointerEnter={props.onPointerEnter}
+                      onPointerLeave={() => {
+                        props.onPointerLeave()
+                        if (control.key === 'hold') stopHold()
+                      }}
+                      onPointerUp={() => {
+                        if (control.key === 'hold') stopHold()
+                        else props.onPointerUp()
+                      }}
                       type="button"
-                      {...interactionProps(buttonKey)}
                     >
-                      <span {...stylexProps(styles.layerLabel)}>{candidate}</span>
-                      <small {...stylexProps(styles.layerMeta)}>
-                        {candidate === layer ? 'Lens active' : layerDescriptions[candidate]}
-                      </small>
-                      {candidate === layer ? (
-                        <i {...stylexProps(styles.activeDot)} aria-hidden="true" />
+                      {control.key === 'hold' ? (
+                        <span
+                          className={className(
+                            styles.fieldHoldProgress,
+                            holding && styles.fieldHoldProgressActive,
+                            confirmed && styles.fieldHoldProgressConfirmed,
+                          )}
+                          aria-hidden="true"
+                        />
                       ) : null}
+                      <span
+                        className={className(
+                          styles.fieldCompactContent,
+                          active && styles.fieldContentHidden,
+                        )}
+                        aria-hidden="true"
+                      >
+                        <FieldControlGlyph
+                          confirmed={confirmed}
+                          controlKey={control.key}
+                          density={density}
+                          favorite={favorite}
+                          recording={recording}
+                        />
+                        {control.width > 70 ? (
+                          <span {...stylexProps(styles.fieldCompactLabel)}>
+                            {control.compactLabel}
+                          </span>
+                        ) : null}
+                      </span>
+                      <span
+                        className={className(
+                          styles.fieldActiveContent,
+                          !active && styles.fieldContentHidden,
+                        )}
+                        aria-hidden="true"
+                      >
+                        <FieldActiveControlFace
+                          addExpanded={addExpanded}
+                          confirmed={confirmed}
+                          control={control}
+                          density={density}
+                          favorite={favorite}
+                          recording={recording}
+                        />
+                      </span>
                     </button>
                   )
                 })}
-              </fieldset>
-
-              <div {...stylexProps(styles.specialRow)}>
-                <button
-                  aria-label={confirmed ? 'Deletion confirmed' : 'Hold to confirm deletion'}
-                  className={className(
-                    styles.specialControl,
-                    styles.holdButton,
-                    !canRender && styles.fallbackGlass,
-                  )}
-                  data-confirmed={confirmed}
-                  data-holding={holding}
-                  onClick={(event) => {
-                    if (event.detail === 0) {
-                      setConfirmed(true)
-                    }
-                  }}
-                  onPointerDown={startHold}
-                  onPointerCancel={stopHold}
-                  onPointerEnter={() => setHovered('hold')}
-                  onPointerLeave={() => {
-                    setHovered((current) => (current === 'hold' ? null : current))
-                    stopHold()
-                  }}
-                  onPointerUp={stopHold}
-                  type="button"
-                >
-                  <span
-                    className={className(
-                      styles.holdProgress,
-                      holding && styles.holdProgressActive,
-                      confirmed && styles.holdProgressConfirmed,
-                    )}
-                    aria-hidden="true"
-                  />
-                  <span
-                    className={className(styles.holdForeground, styles.holdIcon)}
-                    aria-hidden="true"
-                  >
-                    {confirmed ? '✓' : '×'}
-                  </span>
-                  <span {...stylexProps(styles.holdForeground)}>
-                    <strong {...stylexProps(styles.holdTitle)}>
-                      {confirmed ? 'Confirmed' : 'Hold to dissolve'}
-                    </strong>
-                    <small {...stylexProps(styles.holdMeta)}>
-                      {confirmed ? 'Action ready' : 'Intentional action'}
-                    </small>
-                  </span>
-                </button>
-
-                <button
-                  aria-label={recording ? 'Stop recording' : 'Start recording'}
-                  aria-pressed={recording}
-                  className={className(
-                    styles.specialControl,
-                    styles.recordButton,
-                    !canRender && styles.fallbackGlass,
-                  )}
-                  onClick={() => setRecording((current) => !current)}
-                  type="button"
-                  {...interactionProps('record')}
-                >
-                  <span
-                    className={className(styles.recordIndicator, recording && styles.recordActive)}
-                    aria-hidden="true"
-                  />
-                </button>
-
-                <fieldset
-                  className={className(
-                    styles.specialControl,
-                    styles.stepper,
-                    !canRender && styles.fallbackGlass,
-                  )}
-                  onBlur={() => setHovered((current) => (current === 'stepper' ? null : current))}
-                  onFocus={() => setHovered('stepper')}
-                  onPointerEnter={() => setHovered('stepper')}
-                  onPointerDown={() => setPressed('stepper')}
-                  onPointerLeave={() => {
-                    setHovered((current) => (current === 'stepper' ? null : current))
-                    setPressed((current) => (current === 'stepper' ? null : current))
-                  }}
-                  onPointerUp={() =>
-                    setPressed((current) => (current === 'stepper' ? null : current))
-                  }
-                >
-                  <legend className={className(sharedStyles.visuallyHidden)}>Layer density</legend>
-                  <button
-                    aria-label="Decrease layer density"
-                    className={className(styles.stepperButton, styles.stepperLeft)}
-                    disabled={density === 1}
-                    onClick={() => setDensity((current) => Math.max(1, current - 1))}
-                    type="button"
-                  >
-                    −
-                  </button>
-                  <span {...stylexProps(styles.stepperValue)}>
-                    <small {...stylexProps(styles.stepperMeta)}>Density</small>
-                    <output {...stylexProps(styles.stepperOutput)}>
-                      {density.toString().padStart(2, '0')}
-                    </output>
-                  </span>
-                  <button
-                    aria-label="Increase layer density"
-                    className={className(styles.stepperButton, styles.stepperRight)}
-                    disabled={density === 9}
-                    onClick={() => setDensity((current) => Math.min(9, current + 1))}
-                    type="button"
-                  >
-                    +
-                  </button>
-                </fieldset>
               </div>
             </div>
           </div>
 
           <StageFooter
-            detail="Morph · select · hold · record · step"
+            detail="Select · release · gather · reform"
             renderer={canRender ? 'Live liquid-dom' : 'Accessible CSS fallback'}
           />
         </article>
@@ -1103,67 +1265,131 @@ function MaterialControlCanvas({
   )
 }
 
-function GlassShape({
-  active = false,
-  buttonKey,
-  height,
-  hovered,
-  pressed,
-  radius,
-  smoothing = 0.38,
-  width,
-  widthTransition = false,
-}: GlassShapeProps) {
-  const scale = pressed === buttonKey ? 0.975 : hovered === buttonKey ? 1.015 : 1
+function FieldControlGlyph({
+  confirmed,
+  controlKey,
+  density,
+  favorite,
+  recording,
+}: {
+  readonly confirmed: boolean
+  readonly controlKey: ButtonKey
+  readonly density: number
+  readonly favorite: boolean
+  readonly recording: boolean
+}) {
+  if (controlKey === 'launch') return <ArrowIcon />
+  if (controlKey === 'tune') return <TuneIcon />
+  if (controlKey === 'favorite') return <HeartIcon filled={favorite} />
+  if (controlKey === 'add') return <PlusIcon />
+  if (controlKey === 'record') {
+    return (
+      <span
+        className={className(styles.fieldRecordIndicator, recording && styles.fieldRecordActive)}
+      />
+    )
+  }
+  if (controlKey === 'stepper') {
+    return (
+      <span {...stylexProps(styles.fieldValueGlyph)}>{density.toString().padStart(2, '0')}</span>
+    )
+  }
+  if (controlKey === 'hold') {
+    return <span {...stylexProps(styles.fieldTextGlyph)}>{confirmed ? '✓' : '×'}</span>
+  }
 
-  return (
-    <Transform
-      origin={{ x: 0.5, y: 0.5 }}
-      scaleX={scale}
-      scaleY={scale}
-      transition={{ scaleX: CONTROL_SPRING, scaleY: CONTROL_SPRING }}
-    >
-      <Frame
-        height={height}
-        transition={widthTransition ? { width: MORPH_SPRING } : undefined}
-        width={width}
-      >
-        <Glass cornerRadius={radius} cornerSmoothing={smoothing} zIndex={active ? 2 : 1} />
-      </Frame>
-    </Transform>
-  )
+  return <span {...stylexProps(styles.fieldTextGlyph)}>III</span>
 }
 
-function LiquidSelectorShape({
-  hovered,
-  layer,
-  pressed,
+function FieldActiveControlFace({
+  addExpanded,
+  confirmed,
+  control,
+  density,
+  favorite,
+  recording,
 }: {
-  readonly hovered: ButtonKey | null
-  readonly layer: Layer
-  readonly pressed: ButtonKey | null
+  readonly addExpanded: boolean
+  readonly confirmed: boolean
+  readonly control: FieldControl
+  readonly density: number
+  readonly favorite: boolean
+  readonly recording: boolean
 }) {
-  const activeKey = layer.toLowerCase() as ButtonKey
-  const position = layer === 'Surface' ? -216 : layer === 'Signal' ? 216 : 0
-  const scale = pressed === activeKey ? 0.98 : hovered === activeKey ? 1.012 : 1
+  const glyph = (
+    <FieldControlGlyph
+      confirmed={confirmed}
+      controlKey={control.key}
+      density={density}
+      favorite={favorite}
+      recording={recording}
+    />
+  )
+
+  if (control.key === 'launch') {
+    return (
+      <span {...stylexProps(styles.fieldPrimaryFace)}>
+        <i {...stylexProps(styles.fieldCommandLight)} />
+        <span {...stylexProps(styles.fieldFaceCopy)}>
+          <small {...stylexProps(styles.fieldFaceMeta)}>Primary command</small>
+          <strong {...stylexProps(styles.fieldFaceTitle)}>Launch field</strong>
+        </span>
+        {glyph}
+      </span>
+    )
+  }
+
+  if (control.key === 'tune') {
+    return (
+      <span {...stylexProps(styles.fieldStackFace)}>
+        {glyph}
+        <strong {...stylexProps(styles.fieldStackLabel)}>Tune</strong>
+      </span>
+    )
+  }
+
+  if (control.key === 'favorite' || control.key === 'record') {
+    return <span {...stylexProps(styles.fieldIconFace)}>{glyph}</span>
+  }
+
+  if (control.key === 'add') {
+    return (
+      <span {...stylexProps(styles.fieldInlineFace)}>
+        {glyph}
+        {addExpanded ? <strong {...stylexProps(styles.fieldInlineLabel)}>New layer</strong> : null}
+      </span>
+    )
+  }
+
+  if (control.key === 'hold') {
+    return (
+      <span {...stylexProps(styles.fieldHoldFace)}>
+        <span {...stylexProps(styles.fieldHoldIcon)}>{confirmed ? '✓' : '×'}</span>
+        <span {...stylexProps(styles.fieldFaceCopy)}>
+          <strong {...stylexProps(styles.fieldFaceTitle)}>
+            {confirmed ? 'Confirmed' : 'Hold to dissolve'}
+          </strong>
+          <small {...stylexProps(styles.fieldFaceMeta)}>
+            {confirmed ? 'Action ready' : 'Intentional action'}
+          </small>
+        </span>
+      </span>
+    )
+  }
+
+  if (control.key === 'layers') return null
 
   return (
-    <ZStack alignment="center">
-      <Frame height={68} width={650}>
-        <Glass cornerRadius={20} cornerSmoothing={0.42} />
-      </Frame>
-      <Transform
-        origin={{ x: 0.5, y: 0.5 }}
-        scaleX={scale}
-        scaleY={scale}
-        transition={{ scaleX: CONTROL_SPRING, scaleY: CONTROL_SPRING, x: MORPH_SPRING }}
-        x={position}
-      >
-        <Frame height={56} width={206}>
-          <Glass cornerRadius={14} cornerSmoothing={0.42} zIndex={3} />
-        </Frame>
-      </Transform>
-    </ZStack>
+    <span {...stylexProps(styles.fieldStepperFace)}>
+      <span {...stylexProps(styles.fieldStepperEdge)}>−</span>
+      <span {...stylexProps(styles.fieldStepperValue)}>
+        <small {...stylexProps(styles.fieldFaceMeta)}>Density</small>
+        <strong {...stylexProps(styles.fieldValueGlyph)}>
+          {density.toString().padStart(2, '0')}
+        </strong>
+      </span>
+      <span {...stylexProps(styles.fieldStepperEdge)}>+</span>
+    </span>
   )
 }
 
@@ -1312,12 +1538,7 @@ function StageFooter({ detail, renderer }: { readonly detail: string; readonly r
 
 function ArrowIcon() {
   return (
-    <svg
-      {...stylexProps(styles.commandIconSvg, styles.commandArrow)}
-      aria-hidden="true"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
+    <svg {...stylexProps(styles.commandIconSvg)} aria-hidden="true" fill="none" viewBox="0 0 24 24">
       <path d="M5 12h13M13 6l6 6-6 6" />
     </svg>
   )
