@@ -84,6 +84,45 @@ The independently consumable packages are:
 
 All packages are ESM-only, support Node.js 20 or newer, publish TypeScript declarations, and expose versioned material parsers and serializers. Their package-level READMEs document the public entry points and basic use.
 
+## Getting started
+
+Install React 19 and the Liquid grammar:
+
+```sh
+pnpm add @hifi/liquid react react-dom
+```
+
+Start with a typed preset, then tune only the material properties your interface needs:
+
+```tsx
+import {
+  LiquidSurface,
+  liquidThemeMaterials,
+  type LiquidMaterial,
+} from '@hifi/liquid'
+
+const material: LiquidMaterial = {
+  ...liquidThemeMaterials.clear,
+  name: 'Cool clear glass',
+  blur: 12,
+  tint: { r: 0.72, g: 0.9, b: 1, a: 0.14 },
+}
+
+export function StatusPanel() {
+  return (
+    <LiquidSurface material={material}>
+      <section aria-labelledby="status-title">
+        <small>System status</small>
+        <h2 id="status-title">All systems nominal</h2>
+        <p>Your workspace is calibrated and ready.</p>
+      </section>
+    </LiquidSurface>
+  )
+}
+```
+
+For an unchanged preset, pass `theme="clear"` directly to `LiquidSurface`. Material JSON exported by the styleguide can be validated with `parseLiquidMaterial` before rendering.
+
 ## Styleguide
 
 The sample application is both a development harness and the living specification for the packages. It uses [TanStack Router](https://tanstack.com/router), [StyleX](https://stylexjs.com/) for all authored application styles, and builds to static assets in `apps/styleguide/dist`.
