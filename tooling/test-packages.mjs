@@ -15,11 +15,13 @@ try {
   await mkdir(packDirectory)
   await mkdir(join(consumerDirectory, 'src'), { recursive: true })
 
-  await run(
-    'pnpm',
-    ['--filter', './packages/*', 'pack', '--pack-destination', packDirectory],
-    workspaceRoot,
-  )
+  for (const name of packageNames) {
+    await run(
+      'pnpm',
+      ['--filter', `@hifi/${name}`, 'pack', '--pack-destination', packDirectory],
+      workspaceRoot,
+    )
+  }
 
   const archiveNames = await readdir(packDirectory)
   const archives = Object.fromEntries(

@@ -36,7 +36,7 @@
   },
   "scripts": {
     "build": "node ../../tooling/clean-package-dist.mjs && tsc -p tsconfig.build.json",
-    "prepack": "pnpm run build",
+    "prepack": "pnpm --filter @hifi/core build && pnpm run build",
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
