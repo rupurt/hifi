@@ -456,9 +456,15 @@ export const sharedStyles = stylex.create({
     textTransform: 'uppercase',
   },
   guideSection: {
+    backgroundColor: 'var(--guide-section-background, transparent)',
+    borderColor: 'var(--guide-section-border, transparent)',
+    borderStyle: 'solid',
+    borderWidth: 'var(--guide-section-border-width, 0px)',
+    boxShadow: 'var(--guide-section-shadow, none)',
     marginBlock: '0 140px',
     marginInline: 'auto',
     maxWidth: 1380,
+    padding: 'var(--guide-section-padding, 0px)',
     scrollMarginTop: 30,
   },
   guideSectionHeading: {
@@ -474,6 +480,7 @@ export const sharedStyles = stylex.create({
     },
   },
   guideSectionIndex: {
+    color: 'var(--guide-section-index-color, inherit)',
     fontFamily: 'var(--guide-mono, ui-monospace, monospace)',
     fontSize: '0.72rem',
     fontWeight: 700,
@@ -481,9 +488,9 @@ export const sharedStyles = stylex.create({
   guideSectionTitle: {
     fontFamily: 'var(--guide-display, Georgia, serif)',
     fontSize: 'clamp(2.7rem, 5vw, 5.5rem)',
-    fontWeight: 400,
-    letterSpacing: '-0.055em',
-    lineHeight: 0.95,
+    fontWeight: 'var(--guide-section-title-weight, 400)',
+    letterSpacing: 'var(--guide-section-title-tracking, -0.055em)',
+    lineHeight: 'var(--guide-section-title-leading, 0.95)',
     marginBlock: '0 22px',
   },
   guideSectionDescription: {

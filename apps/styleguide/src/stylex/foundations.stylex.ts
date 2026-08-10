@@ -56,9 +56,9 @@ export const foundationStyles = stylex.create({
   displayType: {
     fontFamily: 'var(--guide-display)',
     fontSize: '5.5rem',
-    fontWeight: 400,
-    letterSpacing: '-0.08em',
-    lineHeight: 0.8,
+    fontWeight: 'var(--guide-display-weight, 400)',
+    letterSpacing: 'var(--guide-display-tracking, -0.08em)',
+    lineHeight: 'var(--guide-display-leading, 0.8)',
   },
   readingType: {
     fontFamily: 'var(--guide-font)',
@@ -103,8 +103,9 @@ export const foundationStyles = stylex.create({
   ladderDisplay: {
     fontFamily: 'var(--guide-display)',
     fontSize: 'clamp(2.4rem, 5vw, 5.2rem)',
-    fontWeight: 400,
-    letterSpacing: '-0.06em',
+    fontWeight: 'var(--guide-landmark-weight, 400)',
+    letterSpacing: 'var(--guide-landmark-tracking, -0.06em)',
+    lineHeight: 'var(--guide-landmark-leading, normal)',
   },
   ladderH1: {
     fontFamily: 'var(--guide-display)',
