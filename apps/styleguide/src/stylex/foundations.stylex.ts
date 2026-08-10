@@ -136,7 +136,7 @@ export const foundationStyles = stylex.create({
     padding: 18,
   },
   swatchField: { backgroundColor: 'var(--control-surface-strong)', color: 'var(--guide-ink)' },
-  swatchInk: { backgroundColor: 'var(--guide-ink)', color: 'var(--control-surface-strong)' },
+  swatchInk: { backgroundColor: 'var(--guide-ink)', color: 'var(--control-accent-contrast)' },
   swatchAccent: {
     backgroundColor: 'var(--control-accent)',
     color: 'var(--control-accent-contrast)',
