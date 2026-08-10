@@ -11,20 +11,20 @@ export const kineticStyles = stylex.create({
     '--guide-landmark-tracking': '-0.015em',
     '--guide-landmark-weight': '800',
     '--guide-mono': '"SFMono-Regular", Consolas, monospace',
-    '--guide-section-background': 'color-mix(in srgb, var(--kinetic-background) 94%, white)',
+    '--guide-section-background': 'var(--kinetic-surface-high)',
     '--guide-section-border': 'color-mix(in srgb, var(--kinetic-foreground) 24%, transparent)',
     '--guide-section-border-width': '1px',
     '--guide-section-index-color': 'var(--kinetic-accent)',
     '--guide-section-padding': 'clamp(22px, 3.5vw, 48px)',
     '--guide-section-shadow':
-      '12px 28px 70px color-mix(in srgb, var(--kinetic-foreground) 10%, transparent)',
+      '12px 28px 70px color-mix(in srgb, var(--kinetic-shadow-color) 24%, transparent)',
     '--guide-section-title-leading': '0.94',
     '--guide-section-title-tracking': '-0.025em',
     '--guide-section-title-weight': '850',
-    '--kinetic-edge-shadow': 'color-mix(in srgb, var(--kinetic-foreground) 20%, transparent)',
-    '--kinetic-hard-shadow': 'color-mix(in srgb, var(--kinetic-foreground) 34%, transparent)',
+    '--kinetic-edge-shadow': 'color-mix(in srgb, var(--kinetic-shadow-color) 34%, transparent)',
+    '--kinetic-hard-shadow': 'color-mix(in srgb, var(--kinetic-shadow-color) 62%, transparent)',
     '--kinetic-light-highlight': 'color-mix(in srgb, white 56%, transparent)',
-    '--kinetic-soft-shadow': 'color-mix(in srgb, var(--kinetic-foreground) 16%, transparent)',
+    '--kinetic-soft-shadow': 'color-mix(in srgb, var(--kinetic-shadow-color) 30%, transparent)',
     '--kinetic-shadow-y': 'max(3px, calc(var(--kinetic-travel) * 0.68))',
     '--kinetic-shadow-x': 'max(1px, calc(var(--kinetic-shadow-y) * 0.42))',
     '--kinetic-shadow-soft-y': 'calc(var(--kinetic-shadow-y) + 6px)',
@@ -58,9 +58,9 @@ export const kineticStyles = stylex.create({
     '--generated-button-shadow':
       'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 var(--kinetic-hard-shadow), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(8px + var(--kinetic-mass) * 6px) var(--kinetic-soft-shadow)',
     '--generated-button-hover-shadow':
-      'inset 1px 1px 0 color-mix(in srgb, white 66%, transparent), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-hover-x) var(--kinetic-shadow-hover-y) 0 color-mix(in srgb, var(--kinetic-foreground) 38%, transparent), var(--kinetic-shadow-hover-soft-x) var(--kinetic-shadow-hover-soft-y) calc(10px + var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-foreground) 18%, transparent)',
+      'inset 1px 1px 0 color-mix(in srgb, white 66%, transparent), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-hover-x) var(--kinetic-shadow-hover-y) 0 color-mix(in srgb, var(--kinetic-shadow-color) 68%, transparent), var(--kinetic-shadow-hover-soft-x) var(--kinetic-shadow-hover-soft-y) calc(10px + var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-shadow-color) 34%, transparent)',
     '--generated-button-active-shadow':
-      'inset 2px 2px calc(3px + var(--kinetic-friction) * 4px) color-mix(in srgb, var(--kinetic-foreground) 24%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent), 1px 1px 0 color-mix(in srgb, var(--kinetic-foreground) 28%, transparent)',
+      'inset 2px 2px calc(3px + var(--kinetic-friction) * 4px) color-mix(in srgb, var(--kinetic-shadow-color) 48%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent), 1px 1px 0 color-mix(in srgb, var(--kinetic-shadow-color) 52%, transparent)',
     '--generated-button-hover-transform': 'translate(-0.42px, -1px)',
     '--generated-button-active-transform':
       'translate(var(--kinetic-control-press-x), var(--kinetic-control-press))',
@@ -69,20 +69,19 @@ export const kineticStyles = stylex.create({
     '--generated-icon-radius': '50%',
     '--generated-input-background': 'none',
     '--generated-input-shadow':
-      'inset 2px 2px calc(3px + var(--kinetic-friction) * 3px) color-mix(in srgb, var(--kinetic-foreground) 20%, transparent), inset -1px -1px 0 color-mix(in srgb, white 34%, transparent)',
+      'inset 2px 2px calc(3px + var(--kinetic-friction) * 3px) color-mix(in srgb, var(--kinetic-shadow-color) 42%, transparent), inset -1px -1px 0 color-mix(in srgb, white 34%, transparent)',
     '--generated-input-focus-shadow':
-      'inset 2px 2px calc(3px + var(--kinetic-friction) * 3px) color-mix(in srgb, var(--kinetic-foreground) 20%, transparent), inset -1px -1px 0 color-mix(in srgb, white 34%, transparent)',
+      'inset 2px 2px calc(3px + var(--kinetic-friction) * 3px) color-mix(in srgb, var(--kinetic-shadow-color) 42%, transparent), inset -1px -1px 0 color-mix(in srgb, white 34%, transparent)',
     '--generated-primary-button-shadow':
-      'inset 1px 1px 0 color-mix(in srgb, white 52%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--kinetic-foreground) 24%, transparent), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-accent) 52%, var(--kinetic-foreground)), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(9px + var(--kinetic-mass) * 6px) color-mix(in srgb, var(--kinetic-accent) 20%, transparent)',
+      'inset 1px 1px 0 color-mix(in srgb, white 52%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--kinetic-shadow-color) 38%, transparent), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-accent) 44%, var(--kinetic-shadow-color)), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(9px + var(--kinetic-mass) * 6px) color-mix(in srgb, var(--kinetic-accent) 20%, transparent)',
     '--generated-primary-button-hover-shadow':
-      'inset 1px 1px 0 color-mix(in srgb, white 64%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--kinetic-foreground) 24%, transparent), var(--kinetic-shadow-hover-x) var(--kinetic-shadow-hover-y) 0 color-mix(in srgb, var(--kinetic-accent) 58%, var(--kinetic-foreground)), var(--kinetic-shadow-hover-soft-x) var(--kinetic-shadow-hover-soft-y) calc(11px + var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-accent) 24%, transparent)',
+      'inset 1px 1px 0 color-mix(in srgb, white 64%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--kinetic-shadow-color) 38%, transparent), var(--kinetic-shadow-hover-x) var(--kinetic-shadow-hover-y) 0 color-mix(in srgb, var(--kinetic-accent) 52%, var(--kinetic-shadow-color)), var(--kinetic-shadow-hover-soft-x) var(--kinetic-shadow-hover-soft-y) calc(11px + var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-accent) 24%, transparent)',
     '--generated-primary-button-active-shadow':
-      'inset 2px 2px calc(4px + var(--kinetic-friction) * 4px) color-mix(in srgb, var(--kinetic-foreground) 30%, transparent), inset -1px -1px 0 color-mix(in srgb, white 20%, transparent), 1px 1px 0 color-mix(in srgb, var(--kinetic-accent) 48%, var(--kinetic-foreground))',
+      'inset 2px 2px calc(4px + var(--kinetic-friction) * 4px) color-mix(in srgb, var(--kinetic-shadow-color) 52%, transparent), inset -1px -1px 0 color-mix(in srgb, white 20%, transparent), 1px 1px 0 color-mix(in srgb, var(--kinetic-accent) 42%, var(--kinetic-shadow-color))',
     '--generated-primary-button-background': 'none',
     '--generated-danger-button-background': 'none',
     '--generated-segment-background': 'none',
-    '--generated-segment-background-color':
-      'color-mix(in srgb, var(--kinetic-background) 94%, white)',
+    '--generated-segment-background-color': 'var(--kinetic-surface-high)',
     '--generated-segment-border-width': '1px',
     '--generated-segment-color': 'color-mix(in srgb, var(--kinetic-foreground) 70%, transparent)',
     '--generated-segment-gap': '5px',
@@ -91,11 +90,10 @@ export const kineticStyles = stylex.create({
     '--generated-segment-radius': 'max(2px, calc(var(--kinetic-radius) * 0.45))',
     '--generated-segment-weight': '750',
     '--generated-segment-shadow':
-      'inset 1px 1px 0 color-mix(in srgb, white 52%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--kinetic-foreground) 18%, transparent), var(--kinetic-segment-shadow-x) var(--kinetic-segment-shadow-y) 0 color-mix(in srgb, var(--kinetic-foreground) 32%, transparent), var(--kinetic-segment-shadow-soft-x) var(--kinetic-segment-shadow-soft-y) calc(7px + var(--kinetic-mass) * 3px) color-mix(in srgb, var(--kinetic-foreground) 14%, transparent)',
-    '--generated-segment-active-background':
-      'color-mix(in srgb, var(--kinetic-background) 84%, black)',
+      'inset 1px 1px 0 color-mix(in srgb, white 52%, transparent), inset -1px -1px 0 color-mix(in srgb, var(--kinetic-shadow-color) 32%, transparent), var(--kinetic-segment-shadow-x) var(--kinetic-segment-shadow-y) 0 color-mix(in srgb, var(--kinetic-shadow-color) 58%, transparent), var(--kinetic-segment-shadow-soft-x) var(--kinetic-segment-shadow-soft-y) calc(7px + var(--kinetic-mass) * 3px) color-mix(in srgb, var(--kinetic-shadow-color) 28%, transparent)',
+    '--generated-segment-active-background': 'var(--kinetic-surface-low)',
     '--generated-segment-active-shadow':
-      'inset 2px 2px calc(4px + var(--kinetic-mass) * 2px) color-mix(in srgb, var(--kinetic-foreground) 28%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent), 1px 1px 0 color-mix(in srgb, var(--kinetic-foreground) 22%, transparent)',
+      'inset 2px 2px calc(4px + var(--kinetic-mass) * 2px) color-mix(in srgb, var(--kinetic-shadow-color) 52%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent), 1px 1px 0 color-mix(in srgb, var(--kinetic-shadow-color) 46%, transparent)',
     '--generated-segment-active-border':
       'color-mix(in srgb, var(--kinetic-foreground) 28%, transparent)',
     '--generated-segment-active-color': 'var(--kinetic-foreground)',
@@ -105,11 +103,11 @@ export const kineticStyles = stylex.create({
     '--generated-segment-press-transform':
       'translate(var(--kinetic-control-press-x), var(--kinetic-control-press))',
     '--generated-segment-housing-shadow':
-      'inset 2px 2px calc(5px + var(--kinetic-friction) * 4px) color-mix(in srgb, var(--kinetic-foreground) 22%, transparent), inset -1px -1px 0 color-mix(in srgb, white 32%, transparent)',
+      'inset 2px 2px calc(5px + var(--kinetic-friction) * 4px) color-mix(in srgb, var(--kinetic-shadow-color) 46%, transparent), inset -1px -1px 0 color-mix(in srgb, white 32%, transparent)',
     '--generated-switch-thumb-shadow':
-      'inset 1px 1px 0 var(--kinetic-light-highlight), var(--kinetic-switch-shadow-x) var(--kinetic-switch-shadow-y) calc(5px + var(--kinetic-mass) * 2px) color-mix(in srgb, var(--kinetic-foreground) 24%, transparent)',
+      'inset 1px 1px 0 var(--kinetic-light-highlight), var(--kinetic-switch-shadow-x) var(--kinetic-switch-shadow-y) calc(5px + var(--kinetic-mass) * 2px) color-mix(in srgb, var(--kinetic-shadow-color) 46%, transparent)',
     '--generated-switch-housing-shadow':
-      'inset 2px 2px calc(4px + var(--kinetic-friction) * 3px) color-mix(in srgb, var(--kinetic-foreground) 24%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent)',
+      'inset 2px 2px calc(4px + var(--kinetic-friction) * 3px) color-mix(in srgb, var(--kinetic-shadow-color) 48%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent)',
     backgroundImage:
       'linear-gradient(90deg, var(--kinetic-grid-line) 1px, transparent 1px), linear-gradient(var(--kinetic-grid-line) 1px, transparent 1px), linear-gradient(145deg, color-mix(in srgb, var(--kinetic-background) 84%, white), var(--kinetic-background))',
     backgroundSize: '96px 96px, 96px 96px, auto',
@@ -162,6 +160,9 @@ export const kineticStyles = stylex.create({
     '--kinetic-mass': values.mass,
     '--kinetic-radius': values.radius,
     '--kinetic-restitution': values.restitution,
+    '--kinetic-shadow-color': `color-mix(in srgb, ${values.background} 38%, black)`,
+    '--kinetic-surface-high': `color-mix(in srgb, ${values.background} 86%, white)`,
+    '--kinetic-surface-low': `color-mix(in srgb, ${values.background} 88%, black)`,
     '--kinetic-stiffness': values.stiffness,
     '--kinetic-travel': values.travel,
   }),
@@ -172,6 +173,16 @@ export const kineticStyles = stylex.create({
     minHeight: 'min(900px, calc(100vh - 72px))',
     paddingBlock: 'clamp(70px, 9vw, 125px)',
     position: 'relative',
+    '@media (max-width: 980px)': { gridTemplateColumns: '1fr' },
+  },
+  viscousPage: {
+    backgroundImage:
+      'radial-gradient(ellipse 52% 30% at 83% 7%, color-mix(in srgb, var(--kinetic-accent) 11%, transparent), transparent 72%), linear-gradient(90deg, var(--kinetic-grid-line) 1px, transparent 1px), linear-gradient(var(--kinetic-grid-line) 1px, transparent 1px), linear-gradient(145deg, color-mix(in srgb, var(--kinetic-background) 88%, white), var(--kinetic-background))',
+    backgroundSize: 'auto, 128px 128px, 128px 128px, auto',
+  },
+  viscousHero: {
+    gap: 'clamp(52px, 7vw, 108px)',
+    gridTemplateColumns: 'minmax(0, 0.94fr) minmax(500px, 1.06fr)',
     '@media (max-width: 980px)': { gridTemplateColumns: '1fr' },
   },
   index: {
@@ -237,6 +248,11 @@ export const kineticStyles = stylex.create({
       top: 18,
       width: 12,
     },
+  },
+  viscousMachine: {
+    marginBlock: 28,
+    minHeight: 604,
+    '@media (max-width: 980px)': { minHeight: 570 },
   },
   rail: {
     alignItems: 'center',

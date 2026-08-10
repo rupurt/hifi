@@ -11,16 +11,25 @@ import { KineticStyleguide } from './KineticStyleguide'
 import { LiquidStyleguide } from './LiquidStyleguide'
 import { PrintStyleguide } from './PrintStyleguide'
 import { SignalStyleguide } from './SignalStyleguide'
-import { TextureStyleguide } from './TextureStyleguide'
 import { className, globalStyles, sharedStyles } from './stylex/shared.stylex'
+import { TextureStyleguide } from './TextureStyleguide'
 
 function RootLayout() {
-  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const location = useRouterState({ select: (state) => state.location })
+  const pathname = location.pathname
   const activeGrammar = grammarNames.find((grammar) => pathname === `/styleguide/${grammar}`)
+  const activeTheme = typeof location.search.theme === 'string' ? location.search.theme : undefined
+  const viscousKinetic = activeGrammar === 'kinetic' && activeTheme === 'viscous'
 
   return (
     <div className={className(sharedStyles.siteShell)}>
-      <header className={className(sharedStyles.siteHeader, headerStyle(activeGrammar))}>
+      <header
+        className={className(
+          sharedStyles.siteHeader,
+          headerStyle(activeGrammar),
+          viscousKinetic && sharedStyles.headerKineticViscous,
+        )}
+      >
         <Link
           className={className(
             sharedStyles.wordmark,
@@ -40,11 +49,17 @@ function RootLayout() {
                 className: className(
                   sharedStyles.navLink,
                   navStyle(activeGrammar),
+                  viscousKinetic && sharedStyles.navKineticViscous,
                   sharedStyles.navLinkActive,
                   activeNavStyle(activeGrammar),
+                  viscousKinetic && sharedStyles.navKineticViscousActive,
                 ),
               }}
-              className={className(sharedStyles.navLink, navStyle(activeGrammar))}
+              className={className(
+                sharedStyles.navLink,
+                navStyle(activeGrammar),
+                viscousKinetic && sharedStyles.navKineticViscous,
+              )}
               key={grammar}
               search={{ theme: undefined }}
               to={`/styleguide/${grammar}`}

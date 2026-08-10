@@ -291,7 +291,7 @@ export const catalogStyles = stylex.create({
     borderStyle: 'solid',
     borderWidth: 1,
     boxShadow:
-      'inset 1px 2px 3px color-mix(in srgb, var(--kinetic-foreground) 28%, transparent), inset -1px -1px 0 color-mix(in srgb, white 22%, transparent)',
+      'inset 1px 2px 3px color-mix(in srgb, var(--kinetic-shadow-color) 52%, transparent), inset -1px -1px 0 color-mix(in srgb, white 22%, transparent)',
     height: 6,
     left: 9,
     overflow: 'visible',
@@ -313,7 +313,7 @@ export const catalogStyles = stylex.create({
     borderStyle: 'solid',
     borderWidth: 1,
     boxShadow:
-      'inset 1px 1px 0 color-mix(in srgb, white 48%, transparent), inset -1px -1px 0 var(--kinetic-edge-shadow), 1px 2px 0 color-mix(in srgb, var(--kinetic-foreground) 28%, transparent), 2px 4px 7px color-mix(in srgb, var(--kinetic-foreground) 13%, transparent)',
+      'inset 1px 1px 0 color-mix(in srgb, white 48%, transparent), inset -1px -1px 0 var(--kinetic-edge-shadow), 1px 2px 0 color-mix(in srgb, var(--kinetic-shadow-color) 54%, transparent), 2px 4px 7px color-mix(in srgb, var(--kinetic-shadow-color) 28%, transparent)',
     display: 'block',
     height: 24,
     left: 'var(--catalog-range-value)',
@@ -367,9 +367,9 @@ export const catalogStyles = stylex.create({
     borderWidth: 1,
     boxShadow: {
       default:
-        'inset 1px 1px 0 color-mix(in srgb, white 54%, transparent), inset -1px -1px 0 var(--kinetic-edge-shadow), min(2px, var(--kinetic-shadow-x)) 3px 0 color-mix(in srgb, var(--kinetic-foreground) 30%, transparent)',
+        'inset 1px 1px 0 color-mix(in srgb, white 54%, transparent), inset -1px -1px 0 var(--kinetic-edge-shadow), min(2px, var(--kinetic-shadow-x)) 3px 0 color-mix(in srgb, var(--kinetic-shadow-color) 56%, transparent)',
       ':checked':
-        'inset 1px 1px 0 color-mix(in srgb, white 46%, transparent), inset -1px -1px 0 var(--kinetic-edge-shadow), min(2px, var(--kinetic-shadow-x)) 3px 0 color-mix(in srgb, var(--kinetic-accent) 52%, var(--kinetic-foreground))',
+        'inset 1px 1px 0 color-mix(in srgb, white 46%, transparent), inset -1px -1px 0 var(--kinetic-edge-shadow), min(2px, var(--kinetic-shadow-x)) 3px 0 color-mix(in srgb, var(--kinetic-accent) 48%, var(--kinetic-shadow-color))',
     },
     cursor: 'pointer',
     opacity: { ':disabled': 0.4 },

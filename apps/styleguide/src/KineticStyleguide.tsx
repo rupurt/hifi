@@ -13,9 +13,9 @@ import { FoundationCatalog } from './FoundationCatalog'
 import { KineticMaterialLab } from './ProgrammableMaterialLabs'
 import { StyleguideNav } from './StyleguideNav'
 import { StyleguideSection } from './StyleguideSection'
-import { ThemePicker } from './ThemePicker'
 import { kineticStyles } from './stylex/kinetic.stylex'
 import { className, sharedStyles, stylexProps } from './stylex/shared.stylex'
+import { ThemePicker } from './ThemePicker'
 
 const MACHINE_RAIL_TICKS = ['0', '1', '2', '3', '4', '5', '6', '7', '8'] as const
 
@@ -27,6 +27,7 @@ export function KineticStyleguide() {
   const preset = kineticThemeMaterials[selectedTheme.name as KineticThemeName]
   const [material, setMaterial] = useState<KineticMaterial>(preset)
   const [count, setCount] = useState(0)
+  const isViscous = selectedTheme.name === 'viscous'
 
   useEffect(() => setMaterial(preset), [preset])
 
@@ -38,14 +39,14 @@ export function KineticStyleguide() {
     actuation: material.actuation,
     background: material.backgroundColor,
     controlShadow:
-      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-foreground) 28%, transparent), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(10px + var(--kinetic-mass) * 8px) var(--kinetic-soft-shadow)',
+      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-shadow-color) 54%, transparent), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(10px + var(--kinetic-mass) * 8px) var(--kinetic-soft-shadow)',
     damping: material.damping,
     detents: material.detents,
     duration: `${duration}ms`,
     foreground: material.foregroundColor,
     friction: material.friction,
     generatedShadow:
-      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-foreground) 28%, transparent), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(10px + var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-foreground) 14%, transparent)',
+      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-shadow-color) 54%, transparent), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(10px + var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-shadow-color) 28%, transparent)',
     mass: material.mass,
     radius: `${material.radius}px`,
     restitution: material.restitution,
@@ -56,11 +57,16 @@ export function KineticStyleguide() {
 
   return (
     <main
-      {...stylexProps(sharedStyles.grammarPage, kineticStyles.page, pageStyle)}
+      {...stylexProps(
+        sharedStyles.grammarPage,
+        kineticStyles.page,
+        isViscous && kineticStyles.viscousPage,
+        pageStyle,
+      )}
       data-generated-theme="true"
       data-theme={selectedTheme.name}
     >
-      <header className={className(kineticStyles.hero)}>
+      <header className={className(kineticStyles.hero, isViscous && kineticStyles.viscousHero)}>
         <div className={className(kineticStyles.index)} aria-hidden="true">
           <span>FORCE</span>
           <i className={className(kineticStyles.indexLine)} />
@@ -84,7 +90,10 @@ export function KineticStyleguide() {
           </a>
         </div>
 
-        <KineticSurface className={className(kineticStyles.machine)} material={material}>
+        <KineticSurface
+          className={className(kineticStyles.machine, isViscous && kineticStyles.viscousMachine)}
+          material={material}
+        >
           <div className={className(kineticStyles.rail)} aria-hidden="true">
             {MACHINE_RAIL_TICKS.map((tick) => (
               <i className={className(kineticStyles.railTick)} key={tick} />

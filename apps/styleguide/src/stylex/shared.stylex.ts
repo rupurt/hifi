@@ -1,5 +1,5 @@
-import * as stylex from '@stylexjs/stylex'
 import type { StyleXStyles } from '@stylexjs/stylex'
+import * as stylex from '@stylexjs/stylex'
 
 type CompiledStyle = Readonly<Record<string, unknown>> | false | null | undefined
 
@@ -104,6 +104,11 @@ export const sharedStyles = stylex.create({
     borderBottomColor: '#181b1b',
     color: '#181b1b',
   },
+  headerKineticViscous: {
+    backgroundColor: '#cbd0c7',
+    borderBottomColor: '#17211f',
+    color: '#17211f',
+  },
   wordmark: {
     color: 'inherit',
     fontFamily: 'Georgia, serif',
@@ -206,6 +211,14 @@ export const sharedStyles = stylex.create({
     backgroundColor: '#181b1b',
     color: '#d8d9d4',
     transform: 'translateY(2px)',
+  },
+  navKineticViscous: {
+    backgroundColor: { ':hover': '#a91645' },
+    color: { default: '#17211f', ':hover': '#f8f4ef' },
+  },
+  navKineticViscousActive: {
+    backgroundColor: '#a91645',
+    color: '#f8f4ef',
   },
   landingContainer: {
     marginInline: 'auto',
@@ -343,8 +356,7 @@ export const sharedStyles = stylex.create({
     '--control-muted': 'var(--generated-control-muted, rgb(20 20 20 / 0.62))',
     '--control-positive': '#22765c',
     '--control-radius': '8px',
-    '--control-shadow':
-      'var(--generated-control-shadow, 0 18px 45px rgb(0 0 0 / 0.12))',
+    '--control-shadow': 'var(--generated-control-shadow, 0 18px 45px rgb(0 0 0 / 0.12))',
     '--control-surface': 'var(--generated-control-surface, rgb(255 255 255 / 0.72))',
     '--control-surface-strong': 'var(--generated-control-surface-strong, #fff)',
     '--control-text': 'var(--generated-control-text, currentColor)',
@@ -642,7 +654,7 @@ export const sharedStyles = stylex.create({
   themePickerKinetic: {
     borderRadius: 'var(--kinetic-radius)',
     boxShadow:
-      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-foreground) 24%, transparent), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-foreground) 12%, transparent)',
+      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-shadow-x) var(--kinetic-shadow-y) 0 color-mix(in srgb, var(--kinetic-shadow-color) 54%, transparent), var(--kinetic-shadow-soft-x) var(--kinetic-shadow-soft-y) calc(var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-shadow-color) 26%, transparent)',
     position: 'relative',
     transition:
       'transform var(--kinetic-duration) cubic-bezier(0.2, 1.4, 0.3, 1), box-shadow var(--kinetic-duration) ease',
@@ -659,7 +671,7 @@ export const sharedStyles = stylex.create({
   },
   themePickerKineticActive: {
     boxShadow:
-      'inset 2px 2px calc(var(--kinetic-mass) * 3px) color-mix(in srgb, var(--kinetic-foreground) 18%, transparent), inset -1px -1px 0 color-mix(in srgb, white 22%, transparent)',
+      'inset 2px 2px calc(var(--kinetic-mass) * 3px) color-mix(in srgb, var(--kinetic-shadow-color) 44%, transparent), inset -1px -1px 0 color-mix(in srgb, white 22%, transparent)',
     transform: 'translate(var(--kinetic-control-press-x), var(--kinetic-control-press))',
   },
   themePickerName: {

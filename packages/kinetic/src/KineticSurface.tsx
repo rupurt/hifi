@@ -43,6 +43,7 @@ export function getKineticMaterialStyle(material: KineticMaterial): CSSPropertie
   const softShadowY = shadowY + 6
   const softShadowX = Math.max(2, softShadowY * 0.42)
   const shadowBlur = Math.max(8, material.mass * 7)
+  const shadowColor = `color-mix(in srgb, ${material.backgroundColor} 38%, black)`
   const press = material.travel * material.actuation
   const pressX = Math.max(0.5, press * 0.42)
 
@@ -54,22 +55,26 @@ export function getKineticMaterialStyle(material: KineticMaterial): CSSPropertie
     '--kinetic-control-press-x': `${pressX}px`,
     '--kinetic-damping': material.damping,
     '--kinetic-detents': material.detents,
-    '--kinetic-edge-shadow': `color-mix(in srgb, ${material.foregroundColor} 20%, transparent)`,
+    '--kinetic-edge-shadow': `color-mix(in srgb, ${shadowColor} 34%, transparent)`,
     '--kinetic-friction': material.friction,
     '--kinetic-foreground': material.foregroundColor,
-    '--kinetic-hard-shadow': `color-mix(in srgb, ${material.foregroundColor} 34%, transparent)`,
+    '--kinetic-hard-shadow': `color-mix(in srgb, ${shadowColor} 62%, transparent)`,
     '--kinetic-light-highlight': 'color-mix(in srgb, white 56%, transparent)',
     '--kinetic-mass': material.mass,
     '--kinetic-restitution': material.restitution,
+    '--kinetic-shadow-color': shadowColor,
     '--kinetic-shadow-soft-x': `${softShadowX}px`,
     '--kinetic-shadow-soft-y': `${softShadowY}px`,
     '--kinetic-shadow-x': `${shadowX}px`,
     '--kinetic-shadow-y': `${shadowY}px`,
-    '--kinetic-soft-shadow': `color-mix(in srgb, ${material.foregroundColor} 16%, transparent)`,
+    '--kinetic-soft-shadow': `color-mix(in srgb, ${shadowColor} 30%, transparent)`,
     '--kinetic-stiffness': material.stiffness,
     '--kinetic-travel': `${material.travel}px`,
-    background: `linear-gradient(145deg, color-mix(in srgb, ${material.backgroundColor} 88%, white), ${material.backgroundColor})`,
-    boxShadow: `inset 1px 1px 0 color-mix(in srgb, white 48%, transparent), inset -1px -1px 0 color-mix(in srgb, ${material.foregroundColor} 16%, transparent), ${shadowX}px ${shadowY}px 0 color-mix(in srgb, ${material.foregroundColor} 24%, transparent), ${softShadowX}px ${softShadowY}px ${shadowBlur}px color-mix(in srgb, ${material.foregroundColor} 16%, transparent)`,
+    background:
+      material.response === 'viscous'
+        ? `linear-gradient(145deg, color-mix(in srgb, ${material.backgroundColor} 76%, white), ${material.backgroundColor} 62%, color-mix(in srgb, ${material.backgroundColor} 92%, black))`
+        : `linear-gradient(145deg, color-mix(in srgb, ${material.backgroundColor} 88%, white), ${material.backgroundColor})`,
+    boxShadow: `inset 1px 1px 0 color-mix(in srgb, white 48%, transparent), inset -1px -1px 0 color-mix(in srgb, ${shadowColor} 34%, transparent), ${shadowX}px ${shadowY}px 0 color-mix(in srgb, ${shadowColor} 54%, transparent), ${softShadowX}px ${softShadowY}px ${shadowBlur}px color-mix(in srgb, ${shadowColor} 30%, transparent)`,
     color: material.foregroundColor,
   } as CSSProperties
 }

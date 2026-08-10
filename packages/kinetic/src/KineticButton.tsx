@@ -33,6 +33,7 @@ export function KineticButton({
   const shadowX = Math.max(1, shadowY * 0.42)
   const softShadowY = shadowY + 6
   const softShadowX = Math.max(2, softShadowY * 0.42)
+  const shadowColor = `color-mix(in srgb, ${selected.backgroundColor} 38%, black)`
 
   return (
     <button
@@ -73,8 +74,8 @@ export function KineticButton({
         border: `1px solid color-mix(in srgb, ${selected.foregroundColor} 38%, transparent)`,
         borderRadius: selected.radius,
         boxShadow: pressed
-          ? `inset 2px 2px ${Math.max(3, selected.mass * 3)}px color-mix(in srgb, ${selected.foregroundColor} 22%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent), 1px 1px 0 color-mix(in srgb, ${selected.foregroundColor} 28%, transparent)`
-          : `inset 1px 1px 0 color-mix(in srgb, white 56%, transparent), inset -1px -1px 0 color-mix(in srgb, ${selected.foregroundColor} 20%, transparent), ${shadowX}px ${shadowY}px 0 color-mix(in srgb, ${selected.foregroundColor} 34%, transparent), ${softShadowX}px ${softShadowY}px ${Math.max(8, selected.mass * 7)}px color-mix(in srgb, ${selected.foregroundColor} 18%, transparent)`,
+          ? `inset 2px 2px ${Math.max(3, selected.mass * 3)}px color-mix(in srgb, ${shadowColor} 46%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent), 1px 1px 0 color-mix(in srgb, ${shadowColor} 52%, transparent)`
+          : `inset 1px 1px 0 color-mix(in srgb, white 56%, transparent), inset -1px -1px 0 color-mix(in srgb, ${shadowColor} 34%, transparent), ${shadowX}px ${shadowY}px 0 color-mix(in srgb, ${shadowColor} 62%, transparent), ${softShadowX}px ${softShadowY}px ${Math.max(8, selected.mass * 7)}px color-mix(in srgb, ${shadowColor} 32%, transparent)`,
         color: selected.foregroundColor,
         cursor: disabled ? 'not-allowed' : 'pointer',
         transform: pressed ? `translate(${travelX}px, ${travel}px)` : 'translate(0, 0)',

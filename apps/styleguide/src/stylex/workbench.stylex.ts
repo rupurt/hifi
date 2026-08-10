@@ -282,7 +282,7 @@ export const workbenchStyles = stylex.create({
     borderStyle: 'solid',
     borderWidth: 1,
     boxShadow:
-      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), 1px 2px 0 color-mix(in srgb, var(--kinetic-foreground) 26%, transparent)',
+      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), 1px 2px 0 color-mix(in srgb, var(--kinetic-shadow-color) 52%, transparent)',
     color: 'inherit',
     height: 32,
     width: 32,
@@ -295,7 +295,7 @@ export const workbenchStyles = stylex.create({
     borderStyle: 'solid',
     borderWidth: 1,
     boxShadow:
-      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-encoder-shadow-x) var(--kinetic-encoder-shadow-y) 0 color-mix(in srgb, var(--kinetic-foreground) 26%, transparent), var(--kinetic-encoder-shadow-soft-x) var(--kinetic-encoder-shadow-soft-y) calc(var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-foreground) 14%, transparent)',
+      'inset 1px 1px 0 var(--kinetic-light-highlight), inset -1px -1px 0 var(--kinetic-edge-shadow), var(--kinetic-encoder-shadow-x) var(--kinetic-encoder-shadow-y) 0 color-mix(in srgb, var(--kinetic-shadow-color) 54%, transparent), var(--kinetic-encoder-shadow-soft-x) var(--kinetic-encoder-shadow-soft-y) calc(var(--kinetic-mass) * 7px) color-mix(in srgb, var(--kinetic-shadow-color) 28%, transparent)',
     height: 112,
     position: 'relative',
     width: 112,
