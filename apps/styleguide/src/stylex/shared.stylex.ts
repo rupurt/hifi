@@ -148,7 +148,7 @@ export const sharedStyles = stylex.create({
       ':hover': '#1d1c1a',
     },
     color: {
-      default: 'inherit',
+      default: '#171718',
       ':hover': '#f4f1eb',
     },
     '@media (max-width: 780px)': {
@@ -162,7 +162,7 @@ export const sharedStyles = stylex.create({
   navLiquid: {
     backgroundColor: { ':hover': 'rgb(255 255 255 / 0.13)' },
     boxShadow: { ':hover': 'inset 0 0 0 1px rgb(255 255 255 / 0.18)' },
-    color: { ':hover': 'inherit' },
+    color: { default: '#f7fbff', ':hover': '#f7fbff' },
   },
   navLiquidActive: {
     backgroundColor: 'rgb(255 255 255 / 0.13)',
@@ -171,7 +171,7 @@ export const sharedStyles = stylex.create({
   },
   navTexture: {
     backgroundColor: { ':hover': '#3f3324' },
-    color: { ':hover': '#f3ead7' },
+    color: { default: '#34291d', ':hover': '#f3ead7' },
   },
   navTextureActive: {
     backgroundColor: '#3f3324',
@@ -179,7 +179,7 @@ export const sharedStyles = stylex.create({
   },
   navPrint: {
     backgroundColor: { ':hover': '#e33624' },
-    color: { ':hover': '#fffaf0' },
+    color: { default: '#17140f', ':hover': '#fffaf0' },
   },
   navPrintActive: {
     backgroundColor: '#e33624',
@@ -190,7 +190,7 @@ export const sharedStyles = stylex.create({
     boxShadow: {
       ':hover': 'inset 0 0 0 1px rgb(141 255 179 / 0.35), 0 0 18px rgb(141 255 179 / 0.12)',
     },
-    color: { ':hover': '#8dffb3' },
+    color: { default: '#d8ffe3', ':hover': '#8dffb3' },
   },
   navSignalActive: {
     backgroundColor: 'rgb(141 255 179 / 0.12)',
@@ -199,7 +199,7 @@ export const sharedStyles = stylex.create({
   },
   navKinetic: {
     backgroundColor: { ':hover': '#181b1b' },
-    color: { ':hover': '#d8d9d4' },
+    color: { default: '#181b1b', ':hover': '#d8d9d4' },
     transform: { ':hover': 'translateY(2px)' },
   },
   navKineticActive: {
