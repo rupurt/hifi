@@ -1,6 +1,5 @@
 import {
   type LiquidMaterial,
-  LiquidSurface,
   type LiquidThemeName,
   liquidGrammar,
   liquidThemeMaterials,
@@ -9,8 +8,11 @@ import { useNavigate, useSearch } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import { ControlCatalog } from './ControlCatalog'
 import { FoundationCatalog } from './FoundationCatalog'
+import { LiquidEmissionField } from './LiquidEmissionField'
+import { LiquidHeroMaterial } from './LiquidHeroMaterial'
 import { LiquidInteractionCatalog } from './LiquidInteractionCatalog'
 import { LiquidThemePicker } from './LiquidThemePicker'
+import { liquidFabrics } from './liquidFabrics'
 import { StyleguideNav } from './StyleguideNav'
 import { StyleguideSection } from './StyleguideSection'
 import { liquidStyles } from './stylex/liquid.stylex'
@@ -23,18 +25,70 @@ export function LiquidStyleguide() {
     liquidGrammar.themes.find((candidate) => candidate.name === theme) ?? liquidGrammar.themes[0]
   const preset = liquidThemeMaterials[selectedTheme.name as LiquidThemeName]
   const [material, setMaterial] = useState<LiquidMaterial>(preset)
+  const [transmission, setTransmission] = useState(50)
+  const [relief, setRelief] = useState(50)
 
-  useEffect(() => setMaterial(preset), [preset])
+  useEffect(() => {
+    setMaterial(preset)
+    setRelief(50)
+    setTransmission(50)
+  }, [preset])
 
   const tint = `${Math.round(material.tint.r * 255)} ${Math.round(material.tint.g * 255)} ${Math.round(material.tint.b * 255)}`
+  const fabric = liquidFabrics[selectedTheme.name as LiquidThemeName]
   const pageStyle = liquidStyles.generatedPage({
     accent: `rgb(${tint})`,
-    backgroundImage: `radial-gradient(circle at 12% 12%, rgb(${tint} / 0.24), transparent 28%), radial-gradient(circle at 82% 28%, color-mix(in srgb, rgb(${tint}) 30%, #25c7ff), transparent 32%), radial-gradient(circle at 58% 78%, color-mix(in srgb, rgb(${tint}) 22%, #ff56ae), transparent 33%)`,
+    backgroundColor: fabric.backgroundColor,
+    backgroundImage: `linear-gradient(rgb(3 7 22 / ${fabric.pageShade * 0.44}), rgb(3 7 22 / ${fabric.pageShade * 0.44})), ${fabric.backgroundImage}`,
+    backgroundSize: `auto, ${fabric.backgroundSize}`,
     blur: `${material.blur}px`,
     controlRadius: `${Math.min(material.cornerRadius, 32)}px`,
     glass: `rgb(${tint} / ${Math.min(0.36, material.tint.a + 0.04)})`,
     glassStrong: `rgb(${tint} / ${Math.min(0.5, material.tint.a + 0.14)})`,
+    waveA: fabric.waveA,
+    waveB: fabric.waveB,
+    waveC: fabric.waveC,
   })
+
+  function changeTransmission(value: number) {
+    const position = value / 100
+    const offset = position - 0.5
+
+    setTransmission(value)
+    setMaterial((current) => ({
+      ...current,
+      blur: clamp(preset.blur * (1.5 - position), 0, 32),
+      opacity: clamp(preset.opacity + offset * 0.24, 0.42, 0.98),
+      tint: {
+        ...current.tint,
+        a: clamp(preset.tint.a - offset * 0.22, 0.03, 0.5),
+      },
+    }))
+  }
+
+  function changeRelief(value: number) {
+    const position = value / 100
+    const scale = 0.6 + position * 0.8
+
+    setRelief(value)
+    setMaterial((current) => ({
+      ...current,
+      bezelWidth: clamp(preset.bezelWidth * scale, 6, 72),
+      contentDepth: clamp(preset.contentDepth * scale, 8, 96),
+      displacementFactor: clamp(preset.displacementFactor * scale, 0.2, 2),
+      specularOpacity: clamp(preset.specularOpacity * (0.8 + position * 0.4), 0.2, 1),
+      thickness: clamp(preset.thickness * scale, 8, 96),
+    }))
+  }
+
+  function changeMaterial(nextMaterial: LiquidMaterial) {
+    const nextTransmission = (1.5 - nextMaterial.blur / Math.max(0.001, preset.blur)) * 100
+    const nextRelief = (nextMaterial.thickness / preset.thickness - 0.6) * 125
+
+    setMaterial(nextMaterial)
+    setTransmission(Math.round(clamp(nextTransmission, 0, 100)))
+    setRelief(Math.round(clamp(nextRelief, 0, 100)))
+  }
 
   return (
     <main
@@ -43,82 +97,77 @@ export function LiquidStyleguide() {
       data-theme={selectedTheme.name}
     >
       <div aria-hidden="true" className={className(liquidStyles.atmosphere)}>
-        <span className={className(liquidStyles.orb, liquidStyles.orbA)} />
-        <span className={className(liquidStyles.orb, liquidStyles.orbB)} />
-        <span className={className(liquidStyles.orb, liquidStyles.orbC)} />
-        <span className={className(liquidStyles.grid)} />
+        <span className={className(liquidStyles.fabricVeil)} />
+        <LiquidEmissionField />
+        <span className={className(liquidStyles.reliefSheet)} />
       </div>
 
-      <header className={className(sharedStyles.grammarHero, liquidStyles.contentLayer)}>
-        <div className={className(sharedStyles.grammarHeroCopy)}>
-          <p className={className(sharedStyles.grammarKicker)}>01 / Active grammar</p>
-          <h1 className={className(sharedStyles.grammarHeroTitle)}>
-            Light,
-            <br />
-            <em className={className(liquidStyles.heroEmphasis)}>held in motion.</em>
-          </h1>
-          <p className={className(sharedStyles.grammarIntro)}>
-            Liquid bends the world behind an interface. Refraction, blur, tint, and luminous edges
-            preserve context while controls rise into focus.
-          </p>
-          <a className={className(sharedStyles.grammarJumpLink)} href="#buttons-heading">
-            Explore controls{' '}
-            <span aria-hidden="true" className={className(sharedStyles.grammarJumpGlyph)}>
-              ↓
-            </span>
-          </a>
-        </div>
-
-        <div className={className(liquidStyles.heroVisual)}>
-          <LiquidSurface className={className(liquidStyles.primaryLens)} material={material}>
-            <div className={className(liquidStyles.lensCopy)}>
-              <span className={className(liquidStyles.lensMeta)}>{material.name}</span>
-              <strong className={className(liquidStyles.lensTitle)}>
-                Context stays alive beneath the surface.
-              </strong>
-              <p className={className(liquidStyles.lensCopyText)}>{selectedTheme.description}</p>
-              <button className={className(liquidStyles.lensButton)} type="button">
-                Enter the field
-              </button>
-            </div>
-          </LiquidSurface>
-          <div className={className(liquidStyles.floatCard, liquidStyles.floatCardA)}>
-            <span className={className(liquidStyles.floatLabel)}>Refraction</span>
-            <strong className={className(liquidStyles.floatValue)}>
-              {material.ior.toFixed(2)}
-            </strong>
+      <div className={className(liquidStyles.contentLayer)}>
+        <header className={className(sharedStyles.grammarHero)}>
+          <div className={className(sharedStyles.grammarHeroCopy)}>
+            <p className={className(sharedStyles.grammarKicker)}>01 / Active grammar</p>
+            <h1 className={className(sharedStyles.grammarHeroTitle)}>
+              Light,
+              <br />
+              <em className={className(liquidStyles.heroEmphasis)}>held in motion.</em>
+            </h1>
+            <p className={className(sharedStyles.grammarIntro)}>
+              Liquid bends the world behind an interface. Refraction, blur, tint, and luminous edges
+              preserve context while controls rise into focus.
+            </p>
+            <a className={className(sharedStyles.grammarJumpLink)} href="#buttons-heading">
+              Explore controls{' '}
+              <span aria-hidden="true" className={className(sharedStyles.grammarJumpGlyph)}>
+                ↓
+              </span>
+            </a>
           </div>
-          <div className={className(liquidStyles.floatCard, liquidStyles.floatCardB)}>
-            <span className={className(liquidStyles.floatLabel)}>Light field</span>
-            <strong className={className(liquidStyles.floatValue)}>Active</strong>
+
+          <div className={className(liquidStyles.heroVisual)}>
+            <LiquidHeroMaterial
+              description={selectedTheme.description}
+              index={liquidGrammar.themes.indexOf(selectedTheme)}
+              label={selectedTheme.label}
+              material={material}
+              onReliefChange={changeRelief}
+              onTransmissionChange={changeTransmission}
+              relief={relief}
+              theme={selectedTheme.name as LiquidThemeName}
+              transmission={transmission}
+            />
           </div>
-        </div>
-      </header>
+        </header>
 
-      <StyleguideNav />
+        <StyleguideNav />
 
-      <StyleguideSection
-        description="The optical behavior changes while the grammar's structure remains stable. Select a variant to apply it to every specimen below."
-        id="material-heading"
-        index="01"
-        title="A spectrum of glass"
-      >
-        <LiquidThemePicker
-          label="Starting preset"
-          onChange={(name) => {
-            void navigate({ replace: true, search: { theme: name } })
-          }}
-          value={selectedTheme.name as LiquidThemeName}
+        <StyleguideSection
+          description="Each material carries its own optical field. Select one to place that fabric beneath the entire route and apply its glass constraints to every specimen."
+          id="material-heading"
+          index="01"
+          title="A spectrum of glass"
+        >
+          <LiquidThemePicker
+            label="Choose a material field"
+            onChange={(name) => {
+              void navigate({ replace: true, search: { theme: name } })
+            }}
+            value={selectedTheme.name as LiquidThemeName}
+          />
+        </StyleguideSection>
+
+        <FoundationCatalog />
+        <LiquidInteractionCatalog
+          key={selectedTheme.name}
+          material={material}
+          onMaterialChange={changeMaterial}
+          theme={selectedTheme.name as LiquidThemeName}
         />
-      </StyleguideSection>
-
-      <FoundationCatalog />
-      <LiquidInteractionCatalog
-        key={selectedTheme.name}
-        onMaterialChange={setMaterial}
-        theme={selectedTheme.name as LiquidThemeName}
-      />
-      <ControlCatalog grammarLabel="liquid" hideInteractionSections />
+        <ControlCatalog grammarLabel="liquid" hideInteractionSections />
+      </div>
     </main>
   )
+}
+
+function clamp(value: number, minimum: number, maximum: number) {
+  return Math.min(maximum, Math.max(minimum, value))
 }

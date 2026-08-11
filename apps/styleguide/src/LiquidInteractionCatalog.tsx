@@ -180,9 +180,11 @@ const COMPACT_EDGE_SLOTS = [
 ] as const
 
 export function LiquidInteractionCatalog({
+  material,
   onMaterialChange,
   theme,
 }: {
+  readonly material: LiquidMaterial
   readonly onMaterialChange: (material: LiquidMaterial) => void
   readonly theme: LiquidThemeName
 }) {
@@ -198,59 +200,24 @@ export function LiquidInteractionCatalog({
   const [confirmed, setConfirmed] = useState(false)
   const [recording, setRecording] = useState(false)
   const [density, setDensity] = useState(3)
-  const [studyName, setStudyName] = useState(themeMaterial.name)
-  const [surfaceProfile, setSurfaceProfile] = useState<LiquidSurfaceProfile>(
-    themeMaterial.surfaceProfile,
-  )
-  const [blur, setBlur] = useState<number>(themeMaterial.blur)
-  const [bezelWidth, setBezelWidth] = useState(themeMaterial.bezelWidth)
-  const [cornerRadius, setCornerRadius] = useState(themeMaterial.cornerRadius)
-  const [dispersion, setDispersion] = useState(themeMaterial.dispersion)
-  const [displacement, setDisplacement] = useState(themeMaterial.displacementFactor)
-  const [refraction, setRefraction] = useState(themeMaterial.ior)
-  const [specular, setSpecular] = useState(themeMaterial.specularOpacity)
-  const [thickness, setThickness] = useState(themeMaterial.thickness)
-  const [tintColor, setTintColor] = useState(toHexColor(themeMaterial.tint))
-  const [tint, setTint] = useState(Math.round(themeMaterial.tint.a * 100))
   const [materialEnabled, setMaterialEnabled] = useState(true)
   const [exportStatus, setExportStatus] = useState('Applied to grammar')
   const holdTimerRef = useRef<number | null>(null)
   const canRender = supportsLiquidDomRendering() && !rendererFailed
 
-  const material = useMemo<LiquidMaterial>(
-    () => ({
-      ...themeMaterial,
-      bezelWidth,
-      blur,
-      cornerRadius,
-      contentDepth: thickness,
-      contentIor: refraction,
-      dispersion,
-      displacementFactor: displacement,
-      ior: refraction,
-      name: studyName.trim() || 'Untitled liquid material',
-      specularOpacity: specular,
-      surfaceProfile,
-      thickness,
-      tint: { ...fromHexColor(tintColor), a: tint / 100 },
-    }),
-    [
-      bezelWidth,
-      blur,
-      cornerRadius,
-      dispersion,
-      displacement,
-      refraction,
-      specular,
-      studyName,
-      surfaceProfile,
-      themeMaterial,
-      thickness,
-      tint,
-      tintColor,
-    ],
-  )
   const materialJson = useMemo(() => serializeLiquidMaterial(material), [material])
+  const studyName = material.name
+  const surfaceProfile = material.surfaceProfile
+  const blur = material.blur
+  const bezelWidth = material.bezelWidth
+  const cornerRadius = material.cornerRadius
+  const dispersion = material.dispersion
+  const displacement = material.displacementFactor
+  const refraction = material.ior
+  const specular = material.specularOpacity
+  const thickness = material.thickness
+  const tintColor = toHexColor(material.tint)
+  const tint = Math.round(material.tint.a * 100)
   const fieldPositions = useMemo(() => {
     if (activeControl === null) {
       return FIELD_CONTROLS.map((control) => ({ x: control.dockX, y: control.dockY }))
@@ -345,23 +312,6 @@ export function LiquidInteractionCatalog({
     tintR: Math.round(material.tint.r * 255),
   })
 
-  useEffect(() => {
-    setBezelWidth(themeMaterial.bezelWidth)
-    setBlur(themeMaterial.blur)
-    setCornerRadius(themeMaterial.cornerRadius)
-    setDispersion(themeMaterial.dispersion)
-    setDisplacement(themeMaterial.displacementFactor)
-    setRefraction(themeMaterial.ior)
-    setSurfaceProfile(themeMaterial.surfaceProfile)
-    setSpecular(themeMaterial.specularOpacity)
-    setStudyName(themeMaterial.name)
-    setThickness(themeMaterial.thickness)
-    setTint(Math.round(themeMaterial.tint.a * 100))
-    setTintColor(toHexColor(themeMaterial.tint))
-  }, [themeMaterial])
-
-  useEffect(() => onMaterialChange(material), [material, onMaterialChange])
-
   useEffect(
     () => () => {
       if (holdTimerRef.current !== null) {
@@ -436,19 +386,56 @@ export function LiquidInteractionCatalog({
   }
 
   function resetToPreset() {
-    setBezelWidth(themeMaterial.bezelWidth)
-    setBlur(themeMaterial.blur)
-    setCornerRadius(themeMaterial.cornerRadius)
-    setDispersion(themeMaterial.dispersion)
-    setDisplacement(themeMaterial.displacementFactor)
-    setRefraction(themeMaterial.ior)
-    setSurfaceProfile(themeMaterial.surfaceProfile)
-    setSpecular(themeMaterial.specularOpacity)
-    setStudyName(themeMaterial.name)
-    setThickness(themeMaterial.thickness)
-    setTint(Math.round(themeMaterial.tint.a * 100))
-    setTintColor(toHexColor(themeMaterial.tint))
+    onMaterialChange(themeMaterial)
     setExportStatus('Preset restored')
+  }
+
+  function setStudyName(name: string) {
+    onMaterialChange({ ...material, name: name.trimStart() || 'Untitled liquid material' })
+  }
+
+  function setSurfaceProfile(profile: LiquidSurfaceProfile) {
+    onMaterialChange({ ...material, surfaceProfile: profile })
+  }
+
+  function setBlur(value: number) {
+    onMaterialChange({ ...material, blur: value })
+  }
+
+  function setBezelWidth(value: number) {
+    onMaterialChange({ ...material, bezelWidth: value })
+  }
+
+  function setCornerRadius(value: number) {
+    onMaterialChange({ ...material, cornerRadius: value })
+  }
+
+  function setDispersion(value: number) {
+    onMaterialChange({ ...material, dispersion: value })
+  }
+
+  function setDisplacement(value: number) {
+    onMaterialChange({ ...material, displacementFactor: value })
+  }
+
+  function setRefraction(value: number) {
+    onMaterialChange({ ...material, contentIor: value, ior: value })
+  }
+
+  function setSpecular(value: number) {
+    onMaterialChange({ ...material, specularOpacity: value })
+  }
+
+  function setThickness(value: number) {
+    onMaterialChange({ ...material, contentDepth: value, thickness: value })
+  }
+
+  function setTintColor(value: string) {
+    onMaterialChange({ ...material, tint: { ...fromHexColor(value), a: material.tint.a } })
+  }
+
+  function setTint(value: number) {
+    onMaterialChange({ ...material, tint: { ...material.tint, a: value / 100 } })
   }
 
   async function copyMaterial() {

@@ -1,17 +1,13 @@
 import {
-  Frame,
-  Glass,
-  GlassContainer,
-  LiquidCanvas,
-} from '@liquid-dom/react'
-import {
-  liquidGrammar,
   type LiquidMaterial,
-  liquidThemeMaterials,
   type LiquidThemeName,
+  liquidGrammar,
+  liquidThemeMaterials,
   supportsLiquidDomRendering,
 } from '@hifi/liquid'
+import { Frame, Glass, GlassContainer, LiquidCanvas } from '@liquid-dom/react'
 import { useEffect, useRef, useState } from 'react'
+import { liquidFabrics } from './liquidFabrics'
 import { liquidPickerStyles as styles } from './stylex/liquid-picker.stylex'
 import { className, stylexProps } from './stylex/shared.stylex'
 
@@ -73,6 +69,7 @@ function LiquidMaterialCard({
   const [size, setSize] = useState({ height: 0, width: 0 })
   const rendererSupported = supportsLiquidDomRendering() && !rendererFailed
   const canRender = rendererSupported && size.height > 0 && size.width > 0
+  const fabric = liquidFabrics[name]
   const tint = `${Math.round(material.tint.r * 255)} ${Math.round(
     material.tint.g * 255,
   )} ${Math.round(material.tint.b * 255)}`
@@ -105,22 +102,14 @@ function LiquidMaterialCard({
           chroma: `${material.dispersion * 240}px`,
           chromaNegative: `${material.dispersion * -240}px`,
           edge: `${Math.max(1, material.bezelWidth / 18)}px`,
-          fill: `rgb(${tint} / ${Math.min(
-            0.42,
-            material.tint.a + material.opacity * 0.09,
-          )})`,
+          fill: `rgb(${tint} / ${Math.min(0.42, material.tint.a + material.opacity * 0.09)})`,
           radius: `${material.cornerRadius}px`,
           shadowBlur: `${18 + material.thickness * 0.55}px`,
           shadowY: `${material.thickness * 0.24}px`,
           specular: 0.16 + material.specularOpacity * 0.5,
           tint: `rgb(${tint})`,
         }),
-        name === 'clear' && styles.fieldClear,
-        name === 'tinted' && styles.fieldTinted,
-        name === 'frosted' && styles.fieldFrosted,
-        name === 'blurred' && styles.fieldBlurred,
-        name === 'prismatic' && styles.fieldPrismatic,
-        name === 'smoked' && styles.fieldSmoked,
+        styles.fabric(fabric),
       )}
       data-liquid-renderer={canRender ? 'webgpu' : 'css-fallback'}
       ref={fieldRef}
