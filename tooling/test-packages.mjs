@@ -9,7 +9,7 @@ const pnpmStore = await runForOutput('pnpm', ['store', 'path'], workspaceRoot)
 const temporaryRoot = await mkdtemp(join(tmpdir(), 'hifi-package-consumer-'))
 const packDirectory = join(temporaryRoot, 'packs')
 const consumerDirectory = join(temporaryRoot, 'consumer')
-const packageNames = ['core', 'liquid', 'texture', 'print', 'signal', 'kinetic']
+const packageNames = ['core', 'liquid', 'texture', 'print', 'mosaic', 'kinetic']
 
 try {
   await mkdir(packDirectory)
@@ -74,8 +74,8 @@ try {
       '@hifi/core': `file:${archives['@hifi/core']}`,
       '@hifi/kinetic': `file:${archives['@hifi/kinetic']}`,
       '@hifi/liquid': `file:${archives['@hifi/liquid']}`,
+      '@hifi/mosaic': `file:${archives['@hifi/mosaic']}`,
       '@hifi/print': `file:${archives['@hifi/print']}`,
-      '@hifi/signal': `file:${archives['@hifi/signal']}`,
       '@hifi/texture': `file:${archives['@hifi/texture']}`,
       react: styleguideManifest.dependencies.react,
       'react-dom': styleguideManifest.dependencies['react-dom'],
@@ -122,8 +122,8 @@ try {
   kineticThemeMaterials,
 } from '@hifi/kinetic'
 import { LiquidSurface, liquidThemeMaterials } from '@hifi/liquid'
+import { MosaicSurface, MosaicTile, mosaicThemeMaterials } from '@hifi/mosaic'
 import { PrintSurface, printThemeMaterials } from '@hifi/print'
-import { SignalSurface, signalThemeMaterials } from '@hifi/signal'
 import { TextureSurface, textureThemeMaterials } from '@hifi/texture'
 import { createRoot } from 'react-dom/client'
 
@@ -136,7 +136,9 @@ createRoot(root).render(
     <LiquidSurface material={liquidThemeMaterials.clear}>Liquid</LiquidSurface>
     <TextureSurface material={textureThemeMaterials.paper}>Texture</TextureSurface>
     <PrintSurface material={printThemeMaterials.broadsheet}>Print</PrintSurface>
-    <SignalSurface material={signalThemeMaterials.phosphor}>Signal</SignalSurface>
+    <MosaicSurface material={mosaicThemeMaterials.modular}>
+      <MosaicTile material={mosaicThemeMaterials.modular}>Mosaic</MosaicTile>
+    </MosaicSurface>
     <KineticSurface material={kineticThemeMaterials.precision}>
       <KineticButton material={kineticThemeMaterials.precision}>Kinetic</KineticButton>
     </KineticSurface>
@@ -179,19 +181,20 @@ import {
 } from '@hifi/liquid'
 import { liquidGrammar as liquidGrammarEntry } from '@hifi/liquid/grammar'
 import {
+  MosaicSurface,
+  MosaicTile,
+  mosaicThemeMaterials,
+  parseMosaicMaterial,
+  serializeMosaicMaterial,
+} from '@hifi/mosaic'
+import { mosaicGrammar as mosaicGrammarEntry } from '@hifi/mosaic/grammar'
+import {
   PrintSurface,
   parsePrintMaterial,
   printThemeMaterials,
   serializePrintMaterial,
 } from '@hifi/print'
 import { printGrammar as printGrammarEntry } from '@hifi/print/grammar'
-import {
-  SignalSurface,
-  parseSignalMaterial,
-  serializeSignalMaterial,
-  signalThemeMaterials,
-} from '@hifi/signal'
-import { signalGrammar as signalGrammarEntry } from '@hifi/signal/grammar'
 import {
   TextureSurface,
   parseTextureMaterial,
@@ -204,14 +207,15 @@ assert.equal(typeof defineGrammar, 'function')
 assert.equal(typeof LiquidSurface, 'function')
 assert.equal(typeof TextureSurface, 'function')
 assert.equal(typeof PrintSurface, 'function')
-assert.equal(typeof SignalSurface, 'function')
+assert.equal(typeof MosaicSurface, 'function')
+assert.equal(typeof MosaicTile, 'function')
 assert.equal(typeof KineticSurface, 'function')
 assert.equal(typeof KineticButton, 'function')
 assert.equal(typeof KineticDenseTable, 'function')
 assert.equal(liquidGrammarEntry.name, 'liquid')
 assert.equal(textureGrammarEntry.name, 'texture')
 assert.equal(printGrammarEntry.name, 'print')
-assert.equal(signalGrammarEntry.name, 'signal')
+assert.equal(mosaicGrammarEntry.name, 'mosaic')
 assert.equal(kineticGrammarEntry.name, 'kinetic')
 assert.deepEqual(
   parseLiquidMaterial(JSON.parse(serializeLiquidMaterial(liquidThemeMaterials.clear))),
@@ -226,8 +230,8 @@ assert.deepEqual(
   printThemeMaterials.broadsheet,
 )
 assert.deepEqual(
-  parseSignalMaterial(JSON.parse(serializeSignalMaterial(signalThemeMaterials.phosphor))),
-  signalThemeMaterials.phosphor,
+  parseMosaicMaterial(JSON.parse(serializeMosaicMaterial(mosaicThemeMaterials.modular))),
+  mosaicThemeMaterials.modular,
 )
 assert.deepEqual(
   parseKineticMaterial(JSON.parse(serializeKineticMaterial(kineticThemeMaterials.precision))),

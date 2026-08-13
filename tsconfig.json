@@ -16,12 +16,12 @@
       "@hifi/kinetic/grammar": ["./packages/kinetic/src/grammar.ts"],
       "@hifi/liquid": ["./packages/liquid/src/index.ts"],
       "@hifi/liquid/grammar": ["./packages/liquid/src/grammar.ts"],
+      "@hifi/mosaic": ["./packages/mosaic/src/index.ts"],
+      "@hifi/mosaic/grammar": ["./packages/mosaic/src/grammar.ts"],
       "@hifi/print": ["./packages/print/src/index.ts"],
       "@hifi/print/grammar": ["./packages/print/src/grammar.ts"],
       "@hifi/texture": ["./packages/texture/src/index.ts"],
-      "@hifi/texture/grammar": ["./packages/texture/src/grammar.ts"],
-      "@hifi/signal": ["./packages/signal/src/index.ts"],
-      "@hifi/signal/grammar": ["./packages/signal/src/grammar.ts"]
+      "@hifi/texture/grammar": ["./packages/texture/src/grammar.ts"]
     },
     "resolveJsonModule": true,
     "skipLibCheck": true,

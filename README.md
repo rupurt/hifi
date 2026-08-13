@@ -30,7 +30,7 @@ Themes are variants inside a grammar. In `liquid`, themes describe clear, tinted
 | `liquid` | Layered, refractive glass surfaces | clear, tinted, frosted, prismatic, smoked | First priority |
 | `texture` | Tactile and material-rich surfaces | paper, canvas, grain, fabric | Experimental |
 | `print` | Editorial composition inspired by physical print | broadsheet, magazine, technical, poster | Experimental |
-| `signal` | Emissive information shaped by luminance and time | phosphor, matrix, spectral, night | Experimental |
+| `mosaic` | Modular color and geometry composed into readable regions | modular, tessellated, stained, pixel | Experimental |
 | `kinetic` | Physical controls governed by force and consequence | precision, sprung, magnetic, viscous | Experimental |
 
 These are the starting points, not a closed set. A new grammar belongs in `hifi` when it offers a distinct, reusable visual language rather than a one-off component skin.
@@ -56,7 +56,7 @@ These are the starting points, not a closed set. A new grammar belongs in `hifi`
 │   ├── core/                # Shared grammar contracts and utilities
 │   ├── kinetic/             # Physical interaction grammar
 │   ├── liquid/              # Glassmorphic React grammar
-│   ├── signal/              # Emissive signal grammar
+│   ├── mosaic/              # Modular mosaic grammar
 │   ├── texture/             # Textured React grammar
 │   └── print/               # Print-inspired React grammar
 ├── tooling/                 # Shared TypeScript configuration
@@ -79,7 +79,7 @@ The independently consumable packages are:
 | `@hifi/liquid` | WebGPU liquid glass with a CSS fallback | React 19 |
 | `@hifi/texture` | Tactile substrate and pattern surfaces | React 18.2–19 |
 | `@hifi/print` | Editorial composition and print surfaces | React 18.2–19 |
-| `@hifi/signal` | Emissive traces, analytical fields, and optional audio monitoring | React 18.2–19 |
+| `@hifi/mosaic` | Modular surfaces and explicit-contrast content tiles | React 18.2–19 |
 | `@hifi/kinetic` | Physical surfaces, controls, and dense analytical tables driven by a response model | React 18.2–19 |
 
 All packages are ESM-only, support Node.js 20 or newer, publish TypeScript declarations, and expose versioned material parsers and serializers. Their package-level READMEs document the public entry points and basic use.
@@ -137,7 +137,7 @@ Each grammar has a stable route:
 /styleguide/liquid
 /styleguide/texture
 /styleguide/print
-/styleguide/signal
+/styleguide/mosaic
 /styleguide/kinetic
 ```
 
@@ -171,7 +171,7 @@ Theme names and parameters should describe material behavior rather than a singl
 
 ### Programmable materials
 
-Materials are portable, versioned data rather than values trapped inside a component. Each grammar owns a live theme generator that edits the same material object its route and surface renderers consume: optical parameters in Liquid, substrate and pattern parameters in Texture, paper, ink, grid, type, and composition parameters in Print, emitted light and persistence in Signal, and mass, stiffness, damping, friction, travel, and actuation in Kinetic. A change is applied to the complete styleguide grammar—not only the generator preview—before the resulting theme is copied or downloaded as JSON.
+Materials are portable, versioned data rather than values trapped inside a component. Each grammar owns a live theme generator that edits the same material object its route and surface renderers consume: optical parameters in Liquid, substrate and pattern parameters in Texture, paper, ink, grid, type, and composition parameters in Print, tile palette, joints, rhythm, and contrast pairs in Mosaic, and mass, stiffness, damping, friction, travel, and actuation in Kinetic. A change is applied to the complete styleguide grammar—not only the generator preview—before the resulting theme is copied or downloaded as JSON.
 
 An exported material can be validated and applied directly in an application:
 
@@ -188,7 +188,7 @@ export function Panel() {
 
 The shared `ProgrammableMaterial` envelope supplies the `grammar`, `name`, and `version` fields, while each package validates its own parameters. Every grammar package exports matching `parse…Material` and `serialize…Material` functions; parsers reject incompatible input and serializers produce the canonical JSON used by the styleguide exporters.
 
-Signal progressively enhances its visual field on HDR-capable displays while retaining an SDR baseline. Its Web Audio monitor is silent by default and starts only after direct user input. Kinetic likewise keeps vibration and synthesized actuation feedback opt-in; its visual response model works without either capability.
+Kinetic keeps vibration and synthesized actuation feedback opt-in; its visual response model works without either capability.
 
 ## Development environment
 
@@ -268,7 +268,7 @@ Before a grammar is considered part of the suite, it should:
 - [ ] Build out the `liquid` component vocabulary and mature its initial theme variants.
 - [ ] Publish the static styleguide with reliable deep links.
 - [ ] Establish complete `texture` and `print` grammars from the shared contracts.
-- [ ] Develop `signal` into a full emissive and temporal component vocabulary.
+- [ ] Develop `mosaic` into a full modular-composition component vocabulary.
 - [ ] Develop `kinetic` into a full force- and response-driven component vocabulary.
 - [ ] Add browser-level accessibility, rendering, and visual regression coverage.
 

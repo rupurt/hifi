@@ -6,19 +6,19 @@ import {
   serializeKineticMaterial,
 } from '@hifi/kinetic'
 import {
+  type MosaicMaterial,
+  type MosaicPattern,
+  MosaicSurface,
+  MosaicTile,
+  serializeMosaicMaterial,
+} from '@hifi/mosaic'
+import {
   type PrintComposition,
   type PrintMaterial,
   PrintSurface,
   type PrintTypeface,
   serializePrintMaterial,
 } from '@hifi/print'
-import {
-  type SignalMaterial,
-  type SignalMode,
-  SignalSurface,
-  type SignalWaveform,
-  serializeSignalMaterial,
-} from '@hifi/signal'
 import {
   serializeTextureMaterial,
   type TextureMaterial,
@@ -29,121 +29,60 @@ import { useEffect, useRef, useState } from 'react'
 import { className, stylexProps } from './stylex/shared.stylex'
 import { workbenchClass, workbenchStyles } from './stylex/workbench.stylex'
 
-const SIGNAL_SPECTRUM_BINS = [
-  '01',
-  '02',
-  '03',
-  '04',
-  '05',
-  '06',
-  '07',
-  '08',
-  '09',
-  '10',
-  '11',
-  '12',
-  '13',
-  '14',
-  '15',
-  '16',
-] as const
-
-export function SignalMaterialLab({
+export function MosaicMaterialLab({
   material,
   onChange,
   onReset,
 }: {
-  readonly material: SignalMaterial
-  readonly onChange: (material: SignalMaterial) => void
+  readonly material: MosaicMaterial
+  readonly onChange: (material: MosaicMaterial) => void
   readonly onReset: () => void
 }) {
-  const json = serializeSignalMaterial(material)
-  const { active, available, toggle } = useSignalMonitor(material)
+  const json = serializeMosaicMaterial(material)
 
-  function update(patch: Partial<SignalMaterial>) {
+  function update(patch: Partial<MosaicMaterial>) {
     onChange({ ...material, ...patch })
   }
 
   return (
-    <div className={workbenchClass('material-workbench')} data-workbench="signal">
-      <SignalSurface
-        className={className(workbenchStyles.preview, workbenchStyles.signalPreview)}
+    <div className={workbenchClass('material-workbench')} data-workbench="mosaic">
+      <MosaicSurface
+        className={className(workbenchStyles.preview, workbenchStyles.mosaicPreview)}
         material={material}
       >
-        <div className={workbenchClass('signal-workbench-specimen')}>
-          <header className={className(workbenchStyles.specimenRow, workbenchStyles.specimenMeta)}>
-            <span>Channel 05 / {material.mode}</span>
-            <span>{material.scanRate.toFixed(0)} Hz</span>
-          </header>
-          <div className={workbenchClass('signal-instrument-row')}>
-            <section
-              aria-label="Generated waveform"
-              className={workbenchClass('signal-waveform-plane')}
-            >
-              <svg
-                {...stylexProps(workbenchStyles.waveformSvg)}
-                aria-hidden="true"
-                preserveAspectRatio="none"
-                viewBox="0 0 600 160"
-              >
-                <path
-                  {...stylexProps(workbenchStyles.waveform)}
-                  d={getWaveformPath(material.waveform)}
-                />
-                <path
-                  className={className(
-                    workbenchStyles.waveform,
-                    workbenchStyles.waveformAfterimage,
-                  )}
-                  d={getWaveformPath(material.waveform)}
-                />
-              </svg>
-              <span {...stylexProps(workbenchStyles.planeLabel)}>01 / waveform</span>
-            </section>
-            <section
-              aria-label="Generated spectrum"
-              className={workbenchClass('signal-spectrum-plane')}
-            >
-              <div {...stylexProps(workbenchStyles.spectrum)} aria-hidden="true">
-                {SIGNAL_SPECTRUM_BINS.map((bin, index) => {
-                  const height = `${
-                    18 +
-                    Math.abs(Math.sin(index * 0.82 + material.noise * 8)) * material.intensity * 76
-                  }%`
-
-                  return <i {...stylexProps(workbenchStyles.spectrumBar(height))} key={bin} />
-                })}
-              </div>
-              <span {...stylexProps(workbenchStyles.planeLabel)}>02 / spectrum</span>
-            </section>
-          </div>
-          <footer className={className(workbenchStyles.specimenRow, workbenchStyles.specimenMeta)}>
-            <div>
-              <strong {...stylexProps(workbenchStyles.block)}>{material.name}</strong>
-              <small {...stylexProps(workbenchStyles.muted)}>
-                Decay {material.decay.toFixed(2)}s · focus {Math.round(material.focus * 100)}%
-              </small>
-            </div>
-            <button
-              className={className(
-                workbenchStyles.monitorButton,
-                active && workbenchStyles.monitorActive,
-              )}
-              aria-pressed={active}
-              disabled={!available}
-              onClick={() => void toggle()}
-              type="button"
-            >
-              {available ? (active ? 'Mute monitor' : 'Monitor signal') : 'Audio unavailable'}
-            </button>
-          </footer>
+        <div className={className(workbenchStyles.mosaicSpecimen)}>
+          <MosaicTile
+            className={className(workbenchStyles.mosaicFeature)}
+            material={material}
+            rowSpan={2}
+            span={2}
+          >
+            <span className={className(workbenchStyles.specimenMeta)}>Primary tile / 01</span>
+            <strong className={className(workbenchStyles.mosaicTitle)}>
+              SOLID COLOR CLEAR TYPE
+            </strong>
+            <small className={className(workbenchStyles.mosaicFooter)}>{material.name}</small>
+          </MosaicTile>
+          <MosaicTile material={material} tone="accent">
+            <span className={className(workbenchStyles.specimenMeta)}>Cells</span>
+            <strong className={className(workbenchStyles.mosaicMetric)}>{material.cellSize}</strong>
+          </MosaicTile>
+          <div aria-hidden="true" className={className(workbenchStyles.mosaicColorCell)} />
+          <MosaicTile material={material} span={2} tone="neutral">
+            <span className={className(workbenchStyles.specimenMeta)}>
+              Pattern / {material.pattern}
+            </span>
+            <p className={className(workbenchStyles.mosaicCopy)}>
+              Decorative fields carry rhythm. Messages stay on explicit contrast pairs.
+            </p>
+          </MosaicTile>
         </div>
-      </SignalSurface>
+      </MosaicSurface>
 
       <WorkbenchControls
         fileName={`${toFileName(material.name)}.json`}
         json={json}
-        label="Signal theme generator"
+        label="Mosaic theme generator"
         onReset={onReset}
       >
         <WorkbenchText
@@ -152,21 +91,40 @@ export function SignalMaterialLab({
           value={material.name}
         />
         <WorkbenchSelect
-          label="Signal mode"
-          onChange={(value) => update({ mode: value as SignalMode })}
-          options={['trace', 'matrix', 'spectrum', 'lowlight']}
-          value={material.mode}
-        />
-        <WorkbenchSelect
-          label="Waveform"
-          onChange={(value) => update({ waveform: value as SignalWaveform })}
-          options={['sine', 'square', 'sawtooth', 'triangle']}
-          value={material.waveform}
+          label="Pattern"
+          onChange={(value) => update({ pattern: value as MosaicPattern })}
+          options={['grid', 'tessellation', 'leadwork', 'pixel']}
+          value={material.pattern}
         />
         <WorkbenchColor
-          label="Emission"
-          onChange={(emissionColor) => update({ emissionColor })}
-          value={material.emissionColor}
+          label="Background"
+          onChange={(backgroundColor) => update({ backgroundColor })}
+          value={material.backgroundColor}
+        />
+        <WorkbenchColor
+          label="Foreground"
+          onChange={(foregroundColor) => update({ foregroundColor })}
+          value={material.foregroundColor}
+        />
+        <WorkbenchColor
+          label="Tile"
+          onChange={(tileColor) => update({ tileColor })}
+          value={material.tileColor}
+        />
+        <WorkbenchColor
+          label="Tile text"
+          onChange={(tileTextColor) => update({ tileTextColor })}
+          value={material.tileTextColor}
+        />
+        <WorkbenchColor
+          label="Accent"
+          onChange={(accentColor) => update({ accentColor })}
+          value={material.accentColor}
+        />
+        <WorkbenchColor
+          label="Accent text"
+          onChange={(accentTextColor) => update({ accentTextColor })}
+          value={material.accentTextColor}
         />
         <WorkbenchColor
           label="Secondary"
@@ -174,78 +132,53 @@ export function SignalMaterialLab({
           value={material.secondaryColor}
         />
         <WorkbenchColor
-          label="Black floor"
-          onChange={(backgroundColor) => update({ backgroundColor })}
-          value={material.backgroundColor}
+          label="Joint"
+          onChange={(jointColor) => update({ jointColor })}
+          value={material.jointColor}
         />
         <WorkbenchRange
-          label="Intensity"
-          max={1}
-          min={0.1}
-          onChange={(intensity) => update({ intensity })}
-          step={0.01}
-          value={material.intensity}
+          label="Cell size"
+          max={96}
+          min={16}
+          onChange={(cellSize) => update({ cellSize })}
+          value={material.cellSize}
         />
         <WorkbenchRange
-          label="Bloom"
-          max={40}
-          min={0}
-          onChange={(bloom) => update({ bloom })}
-          value={material.bloom}
-        />
-        <WorkbenchRange
-          label="Persistence"
-          max={3}
-          min={0.08}
-          onChange={(decay) => update({ decay })}
-          step={0.01}
-          value={material.decay}
-        />
-        <WorkbenchRange
-          label="Focus"
-          max={1}
-          min={0.1}
-          onChange={(focus) => update({ focus })}
-          step={0.01}
-          value={material.focus}
-        />
-        <WorkbenchRange
-          label="Noise"
-          max={0.4}
-          min={0}
-          onChange={(noise) => update({ noise })}
-          step={0.01}
-          value={material.noise}
-        />
-        <WorkbenchRange
-          label="Scan rate"
-          max={60}
+          label="Joint width"
+          max={12}
           min={1}
-          onChange={(scanRate) => update({ scanRate })}
-          value={material.scanRate}
+          onChange={(jointWidth) => update({ jointWidth })}
+          value={material.jointWidth}
         />
         <WorkbenchRange
-          label="Trace width"
-          max={8}
-          min={0.5}
-          onChange={(traceWidth) => update({ traceWidth })}
-          step={0.5}
-          value={material.traceWidth}
-        />
-        <WorkbenchRange
-          label="Grid"
-          max={64}
-          min={8}
-          onChange={(gridSize) => update({ gridSize })}
-          value={material.gridSize}
-        />
-        <WorkbenchRange
-          label="Audio gain"
-          max={0.08}
+          label="Corner radius"
+          max={24}
           min={0}
-          onChange={(audioGain) => update({ audioGain })}
-          step={0.001}
-          value={material.audioGain}
+          onChange={(radius) => update({ radius })}
+          value={material.radius}
+        />
+        <WorkbenchRange
+          label="Grid offset"
+          max={1}
+          min={0}
+          onChange={(offset) => update({ offset })}
+          step={0.01}
+          value={material.offset}
+        />
+        <WorkbenchRange
+          label="Relief"
+          max={10}
+          min={0}
+          onChange={(relief) => update({ relief })}
+          value={material.relief}
+        />
+        <WorkbenchRange
+          label="Variation"
+          max={1}
+          min={0}
+          onChange={(variation) => update({ variation })}
+          step={0.01}
+          value={material.variation}
         />
       </WorkbenchControls>
     </div>
@@ -863,87 +796,6 @@ function WorkbenchSelect({
       </select>
     </label>
   )
-}
-
-function getWaveformPath(waveform: SignalWaveform) {
-  switch (waveform) {
-    case 'square':
-      return 'M0 120H75V40H150V120H225V40H300V120H375V40H450V120H525V40H600'
-    case 'sawtooth':
-      return 'M0 128L100 32V128L200 32V128L300 32V128L400 32V128L500 32V128L600 32'
-    case 'triangle':
-      return 'M0 120L75 40L150 120L225 40L300 120L375 40L450 120L525 40L600 120'
-    default:
-      return 'M0 80C25 18 75 18 100 80S175 142 200 80S275 18 300 80S375 142 400 80S475 18 500 80S575 142 600 80'
-  }
-}
-
-function useSignalMonitor(material: SignalMaterial) {
-  const context = useRef<AudioContext | null>(null)
-  const gain = useRef<GainNode | null>(null)
-  const oscillator = useRef<OscillatorNode | null>(null)
-  const [active, setActive] = useState(false)
-  const available =
-    typeof window !== 'undefined' &&
-    Boolean(
-      window.AudioContext ??
-        (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext,
-    )
-
-  useEffect(() => {
-    if (!oscillator.current || !gain.current || !context.current) return
-
-    const now = context.current.currentTime
-    oscillator.current.type = material.waveform
-    oscillator.current.frequency.setTargetAtTime(72 + material.scanRate * 4.25, now, 0.04)
-    gain.current.gain.setTargetAtTime(material.audioGain, now, 0.04)
-  }, [material.audioGain, material.scanRate, material.waveform])
-
-  useEffect(
-    () => () => {
-      oscillator.current?.stop()
-      oscillator.current?.disconnect()
-      gain.current?.disconnect()
-      void context.current?.close()
-    },
-    [],
-  )
-
-  async function toggle() {
-    if (!available) return
-
-    if (active) {
-      oscillator.current?.stop()
-      oscillator.current?.disconnect()
-      gain.current?.disconnect()
-      oscillator.current = null
-      gain.current = null
-      setActive(false)
-      return
-    }
-
-    const AudioContextConstructor =
-      window.AudioContext ??
-      (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-    if (!AudioContextConstructor) return
-
-    const audioContext = context.current ?? new AudioContextConstructor()
-    context.current = audioContext
-    await audioContext.resume()
-
-    const nextOscillator = audioContext.createOscillator()
-    const nextGain = audioContext.createGain()
-    nextOscillator.type = material.waveform
-    nextOscillator.frequency.value = 72 + material.scanRate * 4.25
-    nextGain.gain.value = material.audioGain
-    nextOscillator.connect(nextGain).connect(audioContext.destination)
-    nextOscillator.start()
-    oscillator.current = nextOscillator
-    gain.current = nextGain
-    setActive(true)
-  }
-
-  return { active, available, toggle }
 }
 
 function useKineticFeedback(material: KineticMaterial, enabled: boolean) {

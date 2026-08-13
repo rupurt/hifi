@@ -94,10 +94,11 @@ export const sharedStyles = stylex.create({
     borderBottomWidth: 3,
     color: '#17140f',
   },
-  headerSignal: {
-    backgroundColor: '#03110b',
-    borderBottomColor: 'rgb(141 255 179 / 0.28)',
-    color: '#d8ffe3',
+  headerMosaic: {
+    backgroundColor: '#f2ede2',
+    borderBottomColor: '#171815',
+    borderBottomWidth: 3,
+    color: '#171815',
   },
   headerKinetic: {
     backgroundColor: '#d8d9d4',
@@ -121,6 +122,12 @@ export const sharedStyles = stylex.create({
     fontFamily: 'Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif',
     fontStyle: 'normal',
     letterSpacing: '-0.03em',
+    textTransform: 'uppercase',
+  },
+  wordmarkMosaic: {
+    fontFamily: '"Arial Black", Impact, sans-serif',
+    fontStyle: 'normal',
+    letterSpacing: '-0.08em',
     textTransform: 'uppercase',
   },
   wordmarkInstrument: {
@@ -190,17 +197,15 @@ export const sharedStyles = stylex.create({
     backgroundColor: '#e33624',
     color: '#fffaf0',
   },
-  navSignal: {
-    backgroundColor: { ':hover': 'rgb(141 255 179 / 0.12)' },
-    boxShadow: {
-      ':hover': 'inset 0 0 0 1px rgb(141 255 179 / 0.35), 0 0 18px rgb(141 255 179 / 0.12)',
-    },
-    color: { default: '#d8ffe3', ':hover': '#8dffb3' },
+  navMosaic: {
+    backgroundColor: { ':hover': '#2057c9' },
+    boxShadow: { ':hover': '3px 3px 0 #171815' },
+    color: { default: '#171815', ':hover': '#ffffff' },
   },
-  navSignalActive: {
-    backgroundColor: 'rgb(141 255 179 / 0.12)',
-    boxShadow: 'inset 0 0 0 1px rgb(141 255 179 / 0.35), 0 0 18px rgb(141 255 179 / 0.12)',
-    color: '#8dffb3',
+  navMosaicActive: {
+    backgroundColor: '#2057c9',
+    boxShadow: '3px 3px 0 #171815',
+    color: '#ffffff',
   },
   navKinetic: {
     backgroundColor: { ':hover': '#181b1b' },
@@ -324,13 +329,12 @@ export const sharedStyles = stylex.create({
     backgroundColor: '#ef4d3e',
     color: '#fff8e9',
   },
-  cardSignal: {
-    backgroundColor: '#04120c',
+  cardMosaic: {
+    backgroundColor: '#f2ede2',
     backgroundImage:
-      'linear-gradient(rgb(141 255 179 / 0.12) 1px, transparent 1px), linear-gradient(90deg, rgb(141 255 179 / 0.12) 1px, transparent 1px), radial-gradient(circle at 72% 30%, rgb(141 255 179 / 0.26), transparent 30%)',
-    backgroundSize: '22px 22px, 22px 22px, auto',
-    color: '#d8ffe3',
-    textShadow: '0 0 14px rgb(141 255 179 / 0.28)',
+      'linear-gradient(#171815 3px, transparent 3px), linear-gradient(90deg, #171815 3px, transparent 3px), conic-gradient(from 90deg at 50% 50%, #2057c9 0 25%, #f4c73d 0 50%, #f2ede2 0 75%, #c9362c 0)',
+    backgroundSize: '44px 44px, 44px 44px, 88px 88px',
+    color: '#171815',
   },
   cardKinetic: {
     backgroundImage:
@@ -630,26 +634,22 @@ export const sharedStyles = stylex.create({
     outlineWidth: 0,
   },
   themePickerPrintDescriptionActive: { color: 'rgb(255 250 240 / 0.76)' },
-  themePickerSignal: {
+  themePickerMosaic: {
+    backgroundColor: 'var(--mosaic-background)',
     backgroundImage:
-      'repeating-linear-gradient(0deg, transparent 0 4px, rgb(255 255 255 / 0.018) 4px 5px), linear-gradient(140deg, transparent, color-mix(in srgb, var(--signal-emission) 7%, transparent))',
-    borderRadius: 1,
-    position: 'relative',
-    '::after': {
-      backgroundColor: 'var(--signal-emission)',
-      bottom: 17,
-      boxShadow: '0 0 var(--signal-bloom) var(--signal-emission)',
-      content: '""',
-      height: 2,
-      left: 24,
-      opacity: 0,
-      position: 'absolute',
-      transition: 'opacity 180ms ease, width var(--signal-decay) ease',
-      width: 0,
-    },
+      'linear-gradient(var(--mosaic-joint) var(--mosaic-joint-width), transparent var(--mosaic-joint-width)), linear-gradient(90deg, var(--mosaic-joint) var(--mosaic-joint-width), transparent var(--mosaic-joint-width))',
+    backgroundSize: 'var(--mosaic-cell) var(--mosaic-cell)',
+    borderColor: 'var(--mosaic-joint)',
+    borderRadius: 'var(--mosaic-radius)',
+    boxShadow: 'var(--mosaic-relief) var(--mosaic-relief) 0 var(--mosaic-joint)',
+    transition: 'transform 130ms ease, box-shadow 130ms ease',
   },
-  themePickerSignalActive: {
-    '::after': { opacity: 'var(--signal-intensity)', width: 'calc(100% - 48px)' },
+  themePickerMosaicActive: {
+    backgroundColor: 'var(--mosaic-accent)',
+    boxShadow:
+      'calc(var(--mosaic-relief) + 3px) calc(var(--mosaic-relief) + 3px) 0 var(--mosaic-joint)',
+    color: 'var(--mosaic-accent-text)',
+    transform: 'translate(-3px, -3px)',
   },
   themePickerKinetic: {
     borderRadius: 'var(--kinetic-radius)',

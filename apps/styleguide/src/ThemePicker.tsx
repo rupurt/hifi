@@ -2,7 +2,7 @@ import type { GrammarTheme } from '@hifi/core'
 import { className, sharedStyles } from './stylex/shared.stylex'
 
 interface ThemePickerProps {
-  readonly grammar: 'kinetic' | 'liquid' | 'print' | 'signal' | 'texture'
+  readonly grammar: 'kinetic' | 'liquid' | 'mosaic' | 'print' | 'texture'
   readonly label?: string
   readonly onChange: (name: string) => void
   readonly themes: readonly GrammarTheme[]
@@ -34,7 +34,7 @@ export function ThemePicker({
               grammar === 'texture' && sharedStyles.themePickerTexture,
               grammar === 'print' && sharedStyles.themePickerPrint,
               grammar === 'print' && index === 0 && sharedStyles.themePickerPrintFirst,
-              grammar === 'signal' && sharedStyles.themePickerSignal,
+              grammar === 'mosaic' && sharedStyles.themePickerMosaic,
               grammar === 'kinetic' && sharedStyles.themePickerKinetic,
               theme.name === value && sharedStyles.themePickerOptionActive,
               grammar === 'liquid' && theme.name === value && sharedStyles.themePickerLiquidActive,
@@ -42,7 +42,7 @@ export function ThemePicker({
                 theme.name === value &&
                 sharedStyles.themePickerTextureActive,
               grammar === 'print' && theme.name === value && sharedStyles.themePickerPrintActive,
-              grammar === 'signal' && theme.name === value && sharedStyles.themePickerSignalActive,
+              grammar === 'mosaic' && theme.name === value && sharedStyles.themePickerMosaicActive,
               grammar === 'kinetic' &&
                 theme.name === value &&
                 sharedStyles.themePickerKineticActive,

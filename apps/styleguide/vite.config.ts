@@ -31,12 +31,12 @@ export default defineConfig({
         replacement: fromStyleguide('../../packages/liquid/src/grammar.ts'),
       },
       {
-        find: '@hifi/print/grammar',
-        replacement: fromStyleguide('../../packages/print/src/grammar.ts'),
+        find: '@hifi/mosaic/grammar',
+        replacement: fromStyleguide('../../packages/mosaic/src/grammar.ts'),
       },
       {
-        find: '@hifi/signal/grammar',
-        replacement: fromStyleguide('../../packages/signal/src/grammar.ts'),
+        find: '@hifi/print/grammar',
+        replacement: fromStyleguide('../../packages/print/src/grammar.ts'),
       },
       {
         find: '@hifi/texture/grammar',
@@ -45,8 +45,8 @@ export default defineConfig({
       { find: '@hifi/core', replacement: fromStyleguide('../../packages/core/src/index.ts') },
       { find: '@hifi/kinetic', replacement: fromStyleguide('../../packages/kinetic/src/index.ts') },
       { find: '@hifi/liquid', replacement: fromStyleguide('../../packages/liquid/src/index.ts') },
+      { find: '@hifi/mosaic', replacement: fromStyleguide('../../packages/mosaic/src/index.ts') },
       { find: '@hifi/print', replacement: fromStyleguide('../../packages/print/src/index.ts') },
-      { find: '@hifi/signal', replacement: fromStyleguide('../../packages/signal/src/index.ts') },
       { find: '@hifi/texture', replacement: fromStyleguide('../../packages/texture/src/index.ts') },
     ],
   },

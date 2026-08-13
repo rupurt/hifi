@@ -3,7 +3,7 @@ import { grammarNames, grammarRegistry, isGrammarName } from './grammars'
 
 describe('styleguide grammar registry', () => {
   it('registers the five foundational grammar routes', () => {
-    expect(grammarNames).toEqual(['liquid', 'texture', 'print', 'signal', 'kinetic'])
+    expect(grammarNames).toEqual(['liquid', 'texture', 'print', 'mosaic', 'kinetic'])
   })
 
   it('recognizes registered names without accepting arbitrary paths', () => {

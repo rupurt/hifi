@@ -9,8 +9,8 @@ import {
 import { grammarNames, grammarRegistry } from './grammars'
 import { KineticStyleguide } from './KineticStyleguide'
 import { LiquidStyleguide } from './LiquidStyleguide'
+import { MosaicStyleguide } from './MosaicStyleguide'
 import { PrintStyleguide } from './PrintStyleguide'
-import { SignalStyleguide } from './SignalStyleguide'
 import { className, globalStyles, sharedStyles } from './stylex/shared.stylex'
 import { TextureStyleguide } from './TextureStyleguide'
 
@@ -34,8 +34,8 @@ function RootLayout() {
           className={className(
             sharedStyles.wordmark,
             activeGrammar === 'print' && sharedStyles.wordmarkPrint,
-            (activeGrammar === 'signal' || activeGrammar === 'kinetic') &&
-              sharedStyles.wordmarkInstrument,
+            activeGrammar === 'mosaic' && sharedStyles.wordmarkMosaic,
+            activeGrammar === 'kinetic' && sharedStyles.wordmarkInstrument,
           )}
           to="/"
         >
@@ -147,8 +147,8 @@ function headerStyle(grammar: (typeof grammarNames)[number] | undefined) {
       return sharedStyles.headerTexture
     case 'print':
       return sharedStyles.headerPrint
-    case 'signal':
-      return sharedStyles.headerSignal
+    case 'mosaic':
+      return sharedStyles.headerMosaic
     case 'kinetic':
       return sharedStyles.headerKinetic
     default:
@@ -164,8 +164,8 @@ function navStyle(grammar: (typeof grammarNames)[number] | undefined) {
       return sharedStyles.navTexture
     case 'print':
       return sharedStyles.navPrint
-    case 'signal':
-      return sharedStyles.navSignal
+    case 'mosaic':
+      return sharedStyles.navMosaic
     case 'kinetic':
       return sharedStyles.navKinetic
     default:
@@ -181,8 +181,8 @@ function activeNavStyle(grammar: (typeof grammarNames)[number] | undefined) {
       return sharedStyles.navTextureActive
     case 'print':
       return sharedStyles.navPrintActive
-    case 'signal':
-      return sharedStyles.navSignalActive
+    case 'mosaic':
+      return sharedStyles.navMosaicActive
     case 'kinetic':
       return sharedStyles.navKineticActive
     default:
@@ -198,8 +198,8 @@ function grammarCardStyle(grammar: (typeof grammarNames)[number]) {
       return sharedStyles.cardTexture
     case 'print':
       return sharedStyles.cardPrint
-    case 'signal':
-      return sharedStyles.cardSignal
+    case 'mosaic':
+      return sharedStyles.cardMosaic
     case 'kinetic':
       return sharedStyles.cardKinetic
   }
@@ -238,13 +238,13 @@ export const printRoute = createRoute({
   component: PrintStyleguide,
 })
 
-export const signalRoute = createRoute({
+export const mosaicRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: 'styleguide/signal',
+  path: 'styleguide/mosaic',
   validateSearch: (search: Record<string, unknown>) => ({
     theme: typeof search.theme === 'string' ? search.theme : undefined,
   }),
-  component: SignalStyleguide,
+  component: MosaicStyleguide,
 })
 
 export const kineticRoute = createRoute({
@@ -261,7 +261,7 @@ const routeTree = rootRoute.addChildren([
   liquidRoute,
   textureRoute,
   printRoute,
-  signalRoute,
+  mosaicRoute,
   kineticRoute,
 ])
 

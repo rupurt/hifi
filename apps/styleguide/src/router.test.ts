@@ -8,7 +8,7 @@ describe('styleguide routes', () => {
         '/styleguide/liquid',
         '/styleguide/texture',
         '/styleguide/print',
-        '/styleguide/signal',
+        '/styleguide/mosaic',
         '/styleguide/kinetic',
       ]),
     )

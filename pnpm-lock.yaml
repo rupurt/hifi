@@ -44,12 +44,12 @@ importers:
       '@hifi/liquid':
         specifier: workspace:*
         version: link:../../packages/liquid
+      '@hifi/mosaic':
+        specifier: workspace:*
+        version: link:../../packages/mosaic
       '@hifi/print':
         specifier: workspace:*
         version: link:../../packages/print
-      '@hifi/signal':
-        specifier: workspace:*
-        version: link:../../packages/signal
       '@hifi/texture':
         specifier: workspace:*
         version: link:../../packages/texture
@@ -137,7 +137,7 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
-  packages/print:
+  packages/mosaic:
     dependencies:
       '@hifi/core':
         specifier: workspace:^
@@ -153,7 +153,7 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2
 
-  packages/signal:
+  packages/print:
     dependencies:
       '@hifi/core':
         specifier: workspace:^
