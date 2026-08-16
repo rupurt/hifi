@@ -13,9 +13,9 @@ import { FoundationCatalog } from './FoundationCatalog'
 import { PrintMaterialLab } from './ProgrammableMaterialLabs'
 import { StyleguideNav } from './StyleguideNav'
 import { StyleguideSection } from './StyleguideSection'
-import { ThemePicker } from './ThemePicker'
 import { printStyles } from './stylex/print.stylex'
 import { className, sharedStyles, stylexProps } from './stylex/shared.stylex'
+import { ThemePicker } from './ThemePicker'
 
 export function PrintStyleguide() {
   const { theme } = useSearch({ from: '/styleguide/print' })
@@ -28,6 +28,10 @@ export function PrintStyleguide() {
   useEffect(() => setMaterial(preset), [preset])
 
   const materialStyle = getPrintMaterialStyle(material)
+  const coverMaterial =
+    selectedTheme.name === 'broadsheet'
+      ? { ...material, inkColor: material.paperColor, paperColor: material.inkColor }
+      : material
   const controlShadow = `${material.shadowOffset}px ${material.shadowOffset}px 0 color-mix(in srgb, ${material.inkColor} 16%, transparent)`
   const controlSurface = `color-mix(in srgb, ${material.paperColor} 78%, transparent)`
   const pageStyle = printStyles.generatedPage({
@@ -82,7 +86,7 @@ export function PrintStyleguide() {
             </span>
           </a>
         </div>
-        <PrintSurface className={className(printStyles.cover)} material={material}>
+        <PrintSurface className={className(printStyles.cover)} material={coverMaterial}>
           <div className={className(printStyles.coverCopy)}>
             <span className={className(printStyles.coverMeta)}>Special material issue</span>
             <strong className={className(printStyles.coverTitle)}>{material.name}</strong>

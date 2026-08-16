@@ -9,7 +9,7 @@ export const printGrammar = defineGrammar({
     {
       name: 'broadsheet',
       label: 'Broadsheet',
-      description: 'Dense columns and authoritative scale.',
+      description: 'Stark monochrome columns with cinematic contrast.',
     },
     {
       name: 'magazine',

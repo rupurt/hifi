@@ -23,15 +23,15 @@ export interface PrintMaterial extends ProgrammableMaterial<'print', 1> {
 
 export const printThemeMaterials: Readonly<Record<PrintThemeName, PrintMaterial>> = {
   broadsheet: {
-    accentColor: '#8c2e24',
+    accentColor: '#080808',
     composition: 'columns',
     grammar: 'print',
     gridSize: 28,
-    inkColor: '#181713',
+    inkColor: '#080808',
     name: 'Daily broadsheet',
-    paperColor: '#eee9dd',
+    paperColor: '#fafafa',
     ruleWeight: 1,
-    shadowOffset: 8,
+    shadowOffset: 6,
     typeface: 'serif',
     uppercase: false,
     version: 1,
