@@ -1,5 +1,11 @@
 export { type MosaicThemeName, mosaicGrammar } from './grammar.js'
 export {
+  type MosaicLayoutLeaf,
+  type MosaicLayoutRect,
+  type MosaicLayoutSize,
+  computeSquarifiedLayout,
+} from './layout.js'
+export {
   type MosaicMaterial,
   type MosaicPattern,
   mosaicThemeMaterials,

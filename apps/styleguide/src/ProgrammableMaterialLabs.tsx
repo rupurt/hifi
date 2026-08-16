@@ -50,33 +50,28 @@ export function MosaicMaterialLab({
         className={className(workbenchStyles.preview, workbenchStyles.mosaicPreview)}
         material={material}
       >
-        <div className={className(workbenchStyles.mosaicSpecimen)}>
-          <MosaicTile
-            className={className(workbenchStyles.mosaicFeature)}
-            material={material}
-            rowSpan={2}
-            span={2}
-          >
-            <span className={className(workbenchStyles.specimenMeta)}>Primary tile / 01</span>
-            <strong className={className(workbenchStyles.mosaicTitle)}>
-              SOLID COLOR CLEAR TYPE
-            </strong>
-            <small className={className(workbenchStyles.mosaicFooter)}>{material.name}</small>
-          </MosaicTile>
-          <MosaicTile material={material} tone="accent">
-            <span className={className(workbenchStyles.specimenMeta)}>Cells</span>
-            <strong className={className(workbenchStyles.mosaicMetric)}>{material.cellSize}</strong>
-          </MosaicTile>
-          <div aria-hidden="true" className={className(workbenchStyles.mosaicColorCell)} />
-          <MosaicTile material={material} span={2} tone="neutral">
-            <span className={className(workbenchStyles.specimenMeta)}>
-              Pattern / {material.pattern}
-            </span>
-            <p className={className(workbenchStyles.mosaicCopy)}>
-              Decorative fields carry rhythm. Messages stay on explicit contrast pairs.
-            </p>
-          </MosaicTile>
-        </div>
+        <MosaicTile
+          className={className(workbenchStyles.mosaicFeature)}
+          material={material}
+          weight={4}
+        >
+          <span className={className(workbenchStyles.specimenMeta)}>Primary tile / 01</span>
+          <strong className={className(workbenchStyles.mosaicTitle)}>SOLID COLOR CLEAR TYPE</strong>
+          <small className={className(workbenchStyles.mosaicFooter)}>{material.name}</small>
+        </MosaicTile>
+        <MosaicTile material={material} tone="accent" weight={1}>
+          <span className={className(workbenchStyles.specimenMeta)}>Cells</span>
+          <strong className={className(workbenchStyles.mosaicMetric)}>{material.cellSize}</strong>
+        </MosaicTile>
+        <MosaicTile material={material} tone="neutral" weight={1} />
+        <MosaicTile material={material} tone="neutral" weight={2}>
+          <span className={className(workbenchStyles.specimenMeta)}>
+            Pattern / {material.pattern}
+          </span>
+          <p className={className(workbenchStyles.mosaicCopy)}>
+            Decorative fields carry rhythm. Messages stay on explicit contrast pairs.
+          </p>
+        </MosaicTile>
       </MosaicSurface>
 
       <WorkbenchControls
@@ -151,19 +146,11 @@ export function MosaicMaterialLab({
           value={material.jointWidth}
         />
         <WorkbenchRange
-          label="Corner radius"
+          label="Corner chamfer"
           max={24}
           min={0}
           onChange={(radius) => update({ radius })}
           value={material.radius}
-        />
-        <WorkbenchRange
-          label="Grid offset"
-          max={1}
-          min={0}
-          onChange={(offset) => update({ offset })}
-          step={0.01}
-          value={material.offset}
         />
         <WorkbenchRange
           label="Relief"
@@ -173,13 +160,50 @@ export function MosaicMaterialLab({
           value={material.relief}
         />
         <WorkbenchRange
-          label="Variation"
+          label="Light angle"
+          max={360}
+          min={0}
+          onChange={(lightAngle) => update({ lightAngle })}
+          value={material.lightAngle}
+        />
+        <WorkbenchRange
+          label="Perturbation"
           max={1}
           min={0}
-          onChange={(variation) => update({ variation })}
+          onChange={(perturbation) => update({ perturbation })}
           step={0.01}
-          value={material.variation}
+          value={material.perturbation}
         />
+        <WorkbenchRange
+          label="Edge segments"
+          max={4}
+          min={1}
+          onChange={(edgeSegments) => update({ edgeSegments })}
+          value={material.edgeSegments}
+        />
+        <WorkbenchRange
+          label="Settle tempo"
+          max={160}
+          min={0}
+          onChange={(tempo) => update({ tempo })}
+          value={material.tempo}
+        />
+        <div className={className(workbenchStyles.row)}>
+          <WorkbenchRange
+            label="Seed"
+            max={9999}
+            min={0}
+            onChange={(seed) => update({ seed })}
+            value={material.seed}
+          />
+          <button
+            className={className(workbenchStyles.footerButton)}
+            onClick={() => update({ seed: Math.floor(Math.random() * 10000) })}
+            type="button"
+          >
+            Reseed
+          </button>
+        </div>
       </WorkbenchControls>
     </div>
   )

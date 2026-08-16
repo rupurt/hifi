@@ -1,12 +1,27 @@
-import type { CSSProperties, PropsWithChildren } from 'react'
+import {
+  Children,
+  type CSSProperties,
+  isValidElement,
+  type PropsWithChildren,
+  type ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
+import { computeMosaicGeometry } from './geometry.js'
 import type { MosaicThemeName } from './grammar.js'
+import type { MosaicLayoutSize } from './layout.js'
 import { type MosaicMaterial, mosaicThemeMaterials } from './material.js'
+import type { MosaicTileProps } from './MosaicTile.js'
+import { useReducedMotion } from './useReducedMotion.js'
 
 export interface MosaicSurfaceProps extends PropsWithChildren {
   readonly className?: string
   readonly material?: MosaicMaterial
   readonly theme?: MosaicThemeName
 }
+
+const EASING = 'cubic-bezier(0.16, 1, 0.3, 1)'
 
 export function MosaicSurface({
   children,
@@ -15,6 +30,58 @@ export function MosaicSurface({
   theme = 'modular',
 }: MosaicSurfaceProps) {
   const selected = material ?? mosaicThemeMaterials[theme]
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [size, setSize] = useState<MosaicLayoutSize>({ height: 0, width: 0 })
+  const reducedMotion = useReducedMotion()
+  const [settled, setSettled] = useState(false)
+
+  useEffect(() => {
+    const node = containerRef.current
+    if (!node) return
+
+    const measure = () => {
+      const bounds = node.getBoundingClientRect()
+      setSize({ height: bounds.height, width: bounds.width })
+    }
+    const observer = new ResizeObserver(measure)
+
+    measure()
+    observer.observe(node)
+
+    return () => observer.disconnect()
+  }, [])
+
+  const items = Children.toArray(children).filter(isValidElement) as ReactElement<
+    MosaicTileProps & { readonly key?: string | number | null }
+  >[]
+  const leaves = items.map((child, index) => ({
+    id: String(child.props.id ?? child.key ?? index),
+    weight: Math.max(0.05, child.props.weight ?? 1),
+  }))
+  const hasGeometry = size.width > 0 && size.height > 0
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: leaves/size/selected intentionally re-trigger the settle-in animation on every layout/material change
+  useEffect(() => {
+    setSettled(false)
+    if (reducedMotion) {
+      setSettled(true)
+      return
+    }
+
+    let inner = 0
+    const outer = requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => setSettled(true))
+    })
+
+    return () => {
+      cancelAnimationFrame(outer)
+      cancelAnimationFrame(inner)
+    }
+  }, [leaves, size, selected, reducedMotion])
+
+  const geometry = hasGeometry ? computeMosaicGeometry(leaves, size, selected) : []
+  const geometryById = new Map(geometry.map((tile) => [tile.id, tile]))
+  const duration = settleDuration(selected)
 
   return (
     <section
@@ -22,76 +89,86 @@ export function MosaicSurface({
       data-mosaic-pattern={selected.pattern}
       style={{
         ...getMosaicMaterialStyle(selected),
-        border: `${Math.max(1, selected.jointWidth)}px solid ${selected.jointColor}`,
+        backgroundColor: selected.jointColor,
         minHeight: 'var(--mosaic-surface-min-height, 320px)',
         overflow: 'hidden',
         padding: 'var(--mosaic-surface-padding, 32px)',
         position: 'relative',
       }}
     >
-      {children}
+      <div
+        ref={containerRef}
+        style={{
+          inset: 0,
+          overflow: hasGeometry ? undefined : 'auto',
+          position: 'absolute',
+          ...(hasGeometry ? {} : { display: 'flex', flexWrap: 'wrap', gap: selected.jointWidth }),
+        }}
+      >
+        {items.map((child, index) => {
+          const leaf = leaves[index] ?? { id: String(index), weight: 1 }
+          const tile = geometryById.get(leaf.id)
+
+          if (!tile) {
+            return (
+              <div key={leaf.id} style={{ flexBasis: 0, flexGrow: leaf.weight, minWidth: 0 }}>
+                {child}
+              </div>
+            )
+          }
+
+          return (
+            <div
+              key={leaf.id}
+              style={{
+                clipPath: tile.clipPath === 'none' ? undefined : tile.clipPath,
+                filter: tile.filter,
+                height: tile.height,
+                left: tile.left,
+                opacity: settled ? 1 : 0,
+                position: 'absolute',
+                top: tile.top,
+                transform: settled ? 'scale(1) translateY(0)' : 'scale(0.96) translateY(6px)',
+                transition: reducedMotion
+                  ? 'none'
+                  : `opacity ${duration}ms ${EASING} ${tile.settleDelayMs}ms, transform ${duration}ms ${EASING} ${tile.settleDelayMs}ms`,
+                width: tile.width,
+              }}
+            >
+              {child}
+            </div>
+          )
+        })}
+      </div>
     </section>
   )
 }
 
 export function getMosaicMaterialStyle(material: MosaicMaterial): CSSProperties {
-  const cell = Math.max(12, material.cellSize)
-  const joint = Math.max(1, material.jointWidth)
-  const pattern = getMosaicPattern(material, cell, joint)
-
   return {
     '--mosaic-accent': material.accentColor,
     '--mosaic-accent-text': material.accentTextColor,
     '--mosaic-background': material.backgroundColor,
-    '--mosaic-cell': `${cell}px`,
+    '--mosaic-cell': `${material.cellSize}px`,
+    '--mosaic-edge-segments': material.edgeSegments,
     '--mosaic-foreground': material.foregroundColor,
     '--mosaic-joint': material.jointColor,
-    '--mosaic-joint-width': `${joint}px`,
-    '--mosaic-offset': material.offset,
+    '--mosaic-joint-width': `${material.jointWidth}px`,
+    '--mosaic-light-angle': `${material.lightAngle}deg`,
+    '--mosaic-perturbation': material.perturbation,
     '--mosaic-radius': `${material.radius}px`,
     '--mosaic-relief': `${material.relief}px`,
+    '--mosaic-safe-inset': `${Math.ceil(material.perturbation * material.cellSize * 0.3 + material.radius)}px`,
     '--mosaic-secondary': material.secondaryColor,
+    '--mosaic-seed': material.seed,
+    '--mosaic-tempo': `${material.tempo}ms`,
     '--mosaic-tile': material.tileColor,
     '--mosaic-tile-text': material.tileTextColor,
-    '--mosaic-variation': material.variation,
     backgroundColor: material.backgroundColor,
-    backgroundImage: pattern.backgroundImage,
-    backgroundPosition: pattern.backgroundPosition,
-    backgroundSize: pattern.backgroundSize,
     color: material.foregroundColor,
   } as CSSProperties
 }
 
-function getMosaicPattern(material: MosaicMaterial, cell: number, joint: number) {
-  const tile = `color-mix(in srgb, ${material.tileColor} ${Math.round(22 + material.variation * 24)}%, transparent)`
-  const secondary = `color-mix(in srgb, ${material.secondaryColor} ${Math.round(20 + material.variation * 30)}%, transparent)`
-  const accent = `color-mix(in srgb, ${material.accentColor} ${Math.round(18 + material.variation * 28)}%, transparent)`
-  const jointColor = `color-mix(in srgb, ${material.jointColor} 78%, transparent)`
-
-  switch (material.pattern) {
-    case 'tessellation':
-      return {
-        backgroundImage: `conic-gradient(from 45deg at 75% 25%, ${tile} 0 90deg, ${secondary} 0 180deg, ${accent} 0 270deg, transparent 0), linear-gradient(${jointColor} ${joint}px, transparent ${joint}px), linear-gradient(90deg, ${jointColor} ${joint}px, transparent ${joint}px)`,
-        backgroundPosition: `0 0, ${cell * material.offset}px 0, 0 ${cell * material.offset}px`,
-        backgroundSize: `${cell * 2}px ${cell * 2}px, ${cell}px ${cell}px, ${cell}px ${cell}px`,
-      }
-    case 'leadwork':
-      return {
-        backgroundImage: `radial-gradient(circle at 18% 22%, ${accent} 0 18%, transparent 18.5%), radial-gradient(circle at 78% 68%, ${secondary} 0 22%, transparent 22.5%), linear-gradient(135deg, ${tile}, transparent 62%), linear-gradient(${jointColor} ${joint}px, transparent ${joint}px), linear-gradient(90deg, ${jointColor} ${joint}px, transparent ${joint}px)`,
-        backgroundPosition: '0 0',
-        backgroundSize: `${cell * 3}px ${cell * 3}px, ${cell * 4}px ${cell * 4}px, ${cell * 2}px ${cell * 2}px, ${cell}px ${cell}px, ${cell}px ${cell}px`,
-      }
-    case 'pixel':
-      return {
-        backgroundImage: `conic-gradient(from 90deg at 50% 50%, ${tile} 0 25%, ${secondary} 0 50%, transparent 0 75%, ${accent} 0), linear-gradient(${jointColor} ${joint}px, transparent ${joint}px), linear-gradient(90deg, ${jointColor} ${joint}px, transparent ${joint}px)`,
-        backgroundPosition: '0 0',
-        backgroundSize: `${cell * 2}px ${cell * 2}px, ${cell}px ${cell}px, ${cell}px ${cell}px`,
-      }
-    default:
-      return {
-        backgroundImage: `linear-gradient(${jointColor} ${joint}px, transparent ${joint}px), linear-gradient(90deg, ${jointColor} ${joint}px, transparent ${joint}px), linear-gradient(135deg, ${tile}, transparent 48%, ${secondary} 48% 67%, transparent 67%), radial-gradient(circle at 72% 28%, ${accent}, transparent 24%)`,
-        backgroundPosition: `0 0, 0 0, ${cell * material.offset}px ${cell * material.offset}px, 0 0`,
-        backgroundSize: `${cell}px ${cell}px, ${cell}px ${cell}px, ${cell * 3}px ${cell * 3}px, ${cell * 5}px ${cell * 5}px`,
-      }
-  }
+function settleDuration(material: MosaicMaterial): number {
+  return Math.min(420, Math.max(120, 90 + material.relief * 14 + material.jointWidth * 6))
 }

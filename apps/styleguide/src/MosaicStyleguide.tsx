@@ -3,7 +3,6 @@ import {
   MosaicSurface,
   MosaicTile,
   type MosaicThemeName,
-  getMosaicMaterialStyle,
   mosaicGrammar,
   mosaicThemeMaterials,
 } from '@hifi/mosaic'
@@ -28,14 +27,10 @@ export function MosaicStyleguide() {
 
   useEffect(() => setMaterial(preset), [preset])
 
-  const materialStyle = getMosaicMaterialStyle(material)
   const pageStyle = mosaicStyles.generatedPage({
     accent: material.accentColor,
     accentText: material.accentTextColor,
     background: material.backgroundColor,
-    backgroundImage: String(materialStyle.backgroundImage),
-    backgroundPosition: String(materialStyle.backgroundPosition),
-    backgroundSize: String(materialStyle.backgroundSize),
     cell: `${material.cellSize}px`,
     foreground: material.foregroundColor,
     joint: material.jointColor,
@@ -81,45 +76,42 @@ export function MosaicStyleguide() {
         </div>
 
         <MosaicSurface className={className(mosaicStyles.composition)} material={material}>
-          <div className={className(mosaicStyles.compositionGrid)}>
-            <MosaicTile
-              className={className(mosaicStyles.featureTile)}
-              material={material}
-              rowSpan={2}
-              span={2}
-            >
-              <span className={className(mosaicStyles.tileEyebrow)}>Composition 04</span>
-              <strong className={className(mosaicStyles.featureNumber)}>24</strong>
-              <span className={className(mosaicStyles.tileFooter)}>units / assembled</span>
-            </MosaicTile>
-            <MosaicTile material={material} tone="accent">
-              <span className={className(mosaicStyles.tileEyebrow)}>State</span>
-              <strong className={className(mosaicStyles.tileValue)}>Live</strong>
-            </MosaicTile>
-            <div aria-hidden="true" className={className(mosaicStyles.colorTile)} />
-            <MosaicTile
-              className={className(mosaicStyles.statementTile)}
-              material={material}
-              span={2}
-              tone="neutral"
-            >
-              <strong>THE WHOLE IS LEGIBLE BECAUSE EACH PART IS CLEAR.</strong>
-            </MosaicTile>
-            <div aria-hidden="true" className={className(mosaicStyles.secondaryTile)} />
-            <MosaicTile material={material} tone="accent">
-              <span className={className(mosaicStyles.tileEyebrow)}>Offset</span>
-              <strong className={className(mosaicStyles.tileValue)}>
-                {Math.round(material.offset * 100)}
-              </strong>
-            </MosaicTile>
-          </div>
+          <MosaicTile
+            className={className(mosaicStyles.featureTile)}
+            material={material}
+            weight={4}
+          >
+            <span className={className(mosaicStyles.tileEyebrow)}>Composition 04</span>
+            <strong className={className(mosaicStyles.featureNumber)}>24</strong>
+            <span className={className(mosaicStyles.tileFooter)}>units / assembled</span>
+          </MosaicTile>
+          <MosaicTile material={material} tone="accent" weight={1}>
+            <span className={className(mosaicStyles.tileEyebrow)}>State</span>
+            <strong className={className(mosaicStyles.tileValue)}>Live</strong>
+          </MosaicTile>
+          <MosaicTile material={material} tone="neutral" weight={1} />
+          <MosaicTile
+            className={className(mosaicStyles.statementTile)}
+            material={material}
+            tone="neutral"
+            weight={2}
+          >
+            <strong>THE WHOLE IS LEGIBLE BECAUSE EACH PART IS CLEAR.</strong>
+          </MosaicTile>
+          <MosaicTile material={material} tone="tile" weight={1} />
+          <MosaicTile material={material} tone="accent" weight={1}>
+            <span className={className(mosaicStyles.tileEyebrow)}>Perturbation</span>
+            <strong className={className(mosaicStyles.tileValue)}>
+              {Math.round(material.perturbation * 100)}
+            </strong>
+          </MosaicTile>
         </MosaicSurface>
       </header>
 
       <StyleguideNav />
 
       <StyleguideSection
-        description="Set the palette and its explicit text pairs, then tune the tile pattern, joint, cell, offset, relief, and variation applied to the entire grammar."
+        description="Set the palette and its explicit text pairs, then tune the tile pattern, joint, chamfer, relief, light angle, and seeded perturbation applied to the entire grammar."
         id="material-heading"
         index="01"
         title="Assemble a visual system"

@@ -6,18 +6,11 @@ export const mosaicStyles = stylex.create({
     '--guide-font': 'Inter, ui-sans-serif, sans-serif',
     '--guide-mono': '"SFMono-Regular", Consolas, monospace',
     backgroundColor: 'var(--mosaic-background)',
-    backgroundImage:
-      'linear-gradient(color-mix(in srgb, var(--mosaic-background) 94%, transparent), color-mix(in srgb, var(--mosaic-background) 94%, transparent)), var(--mosaic-pattern)',
-    backgroundPosition: '0 0, var(--mosaic-pattern-position)',
-    backgroundSize: 'auto, var(--mosaic-pattern-size)',
   },
   generatedPage: (values: {
     readonly accent: string
     readonly accentText: string
     readonly background: string
-    readonly backgroundImage: string
-    readonly backgroundPosition: string
-    readonly backgroundSize: string
     readonly cell: string
     readonly foreground: string
     readonly joint: string
@@ -53,9 +46,6 @@ export const mosaicStyles = stylex.create({
     '--mosaic-foreground': values.foreground,
     '--mosaic-joint': values.joint,
     '--mosaic-joint-width': values.jointWidth,
-    '--mosaic-pattern': values.backgroundImage,
-    '--mosaic-pattern-position': values.backgroundPosition,
-    '--mosaic-pattern-size': values.backgroundSize,
     '--mosaic-radius': values.radius,
     '--mosaic-relief': values.relief,
     '--mosaic-secondary': values.secondary,
@@ -124,16 +114,6 @@ export const mosaicStyles = stylex.create({
     padding: 'clamp(18px, 3vw, 34px)',
     '@media (max-width: 1040px)': { minHeight: 580 },
   },
-  compositionGrid: {
-    alignContent: 'center',
-    backgroundColor: 'var(--mosaic-joint)',
-    display: 'grid',
-    gap: 'var(--mosaic-joint-width)',
-    gridAutoRows: 'minmax(130px, auto)',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    minHeight: 560,
-    '@media (max-width: 620px)': { gridTemplateColumns: 'repeat(2, 1fr)' },
-  },
   featureTile: { display: 'flex', flexDirection: 'column', justifyContent: 'space-between' },
   tileEyebrow: {
     fontFamily: 'var(--guide-mono)',
@@ -164,21 +144,5 @@ export const mosaicStyles = stylex.create({
     fontSize: 'clamp(1.5rem, 2.5vw, 2.6rem)',
     letterSpacing: '-0.035em',
     lineHeight: 0.95,
-  },
-  colorTile: {
-    backgroundColor: 'var(--mosaic-secondary)',
-    borderColor: 'var(--mosaic-joint)',
-    borderRadius: 'var(--mosaic-radius)',
-    borderStyle: 'solid',
-    borderWidth: 'var(--mosaic-joint-width)',
-    minHeight: 100,
-  },
-  secondaryTile: {
-    backgroundColor: 'var(--mosaic-tile)',
-    borderColor: 'var(--mosaic-joint)',
-    borderRadius: 'var(--mosaic-radius)',
-    borderStyle: 'solid',
-    borderWidth: 'var(--mosaic-joint-width)',
-    minHeight: 100,
   },
 })

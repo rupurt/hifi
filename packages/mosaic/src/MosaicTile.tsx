@@ -5,18 +5,22 @@ export type MosaicTileTone = 'accent' | 'neutral' | 'tile'
 
 export interface MosaicTileProps extends PropsWithChildren {
   readonly className?: string
+  /** Stable identity for the tile's computed layout slot. Defaults to the element's React key. */
+  readonly id?: string
   readonly material?: MosaicMaterial
-  readonly rowSpan?: 1 | 2 | 3
-  readonly span?: 1 | 2 | 3
   readonly tone?: MosaicTileTone
+  /** Relative size within the surface's weight-driven treemap. Bigger weight, bigger tile —
+   * hierarchy is spatial, not a manually chosen grid span. */
+  readonly weight?: number
 }
 
+/** A content box. It never computes its own position or shape — `MosaicSurface` owns the real
+ * computed geometry for every tile at once, since a tile's box depends on all its siblings'
+ * weights, not on itself in isolation. */
 export function MosaicTile({
   children,
   className,
   material = mosaicThemeMaterials.modular,
-  rowSpan = 1,
-  span = 1,
   tone = 'tile',
 }: MosaicTileProps) {
   const palette = getTonePalette(material, tone)
@@ -27,18 +31,13 @@ export function MosaicTile({
       data-mosaic-tone={tone}
       style={{
         backgroundColor: palette.background,
-        border: `${Math.max(1, material.jointWidth)}px solid ${material.jointColor}`,
-        borderRadius: material.radius,
-        boxShadow:
-          material.relief > 0
-            ? `${material.relief}px ${material.relief}px 0 ${material.jointColor}`
-            : 'none',
         color: palette.foreground,
-        gridColumn: `span ${span}`,
-        gridRow: `span ${rowSpan}`,
+        height: '100%',
         minWidth: 0,
-        padding: 'var(--mosaic-tile-padding, 24px)',
+        overflow: 'hidden',
+        padding: 'var(--mosaic-tile-padding, max(24px, var(--mosaic-safe-inset, 24px)))',
         position: 'relative',
+        width: '100%',
       }}
     >
       {children}

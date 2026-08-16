@@ -14,6 +14,15 @@ describe('mosaic materials', () => {
     ).toThrowError('Mosaic material has an unsupported pattern')
   })
 
+  it.each(['seed', 'tempo', 'lightAngle', 'perturbation', 'edgeSegments'] as const)(
+    'rejects a non-finite %s',
+    (key) => {
+      expect(() =>
+        parseMosaicMaterial({ ...mosaicThemeMaterials.tessellated, [key]: Number.NaN }),
+      ).toThrowError(`Mosaic material requires a finite ${key}`)
+    },
+  )
+
   it('keeps every preset text pair at WCAG AA contrast', () => {
     for (const material of Object.values(mosaicThemeMaterials)) {
       expect(
