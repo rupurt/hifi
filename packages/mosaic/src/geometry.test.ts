@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  chamferedRectPath,
   computeBevelFilter,
   computeMosaicGeometry,
   type MosaicGeometryMaterial,
@@ -135,5 +136,37 @@ describe('computeMosaicGeometry', () => {
     for (const tile of geometry) {
       expect(tile.clipPath).not.toMatch(/NaN/)
     }
+  })
+})
+
+describe('chamferedRectPath', () => {
+  it('returns a plain rect polygon when chamfer is zero', () => {
+    expect(chamferedRectPath(40, 20, 0)).toBe('polygon(0px 0px, 40px 0px, 40px 20px, 0px 20px)')
+  })
+
+  it('returns an 8-point polygon for a positive chamfer', () => {
+    const path = chamferedRectPath(40, 40, 6)
+    const pointCount = path.match(/\d+(?:\.\d+)?px \d+(?:\.\d+)?px/g)?.length
+
+    expect(pointCount).toBe(8)
+  })
+
+  it('clamps the chamfer to half the shorter side so the polygon never self-intersects', () => {
+    const path = chamferedRectPath(20, 10, 999)
+
+    expect(path).not.toMatch(/NaN/)
+    for (const match of path.matchAll(/(-?\d+(?:\.\d+)?)px (-?\d+(?:\.\d+)?)px/g)) {
+      const x = Number(match[1])
+      const y = Number(match[2])
+      expect(x).toBeGreaterThanOrEqual(0)
+      expect(x).toBeLessThanOrEqual(20)
+      expect(y).toBeGreaterThanOrEqual(0)
+      expect(y).toBeLessThanOrEqual(10)
+    }
+  })
+
+  it('never produces NaN or negative coordinates for a zero-size rect', () => {
+    expect(chamferedRectPath(0, 0, 4)).not.toMatch(/NaN/)
+    expect(chamferedRectPath(0, 0, 4)).not.toMatch(/-/)
   })
 })

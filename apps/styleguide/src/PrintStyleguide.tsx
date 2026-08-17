@@ -120,7 +120,7 @@ export function PrintStyleguide() {
       </StyleguideSection>
 
       <FoundationCatalog />
-      <ControlCatalog grammarLabel="print" />
+      <ControlCatalog grammarLabel="print" material={material} />
     </main>
   )
 }

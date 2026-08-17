@@ -111,7 +111,7 @@ export function TextureStyleguide() {
       </StyleguideSection>
 
       <FoundationCatalog />
-      <ControlCatalog grammarLabel="texture" />
+      <ControlCatalog grammarLabel="texture" material={material} />
     </main>
   )
 }

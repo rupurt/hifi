@@ -1,9 +1,10 @@
+import { type InputHTMLAttributes, useId, useState } from 'react'
 import {
-  KineticDenseTable,
-  type KineticDenseTableColumn,
-  type KineticMaterial,
-} from '@hifi/kinetic'
-import { useId, useState } from 'react'
+  type AnyControlMaterial,
+  type GrammarControlKit,
+  reviewRows,
+  useControlKit,
+} from './ControlKits'
 import { StyleguideSection } from './StyleguideSection'
 import { catalogClass, catalogStyles } from './stylex/catalog.stylex'
 import { className, stylexProps } from './stylex/shared.stylex'
@@ -11,151 +12,37 @@ import { className, stylexProps } from './stylex/shared.stylex'
 interface ControlCatalogProps {
   readonly grammarLabel: string
   readonly hideInteractionSections?: boolean
-  readonly kineticMaterial?: KineticMaterial
+  readonly material?: AnyControlMaterial
 }
 
 const layers = ['Surface', 'Content', 'Signal'] as const
 
-interface ReviewRow {
-  readonly bound: string
-  readonly detail: string
-  readonly id: string
-  readonly operation: string
-  readonly rationale: string
-  readonly state: 'ready' | 'review'
-  readonly subject: string
-}
-
-const reviewRows: readonly ReviewRow[] = [
-  {
-    bound: '6 columns · 3 records',
-    detail: 'Native row + column semantics',
-    id: 'alignment-surface',
-    operation: 'VERIFY',
-    rationale: 'Dense evidence remains attached to an explicit subject and heading.',
-    state: 'ready',
-    subject: 'Alignment surface',
-  },
-  {
-    bound: '1040 px minimum',
-    detail: 'One bounded horizontal axis',
-    id: 'viewport-continuity',
-    operation: 'PRESERVE',
-    rationale: 'Narrow viewports scroll the relation instead of changing its meaning.',
-    state: 'review',
-    subject: 'Viewport continuity',
-  },
-  {
-    bound: '0 implied records',
-    detail: 'Full-span declared result',
-    id: 'empty-evidence',
-    operation: 'DECLARE',
-    rationale: 'An empty relation communicates its boundary instead of rendering silence.',
-    state: 'ready',
-    subject: 'Empty evidence',
-  },
-]
-
-function KineticDenseTableSpecimen({ material }: { readonly material?: KineticMaterial }) {
-  const columns: readonly KineticDenseTableColumn<ReviewRow>[] = [
-    {
-      header: 'Rank / subject',
-      id: 'subject',
-      render: (row, index) => (
-        <div className={className(catalogStyles.denseIdentity)}>
-          <span className={className(catalogStyles.denseOrdinal)}>
-            {String(index + 1).padStart(2, '0')}
-          </span>
-          <span className={className(catalogStyles.denseStack)}>
-            <strong>{row.subject}</strong>
-            <code className={className(catalogStyles.denseMeta)}>{row.id}</code>
-          </span>
-        </div>
-      ),
-      rowHeader: true,
-      width: '24%',
-    },
-    {
-      header: 'Recommendation',
-      id: 'operation',
-      render: (row) => (
-        <span className={className(catalogStyles.denseStack)}>
-          <strong>{row.operation}</strong>
-          <small className={className(catalogStyles.denseMeta)}>INTERFACE / STRUCTURE</small>
-        </span>
-      ),
-      width: '16%',
-    },
-    {
-      header: 'Why now',
-      id: 'rationale',
-      render: (row) => <p className={className(catalogStyles.denseReason)}>{row.rationale}</p>,
-      width: '25%',
-    },
-    {
-      header: 'Bounds',
-      id: 'bounds',
-      render: (row) => (
-        <span className={className(catalogStyles.denseStack)}>
-          <strong>{row.bound}</strong>
-          <small className={className(catalogStyles.denseMeta)}>{row.detail}</small>
-        </span>
-      ),
-      width: '17%',
-    },
-    {
-      header: 'Readiness',
-      id: 'state',
-      render: (row) => (
-        <span
-          className={className(
-            catalogStyles.denseState,
-            row.state === 'ready' && catalogStyles.denseStateReady,
-            row.state === 'review' && catalogStyles.denseStateReview,
-          )}
-        >
-          {row.state}
-        </span>
-      ),
-      width: '10%',
-    },
-    {
-      align: 'right',
-      header: 'Action',
-      id: 'action',
-      render: () => (
-        <button className={catalogClass('catalog-table-action')} type="button">
-          Inspect
-        </button>
-      ),
-      width: '8%',
-    },
-  ]
-
-  return (
-    <KineticDenseTable
-      ariaLabel="Interface review queue"
-      className={className(catalogStyles.denseTable)}
-      columns={columns}
-      getRowClassName={() => className(catalogStyles.denseTableRow)}
-      getRowKey={(row) => row.id}
-      material={material}
-      minWidth={1040}
-      rows={reviewRows}
-    />
+function ChoiceInput({
+  inputProps,
+  kit,
+  type,
+}: {
+  readonly inputProps: InputHTMLAttributes<HTMLInputElement>
+  readonly kit: GrammarControlKit | undefined
+  readonly type: 'checkbox' | 'radio'
+}) {
+  return kit?.renderChoice ? (
+    kit.renderChoice({ inputProps, type })
+  ) : (
+    <input {...inputProps} className={className(catalogStyles.choiceInput)} type={type} />
   )
 }
 
 export function ControlCatalog({
   grammarLabel,
   hideInteractionSections = false,
-  kineticMaterial,
+  material,
 }: ControlCatalogProps) {
   const radioName = useId()
   const [layer, setLayer] = useState<(typeof layers)[number]>('Content')
   const [enabled, setEnabled] = useState(true)
   const [range, setRange] = useState(68)
-  const isKinetic = grammarLabel === 'kinetic'
+  const kit = useControlKit(material)
 
   return (
     <div className={catalogClass('control-catalog')}>
@@ -347,32 +234,8 @@ export function ControlCatalog({
                     Range
                     <output className={className(catalogStyles.fieldHelp)}>{range}%</output>
                   </span>
-                  {isKinetic ? (
-                    <div
-                      {...stylexProps(
-                        catalogStyles.kineticRangeControl,
-                        catalogStyles.kineticRangeValue(`${range}%`),
-                      )}
-                    >
-                      <input
-                        aria-label="Range"
-                        className={className(catalogStyles.kineticRangeInput)}
-                        max="100"
-                        min="0"
-                        onChange={(event) => setRange(event.currentTarget.valueAsNumber)}
-                        type="range"
-                        value={range}
-                      />
-                      <span
-                        aria-hidden="true"
-                        className={className(catalogStyles.kineticRangeRail)}
-                      >
-                        <i className={className(catalogStyles.kineticRangeFill)} />
-                        <i className={className(catalogStyles.kineticRangeKnob)}>
-                          <i className={className(catalogStyles.kineticRangeKnobMark)} />
-                        </i>
-                      </span>
-                    </div>
+                  {kit?.renderRange ? (
+                    kit.renderRange({ onChange: setRange, value: range })
                   ) : (
                     <input
                       className={className(catalogStyles.range)}
@@ -392,80 +255,42 @@ export function ControlCatalog({
               <div className={catalogClass('catalog-choice-grid')}>
                 <fieldset className={catalogClass('catalog-choice-group')}>
                   <legend className={className(catalogStyles.choiceLegend)}>Checkboxes</legend>
+                  {/* biome-ignore lint/a11y/noLabelWithoutControl: ChoiceInput always renders a real <input> as its only element child */}
                   <label className={className(catalogStyles.choiceLabel)}>
-                    <input
-                      className={className(
-                        catalogStyles.choiceInput,
-                        isKinetic && catalogStyles.kineticChoiceInput,
-                        isKinetic && catalogStyles.kineticCheckbox,
-                      )}
-                      defaultChecked
-                      type="checkbox"
-                    />
+                    <ChoiceInput inputProps={{ defaultChecked: true }} kit={kit} type="checkbox" />
                     <span>Show material effects</span>
                   </label>
+                  {/* biome-ignore lint/a11y/noLabelWithoutControl: ChoiceInput always renders a real <input> as its only element child */}
                   <label className={className(catalogStyles.choiceLabel)}>
-                    <input
-                      className={className(
-                        catalogStyles.choiceInput,
-                        isKinetic && catalogStyles.kineticChoiceInput,
-                        isKinetic && catalogStyles.kineticCheckbox,
-                      )}
-                      type="checkbox"
-                    />
+                    <ChoiceInput inputProps={{}} kit={kit} type="checkbox" />
                     <span>Increase contrast</span>
                   </label>
+                  {/* biome-ignore lint/a11y/noLabelWithoutControl: ChoiceInput always renders a real <input> as its only element child */}
                   <label className={className(catalogStyles.choiceLabel)}>
-                    <input
-                      className={className(
-                        catalogStyles.choiceInput,
-                        isKinetic && catalogStyles.kineticChoiceInput,
-                        isKinetic && catalogStyles.kineticCheckbox,
-                      )}
-                      disabled
-                      type="checkbox"
-                    />
+                    <ChoiceInput inputProps={{ disabled: true }} kit={kit} type="checkbox" />
                     <span>Unavailable option</span>
                   </label>
                 </fieldset>
 
                 <fieldset className={catalogClass('catalog-choice-group')}>
                   <legend className={className(catalogStyles.choiceLegend)}>Radio choices</legend>
+                  {/* biome-ignore lint/a11y/noLabelWithoutControl: ChoiceInput always renders a real <input> as its only element child */}
                   <label className={className(catalogStyles.choiceLabel)}>
-                    <input
-                      className={className(
-                        catalogStyles.choiceInput,
-                        isKinetic && catalogStyles.kineticChoiceInput,
-                        isKinetic && catalogStyles.kineticRadio,
-                      )}
-                      defaultChecked
-                      name={radioName}
+                    <ChoiceInput
+                      inputProps={{ defaultChecked: true, name: radioName }}
+                      kit={kit}
                       type="radio"
                     />
                     <span>Automatic</span>
                   </label>
+                  {/* biome-ignore lint/a11y/noLabelWithoutControl: ChoiceInput always renders a real <input> as its only element child */}
                   <label className={className(catalogStyles.choiceLabel)}>
-                    <input
-                      className={className(
-                        catalogStyles.choiceInput,
-                        isKinetic && catalogStyles.kineticChoiceInput,
-                        isKinetic && catalogStyles.kineticRadio,
-                      )}
-                      name={radioName}
-                      type="radio"
-                    />
+                    <ChoiceInput inputProps={{ name: radioName }} kit={kit} type="radio" />
                     <span>Light</span>
                   </label>
+                  {/* biome-ignore lint/a11y/noLabelWithoutControl: ChoiceInput always renders a real <input> as its only element child */}
                   <label className={className(catalogStyles.choiceLabel)}>
-                    <input
-                      className={className(
-                        catalogStyles.choiceInput,
-                        isKinetic && catalogStyles.kineticChoiceInput,
-                        isKinetic && catalogStyles.kineticRadio,
-                      )}
-                      name={radioName}
-                      type="radio"
-                    />
+                    <ChoiceInput inputProps={{ name: radioName }} kit={kit} type="radio" />
                     <span>Dark</span>
                   </label>
                 </fieldset>
@@ -603,8 +428,8 @@ export function ControlCatalog({
         index="11"
         title="Tables"
       >
-        {isKinetic ? (
-          <KineticDenseTableSpecimen material={kineticMaterial} />
+        {kit?.renderTable ? (
+          kit.renderTable({ rows: reviewRows })
         ) : (
           <section aria-label="Component readiness" className={catalogClass('catalog-table-shell')}>
             <div className={catalogClass('catalog-table-heading')}>

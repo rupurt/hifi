@@ -1,5 +1,13 @@
 export { type MosaicThemeName, mosaicGrammar } from './grammar.js'
 export {
+  type MosaicGeometryMaterial,
+  type MosaicGeometryPattern,
+  type MosaicTileGeometry,
+  chamferedRectPath,
+  computeBevelFilter,
+  computeMosaicGeometry,
+} from './geometry.js'
+export {
   type MosaicLayoutLeaf,
   type MosaicLayoutRect,
   type MosaicLayoutSize,

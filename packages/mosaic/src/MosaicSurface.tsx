@@ -59,8 +59,16 @@ export function MosaicSurface({
     weight: Math.max(0.05, child.props.weight ?? 1),
   }))
   const hasGeometry = size.width > 0 && size.height > 0
+  // A stable content signature — compared by value, not identity — so the settle-in effect
+  // only re-runs when tiles are actually added or removed. Weight/material/size tweaks (e.g.
+  // dragging a live-bound control, or the initial 0-to-measured resize on mount) leave this
+  // string unchanged, so they never cancel an in-flight settle or replay it mid-drag.
+  const idSignature = leaves
+    .map((leaf) => leaf.id)
+    .sort()
+    .join('|')
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: leaves/size/selected intentionally re-trigger the settle-in animation on every layout/material change
+  // biome-ignore lint/correctness/useExhaustiveDependencies: idSignature stands in for `leaves` by value; reducedMotion is the only other real trigger
   useEffect(() => {
     setSettled(false)
     if (reducedMotion) {
@@ -77,7 +85,7 @@ export function MosaicSurface({
       cancelAnimationFrame(outer)
       cancelAnimationFrame(inner)
     }
-  }, [leaves, size, selected, reducedMotion])
+  }, [idSignature, reducedMotion])
 
   const geometry = hasGeometry ? computeMosaicGeometry(leaves, size, selected) : []
   const geometryById = new Map(geometry.map((tile) => [tile.id, tile]))
@@ -131,7 +139,7 @@ export function MosaicSurface({
                 transform: settled ? 'scale(1) translateY(0)' : 'scale(0.96) translateY(6px)',
                 transition: reducedMotion
                   ? 'none'
-                  : `opacity ${duration}ms ${EASING} ${tile.settleDelayMs}ms, transform ${duration}ms ${EASING} ${tile.settleDelayMs}ms`,
+                  : `opacity ${duration}ms ${EASING} ${tile.settleDelayMs}ms, transform ${duration}ms ${EASING} ${tile.settleDelayMs}ms, left ${duration}ms ${EASING}, top ${duration}ms ${EASING}, width ${duration}ms ${EASING}, height ${duration}ms ${EASING}, clip-path ${duration}ms ${EASING}`,
                 width: tile.width,
               }}
             >

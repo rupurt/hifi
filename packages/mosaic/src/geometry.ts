@@ -276,3 +276,32 @@ function erodeTowardCentroid(points: Point[], jointWidth: number): Point[] {
 function round(value: number): number {
   return Math.round(value * 100) / 100
 }
+
+/**
+ * A ready-to-use `clip-path: polygon(...)` string for a single chamfered rect — the same
+ * corner-cut used on interior treemap corners in `buildTilePolygon`, extracted standalone for
+ * fixed-size controls (checkboxes, radio marks) that don't need a full tile layout. The chamfer
+ * is clamped to half the shorter side so the polygon never self-intersects.
+ */
+export function chamferedRectPath(width: number, height: number, chamfer: number): string {
+  const w = Math.max(0, width)
+  const h = Math.max(0, height)
+  const c = Math.max(0, Math.min(chamfer, Math.min(w, h) / 2))
+
+  if (c <= 0) {
+    return `polygon(0px 0px, ${round(w)}px 0px, ${round(w)}px ${round(h)}px, 0px ${round(h)}px)`
+  }
+
+  const points: Point[] = [
+    { x: c, y: 0 },
+    { x: w - c, y: 0 },
+    { x: w, y: c },
+    { x: w, y: h - c },
+    { x: w - c, y: h },
+    { x: c, y: h },
+    { x: 0, y: h - c },
+    { x: 0, y: c },
+  ]
+
+  return `polygon(${points.map((point) => `${round(point.x)}px ${round(point.y)}px`).join(', ')})`
+}

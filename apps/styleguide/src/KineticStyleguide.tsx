@@ -150,7 +150,7 @@ export function KineticStyleguide() {
       </StyleguideSection>
 
       <FoundationCatalog />
-      <ControlCatalog grammarLabel="kinetic" kineticMaterial={material} />
+      <ControlCatalog grammarLabel="kinetic" material={material} />
     </main>
   )
 }

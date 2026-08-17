@@ -133,7 +133,7 @@ export function MosaicStyleguide() {
       </StyleguideSection>
 
       <FoundationCatalog />
-      <ControlCatalog grammarLabel="mosaic" />
+      <ControlCatalog grammarLabel="mosaic" material={material} />
     </main>
   )
 }

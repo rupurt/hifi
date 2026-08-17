@@ -162,7 +162,7 @@ export function LiquidStyleguide() {
           onMaterialChange={changeMaterial}
           theme={selectedTheme.name as LiquidThemeName}
         />
-        <ControlCatalog grammarLabel="liquid" hideInteractionSections />
+        <ControlCatalog grammarLabel="liquid" hideInteractionSections material={material} />
       </div>
     </main>
   )
