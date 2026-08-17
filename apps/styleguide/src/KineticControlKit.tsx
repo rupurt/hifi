@@ -1,11 +1,14 @@
 import {
+  KineticButton,
   KineticDenseTable,
   type KineticDenseTableColumn,
   type KineticMaterial,
 } from '@hifi/kinetic'
 import type {
+  ButtonKitProps,
   ChoiceKitProps,
   GrammarControlKit,
+  IconButtonKitProps,
   RangeKitProps,
   ReviewRow,
   TableKitProps,
@@ -16,6 +19,28 @@ import { className, stylexProps } from './stylex/shared.stylex'
 
 export function createKineticControlKit(material: KineticMaterial): GrammarControlKit {
   return {
+    renderButton({ children, disabled, variant }: ButtonKitProps) {
+      const style =
+        variant === 'primary'
+          ? {
+              background: 'var(--control-accent)',
+              borderColor: 'var(--control-accent)',
+              color: 'var(--control-accent-contrast)',
+            }
+          : variant === 'danger'
+            ? {
+                background: 'var(--control-danger)',
+                borderColor: 'var(--control-danger)',
+                color: '#fff',
+              }
+            : undefined
+
+      return (
+        <KineticButton disabled={disabled} material={material} style={style}>
+          {children}
+        </KineticButton>
+      )
+    },
     renderChoice({ type, inputProps }: ChoiceKitProps) {
       return (
         <input
@@ -26,6 +51,13 @@ export function createKineticControlKit(material: KineticMaterial): GrammarContr
           )}
           type={type}
         />
+      )
+    },
+    renderIconButton({ ariaLabel, icon }: IconButtonKitProps) {
+      return (
+        <KineticButton aria-label={ariaLabel} material={material} style={{ paddingInline: 0, width: 42 }}>
+          {icon}
+        </KineticButton>
       )
     },
     renderRange({ value, onChange }: RangeKitProps) {

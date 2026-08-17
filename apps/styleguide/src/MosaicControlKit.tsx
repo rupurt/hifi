@@ -1,11 +1,19 @@
 import {
   chamferedRectPath,
+  chamferedRectPathResponsive,
   computeBevelFilter,
   type MosaicMaterial,
   MosaicSurface,
   MosaicTile,
 } from '@hifi/mosaic'
-import type { ChoiceKitProps, GrammarControlKit, RangeKitProps, TableKitProps } from './ControlKits'
+import type {
+  ButtonKitProps,
+  ChoiceKitProps,
+  GrammarControlKit,
+  IconButtonKitProps,
+  RangeKitProps,
+  TableKitProps,
+} from './ControlKits'
 import { catalogMosaicStyles } from './stylex/catalog-mosaic.stylex'
 import { className, stylexProps } from './stylex/shared.stylex'
 
@@ -14,9 +22,44 @@ const CHECKBOX_CHAMFER = 4
 const RADIO_CHAMFER = 8
 
 export function createMosaicControlKit(material: MosaicMaterial): GrammarControlKit {
-  const filter = computeBevelFilter(material)
+  const restFilter = computeBevelFilter(material)
+  // Pressed state inverts the light source and softens the lift, so the same bevel math that
+  // makes a tile look raised at rest makes it read as pushed in on press — the light now
+  // catches the recessed edge instead of the raised one.
+  const pressedFilter = computeBevelFilter({
+    ...material,
+    lightAngle: material.lightAngle + 180,
+    relief: material.relief * 0.4,
+  })
+  const buttonChamfer = chamferedRectPathResponsive(Math.min(material.radius, 14))
 
   return {
+    renderButton({ children, disabled, variant }: ButtonKitProps) {
+      const { background, color } =
+        variant === 'primary'
+          ? { background: material.accentColor, color: material.accentTextColor }
+          : variant === 'danger'
+            ? { background: 'var(--control-danger)', color: '#fff' }
+            : { background: material.tileColor, color: material.tileTextColor }
+
+      return (
+        <button
+          disabled={disabled}
+          {...stylexProps(
+            catalogMosaicStyles.button({
+              background,
+              clipPath: buttonChamfer,
+              color,
+              pressedFilter,
+              restFilter,
+            }),
+          )}
+          type="button"
+        >
+          {children}
+        </button>
+      )
+    },
     renderChoice({ inputProps, type }: ChoiceKitProps) {
       const chamfer = type === 'checkbox' ? CHECKBOX_CHAMFER : RADIO_CHAMFER
 
@@ -29,12 +72,31 @@ export function createMosaicControlKit(material: MosaicMaterial): GrammarControl
               border: material.jointColor,
               checkedBackground: material.accentColor,
               clipPath: chamferedRectPath(CHOICE_SIZE, CHOICE_SIZE, chamfer),
-              filter,
+              filter: restFilter,
               uncheckedBackground: material.jointColor,
             }),
           )}
           type={type}
         />
+      )
+    },
+    renderIconButton({ ariaLabel, icon }: IconButtonKitProps) {
+      return (
+        <button
+          aria-label={ariaLabel}
+          {...stylexProps(
+            catalogMosaicStyles.iconButton({
+              background: material.tileColor,
+              clipPath: buttonChamfer,
+              color: material.tileTextColor,
+              pressedFilter,
+              restFilter,
+            }),
+          )}
+          type="button"
+        >
+          {icon}
+        </button>
       )
     },
     renderRange({ value, onChange }: RangeKitProps) {

@@ -305,3 +305,20 @@ export function chamferedRectPath(width: number, height: number, chamfer: number
 
   return `polygon(${points.map((point) => `${round(point.x)}px ${round(point.y)}px`).join(', ')})`
 }
+
+/**
+ * A chamfered-rect clip-path that doesn't need the element's rendered size ahead of time —
+ * built from `calc()` against percentages, for intrinsically-sized elements like text buttons
+ * where the pixel width isn't known until layout. `chamfer` is a fixed pixel cut regardless of
+ * the element's actual size (unlike `chamferedRectPath`, it isn't clamped to half the shorter
+ * side, since that side isn't known here — keep `chamfer` modest relative to expected sizing).
+ */
+export function chamferedRectPathResponsive(chamfer: number): string {
+  const c = Math.max(0, chamfer)
+
+  if (c <= 0) {
+    return 'polygon(0 0, 100% 0, 100% 100%, 0 100%)'
+  }
+
+  return `polygon(${c}px 0, calc(100% - ${c}px) 0, 100% ${c}px, 100% calc(100% - ${c}px), calc(100% - ${c}px) 100%, ${c}px 100%, 0 calc(100% - ${c}px), 0 ${c}px)`
+}

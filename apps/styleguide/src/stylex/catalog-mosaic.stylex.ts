@@ -24,6 +24,51 @@ export const catalogMosaicStyles = stylex.create({
     clipPath: values.clipPath,
     filter: values.filter,
   }),
+  button: (values: {
+    readonly background: string
+    readonly clipPath: string
+    readonly color: string
+    readonly pressedFilter: string
+    readonly restFilter: string
+  }) => ({
+    backgroundColor: values.background,
+    border: 0,
+    clipPath: values.clipPath,
+    color: values.color,
+    cursor: { default: 'pointer', ':disabled': 'not-allowed' },
+    filter: { default: values.restFilter, ':active': values.pressedFilter },
+    fontWeight: 700,
+    minHeight: 42,
+    opacity: { ':disabled': 0.5 },
+    outline: { ':focus-visible': '2px solid var(--control-accent)' },
+    outlineOffset: { ':focus-visible': 3 },
+    paddingInline: 18,
+    transform: { default: 'translateY(0)', ':active': 'translateY(1px)' },
+    transition: 'filter 120ms ease, transform 120ms ease',
+  }),
+  iconButton: (values: {
+    readonly background: string
+    readonly clipPath: string
+    readonly color: string
+    readonly pressedFilter: string
+    readonly restFilter: string
+  }) => ({
+    alignItems: 'center',
+    backgroundColor: values.background,
+    border: 0,
+    clipPath: values.clipPath,
+    color: values.color,
+    cursor: 'pointer',
+    display: 'inline-flex',
+    filter: { default: values.restFilter, ':active': values.pressedFilter },
+    height: 42,
+    justifyContent: 'center',
+    outline: { ':focus-visible': '2px solid var(--control-accent)' },
+    outlineOffset: { ':focus-visible': 3 },
+    transform: { default: 'translateY(0)', ':active': 'translateY(1px)' },
+    transition: 'filter 120ms ease, transform 120ms ease',
+    width: 42,
+  }),
   rangeWrap: { height: 42, position: 'relative' },
   rangeSurface: {
     '--mosaic-surface-min-height': '42px',

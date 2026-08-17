@@ -1,7 +1,24 @@
 import { getTextureMaterialStyle, type TextureMaterial } from '@hifi/texture'
-import type { ChoiceKitProps, GrammarControlKit, RangeKitProps, TableKitProps } from './ControlKits'
+import type {
+  ButtonKitProps,
+  ChoiceKitProps,
+  GrammarControlKit,
+  IconButtonKitProps,
+  RangeKitProps,
+  TableKitProps,
+} from './ControlKits'
 import { catalogTextureStyles } from './stylex/catalog-texture.stylex'
 import { className, stylexProps } from './stylex/shared.stylex'
+
+function buttonImage(material: TextureMaterial, backgroundColor: string, textureColor: string, intensity: number) {
+  return getTextureMaterialStyle({ ...material, backgroundColor, intensity, scale: 4, textureColor })
+    .backgroundImage as string
+}
+
+function buttonShadow(shadowDepth: number, compressed: boolean) {
+  const depth = compressed ? shadowDepth * 0.2 : shadowDepth
+  return `0 ${Math.max(compressed ? 0 : 1, depth * 0.3)}px ${Math.max(1, depth * 0.6)}px rgb(42 29 16 / ${compressed ? 0.24 : 0.32})`
+}
 
 export function createTextureControlKit(material: TextureMaterial): GrammarControlKit {
   const uncheckedSwatch = getTextureMaterialStyle({ ...material, scale: 4 })
@@ -35,6 +52,42 @@ export function createTextureControlKit(material: TextureMaterial): GrammarContr
   })
 
   return {
+    renderButton({ children, disabled, variant }: ButtonKitProps) {
+      const { background, color, textureColor } =
+        variant === 'primary'
+          ? {
+              background: material.accentColor,
+              color: 'var(--control-accent-contrast)',
+              textureColor: material.highlightColor,
+            }
+          : variant === 'danger'
+            ? { background: 'var(--control-danger)', color: '#fff', textureColor: material.highlightColor }
+            : {
+                background: material.backgroundColor,
+                color: material.foregroundColor,
+                textureColor: material.textureColor,
+              }
+
+      return (
+        <button
+          disabled={disabled}
+          {...stylexProps(
+            catalogTextureStyles.button({
+              backgroundColor: background,
+              borderRadius: material.borderRadius,
+              color,
+              pressedImage: buttonImage(material, background, textureColor, Math.min(1, material.intensity * 2)),
+              pressedShadow: buttonShadow(material.shadowDepth, true),
+              restImage: buttonImage(material, background, textureColor, material.intensity),
+              restShadow: buttonShadow(material.shadowDepth, false),
+            }),
+          )}
+          type="button"
+        >
+          {children}
+        </button>
+      )
+    },
     renderChoice({ inputProps, type }: ChoiceKitProps) {
       return (
         <input
@@ -54,6 +107,37 @@ export function createTextureControlKit(material: TextureMaterial): GrammarContr
           )}
           type={type}
         />
+      )
+    },
+    renderIconButton({ ariaLabel, icon }: IconButtonKitProps) {
+      return (
+        <button
+          aria-label={ariaLabel}
+          {...stylexProps(
+            catalogTextureStyles.iconButton({
+              backgroundColor: material.backgroundColor,
+              borderRadius: material.borderRadius,
+              color: material.foregroundColor,
+              pressedImage: buttonImage(
+                material,
+                material.backgroundColor,
+                material.textureColor,
+                Math.min(1, material.intensity * 2),
+              ),
+              pressedShadow: buttonShadow(material.shadowDepth, true),
+              restImage: buttonImage(
+                material,
+                material.backgroundColor,
+                material.textureColor,
+                material.intensity,
+              ),
+              restShadow: buttonShadow(material.shadowDepth, false),
+            }),
+          )}
+          type="button"
+        >
+          {icon}
+        </button>
       )
     },
     renderRange({ value, onChange }: RangeKitProps) {

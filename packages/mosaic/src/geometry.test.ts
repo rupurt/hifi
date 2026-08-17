@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   chamferedRectPath,
+  chamferedRectPathResponsive,
   computeBevelFilter,
   computeMosaicGeometry,
   type MosaicGeometryMaterial,
@@ -168,5 +169,24 @@ describe('chamferedRectPath', () => {
   it('never produces NaN or negative coordinates for a zero-size rect', () => {
     expect(chamferedRectPath(0, 0, 4)).not.toMatch(/NaN/)
     expect(chamferedRectPath(0, 0, 4)).not.toMatch(/-/)
+  })
+})
+
+describe('chamferedRectPathResponsive', () => {
+  it('returns a plain rect polygon when chamfer is zero', () => {
+    expect(chamferedRectPathResponsive(0)).toBe('polygon(0 0, 100% 0, 100% 100%, 0 100%)')
+  })
+
+  it('treats a negative chamfer as zero', () => {
+    expect(chamferedRectPathResponsive(-5)).toBe('polygon(0 0, 100% 0, 100% 100%, 0 100%)')
+  })
+
+  it('returns an 8-point polygon mixing percentages and calc() for a positive chamfer', () => {
+    const path = chamferedRectPathResponsive(6)
+
+    expect(path).not.toMatch(/NaN/)
+    expect(path.match(/calc\(100% - 6px\)/g)).toHaveLength(4)
+    expect(path.match(/6px/g)?.length).toBeGreaterThanOrEqual(4)
+    expect(path.match(/,/g)).toHaveLength(7)
   })
 })

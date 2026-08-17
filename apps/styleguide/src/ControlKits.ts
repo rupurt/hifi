@@ -50,6 +50,19 @@ export const reviewRows: readonly ReviewRow[] = [
   },
 ]
 
+export type ButtonVariant = 'primary' | 'secondary' | 'danger'
+
+export interface ButtonKitProps {
+  readonly children: ReactNode
+  readonly disabled?: boolean
+  readonly variant: ButtonVariant
+}
+
+export interface IconButtonKitProps {
+  readonly ariaLabel: string
+  readonly icon: ReactNode
+}
+
 export interface RangeKitProps {
   readonly value: number
   readonly onChange: (value: number) => void
@@ -65,7 +78,9 @@ export interface TableKitProps {
 }
 
 export interface GrammarControlKit {
+  renderButton?(props: ButtonKitProps): ReactNode
   renderChoice?(props: ChoiceKitProps): ReactNode
+  renderIconButton?(props: IconButtonKitProps): ReactNode
   renderRange?(props: RangeKitProps): ReactNode
   renderTable?(props: TableKitProps): ReactNode
 }

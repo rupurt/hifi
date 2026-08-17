@@ -20,6 +20,57 @@ export const catalogPrintStyles = stylex.create({
     outlineOffset: { ':focus-visible': 3 },
     width: 18,
   }),
+  button: (values: {
+    readonly background: string
+    readonly borderColor: string
+    readonly color: string
+    readonly pressTranslate: string
+    readonly shadow: string
+  }) => ({
+    backgroundColor: values.background,
+    borderColor: values.borderColor,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    boxShadow: { default: values.shadow, ':active': 'none' },
+    color: values.color,
+    cursor: { default: 'pointer', ':disabled': 'not-allowed' },
+    fontFamily: 'var(--guide-mono)',
+    fontSize: '0.78rem',
+    fontWeight: 800,
+    letterSpacing: '0.08em',
+    minHeight: 42,
+    opacity: { ':disabled': 0.5 },
+    outline: { ':focus-visible': '2px solid var(--control-accent)' },
+    outlineOffset: { ':focus-visible': 3 },
+    paddingInline: 18,
+    textTransform: 'uppercase',
+    transform: { default: 'translate(0, 0)', ':active': values.pressTranslate },
+    transition: 'box-shadow 100ms ease, transform 100ms ease',
+  }),
+  iconButton: (values: {
+    readonly background: string
+    readonly borderColor: string
+    readonly color: string
+    readonly pressTranslate: string
+    readonly shadow: string
+  }) => ({
+    alignItems: 'center',
+    backgroundColor: values.background,
+    borderColor: values.borderColor,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    boxShadow: { default: values.shadow, ':active': 'none' },
+    color: values.color,
+    cursor: 'pointer',
+    display: 'inline-flex',
+    height: 42,
+    justifyContent: 'center',
+    outline: { ':focus-visible': '2px solid var(--control-accent)' },
+    outlineOffset: { ':focus-visible': 3 },
+    transform: { default: 'translate(0, 0)', ':active': values.pressTranslate },
+    transition: 'box-shadow 100ms ease, transform 100ms ease',
+    width: 42,
+  }),
   rangeControl: (values: {
     readonly ruleColor: string
     readonly ruleWeight: number

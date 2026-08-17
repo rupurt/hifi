@@ -28,6 +28,57 @@ export const catalogTextureStyles = stylex.create({
     borderStyle: 'solid',
     borderWidth: { default: 1, ':checked': 2 },
   }),
+  button: (values: {
+    readonly backgroundColor: string
+    readonly borderRadius: number
+    readonly color: string
+    readonly pressedImage: string
+    readonly pressedShadow: string
+    readonly restImage: string
+    readonly restShadow: string
+  }) => ({
+    backgroundColor: values.backgroundColor,
+    backgroundImage: { default: values.restImage, ':active': values.pressedImage },
+    border: 0,
+    borderRadius: values.borderRadius,
+    boxShadow: { default: values.restShadow, ':active': values.pressedShadow },
+    color: values.color,
+    cursor: { default: 'pointer', ':disabled': 'not-allowed' },
+    fontWeight: 700,
+    minHeight: 42,
+    opacity: { ':disabled': 0.5 },
+    outline: { ':focus-visible': '2px solid var(--control-accent)' },
+    outlineOffset: { ':focus-visible': 3 },
+    paddingInline: 18,
+    transform: { default: 'translateY(0)', ':active': 'translateY(1px)' },
+    transition: 'box-shadow 120ms ease, transform 120ms ease',
+  }),
+  iconButton: (values: {
+    readonly backgroundColor: string
+    readonly borderRadius: number
+    readonly color: string
+    readonly pressedImage: string
+    readonly pressedShadow: string
+    readonly restImage: string
+    readonly restShadow: string
+  }) => ({
+    alignItems: 'center',
+    backgroundColor: values.backgroundColor,
+    backgroundImage: { default: values.restImage, ':active': values.pressedImage },
+    border: 0,
+    borderRadius: values.borderRadius,
+    boxShadow: { default: values.restShadow, ':active': values.pressedShadow },
+    color: values.color,
+    cursor: 'pointer',
+    display: 'inline-flex',
+    height: 42,
+    justifyContent: 'center',
+    outline: { ':focus-visible': '2px solid var(--control-accent)' },
+    outlineOffset: { ':focus-visible': 3 },
+    transform: { default: 'translateY(0)', ':active': 'translateY(1px)' },
+    transition: 'box-shadow 120ms ease, transform 120ms ease',
+    width: 42,
+  }),
   rangeControl: {
     height: 42,
     outline: { ':focus-within': '2px solid var(--control-accent)' },

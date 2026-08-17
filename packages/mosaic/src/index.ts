@@ -4,6 +4,7 @@ export {
   type MosaicGeometryPattern,
   type MosaicTileGeometry,
   chamferedRectPath,
+  chamferedRectPathResponsive,
   computeBevelFilter,
   computeMosaicGeometry,
 } from './geometry.js'

@@ -1,15 +1,54 @@
 import type { PrintMaterial } from '@hifi/print'
-import type { ChoiceKitProps, GrammarControlKit, RangeKitProps, TableKitProps } from './ControlKits'
+import type {
+  ButtonKitProps,
+  ChoiceKitProps,
+  GrammarControlKit,
+  IconButtonKitProps,
+  RangeKitProps,
+  TableKitProps,
+} from './ControlKits'
 import { catalogPrintStyles } from './stylex/catalog-print.stylex'
 import { stylexProps } from './stylex/shared.stylex'
 
 export function createPrintControlKit(material: PrintMaterial): GrammarControlKit {
+  const shadowOffset = (scale: number) => Math.max(1, material.shadowOffset * scale)
   const hardShadow = (scale: number) => {
-    const offset = Math.max(1, material.shadowOffset * scale)
+    const offset = shadowOffset(scale)
     return `${offset}px ${offset}px 0 color-mix(in srgb, ${material.inkColor} 30%, transparent)`
   }
 
   return {
+    renderButton({ children, disabled, variant }: ButtonKitProps) {
+      const { background, borderColor, color } =
+        variant === 'primary'
+          ? {
+              background: material.accentColor,
+              borderColor: material.accentColor,
+              color: 'var(--control-accent-contrast)',
+            }
+          : variant === 'danger'
+            ? { background: 'var(--control-danger)', borderColor: 'var(--control-danger)', color: '#fff' }
+            : { background: material.paperColor, borderColor: material.inkColor, color: material.inkColor }
+      const offset = shadowOffset(0.5)
+
+      return (
+        <button
+          disabled={disabled}
+          {...stylexProps(
+            catalogPrintStyles.button({
+              background,
+              borderColor,
+              color,
+              pressTranslate: `translate(${offset}px, ${offset}px)`,
+              shadow: hardShadow(0.5),
+            }),
+          )}
+          type="button"
+        >
+          {children}
+        </button>
+      )
+    },
     renderChoice({ inputProps, type }: ChoiceKitProps) {
       return (
         <input
@@ -24,6 +63,27 @@ export function createPrintControlKit(material: PrintMaterial): GrammarControlKi
           )}
           type={type}
         />
+      )
+    },
+    renderIconButton({ ariaLabel, icon }: IconButtonKitProps) {
+      const offset = shadowOffset(0.5)
+
+      return (
+        <button
+          aria-label={ariaLabel}
+          {...stylexProps(
+            catalogPrintStyles.iconButton({
+              background: material.paperColor,
+              borderColor: material.inkColor,
+              color: material.inkColor,
+              pressTranslate: `translate(${offset}px, ${offset}px)`,
+              shadow: hardShadow(0.5),
+            }),
+          )}
+          type="button"
+        >
+          {icon}
+        </button>
       )
     },
     renderRange({ value, onChange }: RangeKitProps) {

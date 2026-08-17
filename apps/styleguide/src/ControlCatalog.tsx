@@ -1,6 +1,7 @@
-import { type InputHTMLAttributes, useId, useState } from 'react'
+import { type InputHTMLAttributes, type ReactNode, useId, useState } from 'react'
 import {
   type AnyControlMaterial,
+  type ButtonVariant,
   type GrammarControlKit,
   reviewRows,
   useControlKit,
@@ -30,6 +31,48 @@ function ChoiceInput({
     kit.renderChoice({ inputProps, type })
   ) : (
     <input {...inputProps} className={className(catalogStyles.choiceInput)} type={type} />
+  )
+}
+
+function CatalogButton({
+  children,
+  disabled,
+  kit,
+  variant,
+}: {
+  readonly children: ReactNode
+  readonly disabled?: boolean
+  readonly kit: GrammarControlKit | undefined
+  readonly variant: ButtonVariant
+}) {
+  if (kit?.renderButton) return kit.renderButton({ children, disabled, variant })
+
+  const classNames = ['catalog-button']
+  if (variant === 'primary') classNames.push('catalog-button-primary')
+  if (variant === 'danger') classNames.push('catalog-button-danger')
+
+  return (
+    <button className={catalogClass(...classNames)} disabled={disabled} type="button">
+      {children}
+    </button>
+  )
+}
+
+function CatalogIconButton({
+  ariaLabel,
+  icon,
+  kit,
+}: {
+  readonly ariaLabel: string
+  readonly icon: ReactNode
+  readonly kit: GrammarControlKit | undefined
+}) {
+  if (kit?.renderIconButton) return kit.renderIconButton({ ariaLabel, icon })
+
+  return (
+    <button aria-label={ariaLabel} className={catalogClass('catalog-icon-button')} type="button">
+      {icon}
+    </button>
   )
 }
 
@@ -63,38 +106,32 @@ export function ControlCatalog({
                   <code className={className(catalogStyles.code)}>default states</code>
                 </header>
                 <div className={catalogClass('catalog-control-row')}>
-                  <button
-                    className={catalogClass('catalog-button', 'catalog-button-primary')}
-                    type="button"
-                  >
+                  <CatalogButton kit={kit} variant="primary">
                     Continue
-                  </button>
-                  <button className={catalogClass('catalog-button')} type="button">
+                  </CatalogButton>
+                  <CatalogButton kit={kit} variant="secondary">
                     Save draft
-                  </button>
-                  <button
-                    className={catalogClass('catalog-button', 'catalog-button-danger')}
-                    type="button"
-                  >
+                  </CatalogButton>
+                  <CatalogButton kit={kit} variant="danger">
                     Remove
-                  </button>
-                  <button className={catalogClass('catalog-button')} disabled type="button">
+                  </CatalogButton>
+                  <CatalogButton disabled kit={kit} variant="secondary">
                     Disabled
-                  </button>
-                  <button
-                    aria-label="Add item"
-                    className={catalogClass('catalog-icon-button')}
-                    type="button"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      className={className(catalogStyles.icon)}
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 5v14M5 12h14" />
-                    </svg>
-                  </button>
+                  </CatalogButton>
+                  <CatalogIconButton
+                    ariaLabel="Add item"
+                    icon={
+                      <svg
+                        aria-hidden="true"
+                        className={className(catalogStyles.icon)}
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M12 5v14M5 12h14" />
+                      </svg>
+                    }
+                    kit={kit}
+                  />
                 </div>
               </article>
 
