@@ -99,7 +99,7 @@ export const liquidInteractionStyles = stylex.create({
     '--lab-tint-r': values.tintR,
   }),
   stage: {
-    backgroundColor: '#080d24',
+    backgroundColor: '#101019',
     borderColor: 'rgb(255 255 255 / 0.2)',
     borderRadius: 44,
     borderStyle: 'solid',
@@ -126,89 +126,20 @@ export const liquidInteractionStyles = stylex.create({
     '@media (max-width: 780px)': { minHeight: 800 },
     '@media (max-width: 520px)': { minHeight: 700 },
   },
-  backdrop: {
-    backgroundImage:
-      'radial-gradient(circle at 18% 20%, rgb(84 72 202 / 0.16), transparent 29%), radial-gradient(circle at 82% 72%, rgb(22 150 183 / 0.13), transparent 32%), linear-gradient(145deg, #0b1020, #0b1425 52%, #09111d)',
+  backdrop: (values: { readonly washA: string; readonly washB: string }) => ({
+    backgroundImage: `radial-gradient(circle at 22% 22%, ${values.washA}, transparent 42%), radial-gradient(circle at 78% 78%, ${values.washB}, transparent 44%), linear-gradient(160deg, #16161f, #1a1a24 55%, #121218)`,
     inset: 0,
     overflow: 'hidden',
     position: 'absolute',
     zIndex: -2,
     '::after': {
       backgroundImage:
-        'linear-gradient(to bottom, rgb(3 7 18 / 0.06), rgb(3 7 18 / 0.26)), radial-gradient(circle at 50% 52%, transparent 24%, rgb(2 5 15 / 0.28) 100%)',
+        'linear-gradient(to bottom, rgb(3 7 18 / 0.04), rgb(3 7 18 / 0.18)), radial-gradient(circle at 50% 55%, transparent 32%, rgb(2 5 15 / 0.18) 100%)',
       content: '""',
       inset: 0,
       position: 'absolute',
     },
-  },
-  formBackdrop: {
-    backgroundImage:
-      'radial-gradient(circle at 24% 48%, rgb(25 132 171 / 0.14), transparent 28%), radial-gradient(circle at 76% 34%, rgb(116 75 189 / 0.13), transparent 31%), linear-gradient(145deg, #0a1722, #0e1927 54%, #09151f)',
-  },
-  ribbon: {
-    borderRadius: 999,
-    display: 'block',
-    filter: 'blur(38px) saturate(125%)',
-    opacity: 0.26,
-    position: 'absolute',
-    transform: 'rotate(-2deg)',
-  },
-  ribbonA: {
-    backgroundImage:
-      'linear-gradient(90deg, rgb(104 78 255 / 0.12), #815eff 28%, #1ccfe0 62%, rgb(22 190 205 / 0.1))',
-    height: 92,
-    left: '7%',
-    top: '48%',
-    width: '86%',
-  },
-  formRibbonA: {
-    backgroundImage: 'linear-gradient(90deg, transparent, #27c7d6 38%, #7365de 70%, transparent)',
-    height: 72,
-    left: '8%',
-    opacity: 0.2,
-    top: '52%',
-    transform: 'rotate(-6deg)',
-    width: '84%',
-  },
-  ribbonB: {
-    backgroundImage: 'linear-gradient(180deg, #ff6c9c, #755eff 55%, transparent)',
-    height: 430,
-    opacity: 0.11,
-    right: '18%',
-    top: '16%',
-    transform: 'rotate(10deg)',
-    width: 86,
-  },
-  hidden: { display: 'none' },
-  orb: {
-    borderRadius: '50%',
-    filter: 'blur(3px)',
-    opacity: 0.24,
-    position: 'absolute',
-  },
-  formOrb: { opacity: 0.12 },
-  orbA: {
-    backgroundImage: 'radial-gradient(circle, #ffb563, #ff5b9f 32%, transparent 69%)',
-    height: 92,
-    left: '14%',
-    top: '39%',
-    width: 92,
-  },
-  orbB: {
-    backgroundImage: 'radial-gradient(circle, #5aefff, #3c63ff 34%, transparent 70%)',
-    bottom: '22%',
-    height: 112,
-    right: '12%',
-    width: 112,
-  },
-  backdropGrid: {
-    backgroundImage:
-      'linear-gradient(rgb(255 255 255 / 0.035) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 0.035) 1px, transparent 1px)',
-    backgroundSize: '48px 48px',
-    inset: 0,
-    maskImage: 'radial-gradient(circle at 50% 52%, #000, transparent 68%)',
-    position: 'absolute',
-  },
+  }),
   stageHeader: {
     alignItems: 'flex-start',
     color: '#fff',
@@ -1248,5 +1179,110 @@ export const liquidInteractionStyles = stylex.create({
     backgroundImage: 'linear-gradient(145deg, rgb(255 255 255 / 0.94), rgb(255 255 255 / 0.58))',
     borderColor: 'rgb(255 255 255 / 0.8)',
     color: '#11162d',
+  },
+  formsPanel: {
+    backdropFilter: 'blur(30px) saturate(150%)',
+    backgroundColor:
+      'rgb(var(--lab-tint-r) var(--lab-tint-g) var(--lab-tint-b) / calc(var(--lab-control-fill) + 0.05))',
+    backgroundImage:
+      'linear-gradient(145deg, rgb(255 255 255 / var(--lab-highlight-alpha)), transparent 32%)',
+    borderColor: 'rgb(255 255 255 / var(--lab-edge-alpha))',
+    borderRadius: 'var(--lab-panel-radius)',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    boxShadow:
+      'inset 0 1px 0 rgb(255 255 255 / var(--lab-highlight-alpha)), 0 20px 60px rgb(0 0 24 / 0.16)',
+    color: '#fff',
+    display: 'grid',
+    gap: 36,
+    padding: 'clamp(24px, 4vw, 44px)',
+    position: 'relative',
+    textShadow: '0 1px 14px rgb(0 0 24 / 0.3)',
+  },
+  choiceGrid: {
+    alignItems: 'start',
+    display: 'grid',
+    gap: 24,
+    gridTemplateColumns: '1fr 1fr 2fr',
+    '@media (max-width: 780px)': { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' },
+    '@media (max-width: 480px)': { gridTemplateColumns: '1fr' },
+  },
+  choiceGroup: { borderWidth: 0, display: 'grid', gap: 14, margin: 0, padding: 0 },
+  choiceLegend: {
+    color: 'rgb(239 246 255 / 0.68)',
+    fontSize: '0.61rem',
+    fontWeight: 800,
+    letterSpacing: '0.08em',
+    marginBottom: 2,
+    textTransform: 'uppercase',
+  },
+  choiceLabel: {
+    alignItems: 'center',
+    color: '#fff',
+    display: 'flex',
+    fontSize: '0.82rem',
+    gap: 11,
+  },
+  choiceInput: {
+    appearance: 'none',
+    backdropFilter: 'blur(var(--lab-control-blur)) saturate(140%)',
+    backgroundColor: {
+      default:
+        'rgb(var(--lab-tint-r) var(--lab-tint-g) var(--lab-tint-b) / var(--lab-control-fill))',
+      ':checked':
+        'rgb(var(--lab-tint-r) var(--lab-tint-g) var(--lab-tint-b) / calc(var(--lab-control-fill) + 0.42))',
+    },
+    backgroundImage:
+      'linear-gradient(145deg, rgb(255 255 255 / var(--lab-highlight-alpha)), transparent 46%)',
+    borderColor: 'rgb(255 255 255 / var(--lab-edge-alpha))',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    boxShadow: {
+      default: 'inset 0 1px 0 rgb(255 255 255 / var(--lab-highlight-alpha))',
+      ':checked':
+        'inset 0 1px 0 rgb(255 255 255 / var(--lab-highlight-alpha)), 0 0 0 2px rgb(255 255 255 / 0.4)',
+    },
+    cursor: 'pointer',
+    height: 20,
+    outline: { ':focus-visible': '2px solid var(--liquid-accent)' },
+    outlineOffset: { ':focus-visible': 3 },
+    transition: 'background-color 180ms ease, box-shadow 180ms ease',
+    width: 20,
+  },
+  choiceCheckbox: { borderRadius: 6 },
+  choiceRadio: { borderRadius: '50%' },
+  formsFieldGrid: {
+    display: 'grid',
+    gap: 24,
+    gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+    '@media (max-width: 820px)': { gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' },
+    '@media (max-width: 480px)': { gridTemplateColumns: '1fr' },
+  },
+  formsFieldWide: {
+    gridColumn: 'span 3',
+    '@media (max-width: 820px)': { gridColumn: 'span 2' },
+    '@media (max-width: 480px)': { gridColumn: 'span 1' },
+  },
+  formsFieldHelp: {
+    color: 'rgb(239 246 255 / 0.5)',
+    fontSize: '0.66rem',
+  },
+  formsTextarea: {
+    minHeight: 96,
+    padding: '10px 12px',
+    resize: 'vertical',
+  },
+  formsPickerGroup: {
+    display: 'grid',
+    gap: 16,
+    gridTemplateColumns: '0.6fr 0.9fr 1.5fr',
+    '@media (max-width: 480px)': { gridTemplateColumns: '1fr' },
+  },
+  formsFileInput: {
+    color: 'rgb(239 246 255 / 0.62)',
+    fontSize: '0.72rem',
+    maxWidth: '100%',
+    outline: { ':focus-visible': '2px solid var(--liquid-accent)' },
+    outlineOffset: { ':focus-visible': 3 },
   },
 })

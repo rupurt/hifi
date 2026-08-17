@@ -11,6 +11,7 @@ import { FoundationCatalog } from './FoundationCatalog'
 import { LiquidEmissionField } from './LiquidEmissionField'
 import { LiquidHeroMaterial } from './LiquidHeroMaterial'
 import { LiquidInteractionCatalog } from './LiquidInteractionCatalog'
+import { LiquidMaterialLab } from './LiquidMaterialLab'
 import { LiquidThemePicker } from './LiquidThemePicker'
 import { liquidFabrics } from './liquidFabrics'
 import { StyleguideNav } from './StyleguideNav'
@@ -141,7 +142,7 @@ export function LiquidStyleguide() {
         <StyleguideNav />
 
         <StyleguideSection
-          description="Each material carries its own optical field. Select one to place that fabric beneath the entire route and apply its glass constraints to every specimen."
+          description="Each material carries its own optical field. Select one to place that fabric beneath the entire route, then tune it directly below."
           id="material-heading"
           index="01"
           title="A spectrum of glass"
@@ -153,15 +154,16 @@ export function LiquidStyleguide() {
             }}
             value={selectedTheme.name as LiquidThemeName}
           />
+          <LiquidMaterialLab
+            key={selectedTheme.name}
+            material={material}
+            onMaterialChange={changeMaterial}
+            theme={selectedTheme.name as LiquidThemeName}
+          />
         </StyleguideSection>
 
         <FoundationCatalog />
-        <LiquidInteractionCatalog
-          key={selectedTheme.name}
-          material={material}
-          onMaterialChange={changeMaterial}
-          theme={selectedTheme.name as LiquidThemeName}
-        />
+        <LiquidInteractionCatalog key={selectedTheme.name} material={material} />
         <ControlCatalog grammarLabel="liquid" hideInteractionSections material={material} />
       </div>
     </main>
