@@ -12,6 +12,8 @@ import type {
   GrammarControlKit,
   IconButtonKitProps,
   RangeKitProps,
+  SegmentKitProps,
+  SwitchKitProps,
   TableKitProps,
 } from './ControlKits'
 import { catalogMosaicStyles } from './stylex/catalog-mosaic.stylex'
@@ -131,6 +133,63 @@ export function createMosaicControlKit(material: MosaicMaterial): GrammarControl
             value={value}
           />
         </div>
+      )
+    },
+    renderSegment({ children, onClick, selected }: SegmentKitProps) {
+      const { background, color } = selected
+        ? { background: material.accentColor, color: material.accentTextColor }
+        : { background: material.tileColor, color: material.tileTextColor }
+
+      return (
+        <button
+          aria-pressed={selected}
+          onClick={onClick}
+          {...stylexProps(
+            catalogMosaicStyles.button({
+              background,
+              clipPath: buttonChamfer,
+              color,
+              pressedFilter,
+              restFilter,
+            }),
+          )}
+          type="button"
+        >
+          {children}
+        </button>
+      )
+    },
+    renderSwitch({ ariaLabel, checked, onClick }: SwitchKitProps) {
+      const thumbSize = 24
+      const trackWidth = 58
+      const trackPadding = 3
+      const translateX = trackWidth - trackPadding * 2 - thumbSize
+
+      return (
+        <button
+          aria-checked={checked}
+          aria-label={ariaLabel}
+          onClick={onClick}
+          role="switch"
+          {...stylexProps(
+            catalogMosaicStyles.switchTrack({
+              background: material.jointColor,
+              clipPath: chamferedRectPath(trackWidth, 32, Math.min(material.radius, 10)),
+            }),
+          )}
+          type="button"
+        >
+          <span
+            {...stylexProps(
+              catalogMosaicStyles.switchThumb({
+                background: checked ? material.accentColor : material.tileColor,
+                clipPath: chamferedRectPath(thumbSize, thumbSize, Math.min(material.radius, 6)),
+                filter: restFilter,
+                translateX: checked ? `${translateX}px` : '0px',
+              }),
+            )}
+          />
+        </button>
       )
     },
     renderTable({ rows }: TableKitProps) {

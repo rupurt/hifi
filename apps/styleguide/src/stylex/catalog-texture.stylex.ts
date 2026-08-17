@@ -79,6 +79,57 @@ export const catalogTextureStyles = stylex.create({
     transition: 'box-shadow 120ms ease, transform 120ms ease',
     width: 42,
   }),
+  segment: (values: {
+    readonly backgroundColor: string
+    readonly backgroundImage: string
+    readonly borderRadius: number
+    readonly boxShadow: string
+    readonly color: string
+  }) => ({
+    backgroundColor: values.backgroundColor,
+    backgroundImage: values.backgroundImage,
+    border: 0,
+    borderRadius: values.borderRadius,
+    boxShadow: values.boxShadow,
+    color: values.color,
+    cursor: 'pointer',
+    fontWeight: 700,
+    minHeight: 38,
+    outline: { ':focus-visible': '2px solid var(--control-accent)' },
+    outlineOffset: { ':focus-visible': 3 },
+    paddingInline: 10,
+    transition: 'box-shadow 150ms ease',
+  }),
+  switchTrack: (values: { readonly backgroundColor: string; readonly backgroundImage: string }) => ({
+    backgroundColor: values.backgroundColor,
+    backgroundImage: values.backgroundImage,
+    borderRadius: 999,
+    cursor: 'pointer',
+    height: 32,
+    outline: { ':focus-visible': '2px solid var(--control-accent)' },
+    outlineOffset: { ':focus-visible': 3 },
+    position: 'relative',
+    width: 58,
+  }),
+  switchThumb: (values: {
+    readonly backgroundColor: string
+    readonly backgroundImage: string
+    readonly boxShadow: string
+    readonly translateX: string
+  }) => ({
+    backgroundColor: values.backgroundColor,
+    backgroundImage: values.backgroundImage,
+    borderRadius: '50%',
+    boxShadow: values.boxShadow,
+    display: 'block',
+    height: 24,
+    left: 3,
+    position: 'absolute',
+    top: 3,
+    transform: `translateX(${values.translateX})`,
+    transition: 'transform 180ms ease',
+    width: 24,
+  }),
   rangeControl: {
     height: 42,
     outline: { ':focus-within': '2px solid var(--control-accent)' },

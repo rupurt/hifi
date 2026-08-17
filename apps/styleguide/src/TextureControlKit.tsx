@@ -5,6 +5,8 @@ import type {
   GrammarControlKit,
   IconButtonKitProps,
   RangeKitProps,
+  SegmentKitProps,
+  SwitchKitProps,
   TableKitProps,
 } from './ControlKits'
 import { catalogTextureStyles } from './stylex/catalog-texture.stylex'
@@ -183,6 +185,67 @@ export function createTextureControlKit(material: TextureMaterial): GrammarContr
             />
           </span>
         </div>
+      )
+    },
+    renderSegment({ children, onClick, selected }: SegmentKitProps) {
+      const background = selected ? material.accentColor : material.backgroundColor
+      const textureColor = selected ? material.highlightColor : material.textureColor
+      const intensity = selected ? Math.min(1, material.intensity * 1.6) : material.intensity
+
+      return (
+        <button
+          aria-pressed={selected}
+          onClick={onClick}
+          {...stylexProps(
+            catalogTextureStyles.segment({
+              backgroundColor: background,
+              backgroundImage: buttonImage(material, background, textureColor, intensity),
+              borderRadius: material.borderRadius,
+              boxShadow: buttonShadow(material.shadowDepth, selected),
+              color: selected ? 'var(--control-accent-contrast)' : material.foregroundColor,
+            }),
+          )}
+          type="button"
+        >
+          {children}
+        </button>
+      )
+    },
+    renderSwitch({ ariaLabel, checked, onClick }: SwitchKitProps) {
+      const trackBackground = checked ? material.accentColor : material.backgroundColor
+      const trackImage = buttonImage(
+        material,
+        trackBackground,
+        checked ? material.highlightColor : material.textureColor,
+        checked ? Math.min(1, material.intensity * 1.3) : material.intensity * 0.6,
+      )
+      const thumbImage = buttonImage(material, material.backgroundColor, material.textureColor, material.intensity)
+
+      return (
+        <button
+          aria-checked={checked}
+          aria-label={ariaLabel}
+          onClick={onClick}
+          role="switch"
+          {...stylexProps(
+            catalogTextureStyles.switchTrack({
+              backgroundColor: trackBackground,
+              backgroundImage: trackImage,
+            }),
+          )}
+          type="button"
+        >
+          <span
+            {...stylexProps(
+              catalogTextureStyles.switchThumb({
+                backgroundColor: material.backgroundColor,
+                backgroundImage: thumbImage,
+                boxShadow: knobShadow,
+                translateX: checked ? '28px' : '0px',
+              }),
+            )}
+          />
+        </button>
       )
     },
     renderTable({ rows }: TableKitProps) {

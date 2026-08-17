@@ -76,6 +76,68 @@ function CatalogIconButton({
   )
 }
 
+function CatalogSegment({
+  children,
+  kit,
+  onClick,
+  selected,
+}: {
+  readonly children: ReactNode
+  readonly kit: GrammarControlKit | undefined
+  readonly onClick: () => void
+  readonly selected: boolean
+}) {
+  if (kit?.renderSegment) return kit.renderSegment({ children, onClick, selected })
+
+  return (
+    <button
+      aria-pressed={selected}
+      className={className(
+        catalogStyles.interactive,
+        catalogStyles.segmentedButton,
+        selected && catalogStyles.segmentedActive,
+      )}
+      onClick={onClick}
+      type="button"
+    >
+      {children}
+    </button>
+  )
+}
+
+function CatalogSwitch({
+  ariaLabel,
+  checked,
+  kit,
+  onClick,
+}: {
+  readonly ariaLabel: string
+  readonly checked: boolean
+  readonly kit: GrammarControlKit | undefined
+  readonly onClick: () => void
+}) {
+  if (kit?.renderSwitch) return kit.renderSwitch({ ariaLabel, checked, onClick })
+
+  return (
+    <button
+      aria-checked={checked}
+      aria-label={ariaLabel}
+      className={className(
+        catalogStyles.interactive,
+        catalogStyles.switch,
+        checked && catalogStyles.switchActive,
+      )}
+      onClick={onClick}
+      role="switch"
+      type="button"
+    >
+      <span
+        className={className(catalogStyles.switchThumb, checked && catalogStyles.switchThumbActive)}
+      />
+    </button>
+  )
+}
+
 export function ControlCatalog({
   grammarLabel,
   hideInteractionSections = false,
@@ -145,19 +207,14 @@ export function ControlCatalog({
                 <fieldset className={catalogClass('catalog-segmented')}>
                   <legend className={catalogClass('visually-hidden')}>Composition layer</legend>
                   {layers.map((candidate) => (
-                    <button
-                      aria-pressed={candidate === layer}
-                      className={className(
-                        catalogStyles.interactive,
-                        catalogStyles.segmentedButton,
-                        candidate === layer && catalogStyles.segmentedActive,
-                      )}
+                    <CatalogSegment
                       key={candidate}
+                      kit={kit}
                       onClick={() => setLayer(candidate)}
-                      type="button"
+                      selected={candidate === layer}
                     >
                       {candidate}
-                    </button>
+                    </CatalogSegment>
                   ))}
                 </fieldset>
               </article>
@@ -170,25 +227,12 @@ export function ControlCatalog({
                   <code className={className(catalogStyles.code)}>switch</code>
                 </header>
                 <div className={catalogClass('catalog-switch-row')}>
-                  <button
-                    aria-checked={enabled}
-                    aria-label="Enable live material"
-                    className={className(
-                      catalogStyles.interactive,
-                      catalogStyles.switch,
-                      enabled && catalogStyles.switchActive,
-                    )}
+                  <CatalogSwitch
+                    ariaLabel="Enable live material"
+                    checked={enabled}
+                    kit={kit}
                     onClick={() => setEnabled((current) => !current)}
-                    role="switch"
-                    type="button"
-                  >
-                    <span
-                      className={className(
-                        catalogStyles.switchThumb,
-                        enabled && catalogStyles.switchThumbActive,
-                      )}
-                    />
-                  </button>
+                  />
                   <div>
                     <strong className={className(catalogStyles.stackBlock)}>
                       {enabled ? 'Material active' : 'Material quiet'}

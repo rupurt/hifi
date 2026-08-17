@@ -71,6 +71,34 @@ export const catalogPrintStyles = stylex.create({
     transition: 'box-shadow 100ms ease, transform 100ms ease',
     width: 42,
   }),
+  switchTrack: (values: { readonly borderColor: string; readonly fill: string }) => ({
+    backgroundColor: values.fill,
+    borderColor: values.borderColor,
+    borderStyle: 'solid',
+    borderWidth: 1,
+    cursor: 'pointer',
+    height: 32,
+    outline: { ':focus-visible': `2px solid ${values.borderColor}` },
+    outlineOffset: { ':focus-visible': 3 },
+    position: 'relative',
+    width: 58,
+  }),
+  switchThumb: (values: {
+    readonly backgroundColor: string
+    readonly shadow: string
+    readonly translateX: string
+  }) => ({
+    backgroundColor: values.backgroundColor,
+    boxShadow: values.shadow,
+    display: 'block',
+    height: 24,
+    left: 3,
+    position: 'absolute',
+    top: 3,
+    transform: `translateX(${values.translateX})`,
+    transition: 'transform 150ms ease',
+    width: 24,
+  }),
   rangeControl: (values: {
     readonly ruleColor: string
     readonly ruleWeight: number

@@ -69,6 +69,34 @@ export const catalogMosaicStyles = stylex.create({
     transition: 'filter 120ms ease, transform 120ms ease',
     width: 42,
   }),
+  switchTrack: (values: { readonly background: string; readonly clipPath: string }) => ({
+    backgroundColor: values.background,
+    clipPath: values.clipPath,
+    cursor: 'pointer',
+    height: 32,
+    outline: { ':focus-visible': '2px solid var(--control-accent)' },
+    outlineOffset: { ':focus-visible': 3 },
+    position: 'relative',
+    width: 58,
+  }),
+  switchThumb: (values: {
+    readonly background: string
+    readonly clipPath: string
+    readonly filter: string
+    readonly translateX: string
+  }) => ({
+    backgroundColor: values.background,
+    clipPath: values.clipPath,
+    display: 'block',
+    filter: values.filter,
+    height: 24,
+    left: 3,
+    position: 'absolute',
+    top: 3,
+    transform: `translateX(${values.translateX})`,
+    transition: 'transform 180ms ease, background-color 180ms ease',
+    width: 24,
+  }),
   rangeWrap: { height: 42, position: 'relative' },
   rangeSurface: {
     '--mosaic-surface-min-height': '42px',

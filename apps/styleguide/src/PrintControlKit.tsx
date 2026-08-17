@@ -5,6 +5,8 @@ import type {
   GrammarControlKit,
   IconButtonKitProps,
   RangeKitProps,
+  SegmentKitProps,
+  SwitchKitProps,
   TableKitProps,
 } from './ControlKits'
 import { catalogPrintStyles } from './stylex/catalog-print.stylex'
@@ -130,6 +132,54 @@ export function createPrintControlKit(material: PrintMaterial): GrammarControlKi
             )}
           />
         </div>
+      )
+    },
+    renderSegment({ children, onClick, selected }: SegmentKitProps) {
+      const background = selected ? material.inkColor : material.paperColor
+      const color = selected ? material.paperColor : material.inkColor
+      const offset = shadowOffset(0.5)
+
+      return (
+        <button
+          aria-pressed={selected}
+          onClick={onClick}
+          {...stylexProps(
+            catalogPrintStyles.button({
+              background,
+              borderColor: material.inkColor,
+              color,
+              pressTranslate: `translate(${offset}px, ${offset}px)`,
+              shadow: selected ? 'none' : hardShadow(0.5),
+            }),
+          )}
+          type="button"
+        >
+          {children}
+        </button>
+      )
+    },
+    renderSwitch({ ariaLabel, checked, onClick }: SwitchKitProps) {
+      return (
+        <button
+          aria-checked={checked}
+          aria-label={ariaLabel}
+          onClick={onClick}
+          role="switch"
+          {...stylexProps(
+            catalogPrintStyles.switchTrack({ borderColor: material.inkColor, fill: material.paperColor }),
+          )}
+          type="button"
+        >
+          <span
+            {...stylexProps(
+              catalogPrintStyles.switchThumb({
+                backgroundColor: checked ? material.accentColor : material.inkColor,
+                shadow: hardShadow(0.3),
+                translateX: checked ? '28px' : '0px',
+              }),
+            )}
+          />
+        </button>
       )
     },
     renderTable({ rows }: TableKitProps) {

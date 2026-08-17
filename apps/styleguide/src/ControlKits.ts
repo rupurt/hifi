@@ -77,11 +77,25 @@ export interface TableKitProps {
   readonly rows: readonly ReviewRow[]
 }
 
+export interface SegmentKitProps {
+  readonly children: ReactNode
+  readonly onClick: () => void
+  readonly selected: boolean
+}
+
+export interface SwitchKitProps {
+  readonly ariaLabel: string
+  readonly checked: boolean
+  readonly onClick: () => void
+}
+
 export interface GrammarControlKit {
   renderButton?(props: ButtonKitProps): ReactNode
   renderChoice?(props: ChoiceKitProps): ReactNode
   renderIconButton?(props: IconButtonKitProps): ReactNode
   renderRange?(props: RangeKitProps): ReactNode
+  renderSegment?(props: SegmentKitProps): ReactNode
+  renderSwitch?(props: SwitchKitProps): ReactNode
   renderTable?(props: TableKitProps): ReactNode
 }
 
