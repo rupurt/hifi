@@ -233,6 +233,15 @@ export const liquidInteractionStyles = stylex.create({
     width: '100%',
   },
   buttonStage: {
+    backdropFilter: 'blur(30px) saturate(150%)',
+    backgroundColor:
+      'rgb(var(--lab-tint-r) var(--lab-tint-g) var(--lab-tint-b) / calc(var(--lab-control-fill) + 0.05))',
+    backgroundImage:
+      'linear-gradient(145deg, rgb(255 255 255 / var(--lab-highlight-alpha)), transparent 32%)',
+    borderColor: 'rgb(255 255 255 / var(--lab-edge-alpha))',
+    borderRadius: 'var(--lab-panel-radius)',
+    boxShadow:
+      'inset 0 1px 0 rgb(255 255 255 / var(--lab-highlight-alpha)), 0 20px 60px rgb(0 0 24 / 0.16)',
     minHeight: 760,
     '@media (max-width: 780px)': { minHeight: 700 },
     '@media (max-width: 520px)': { minHeight: 620 },

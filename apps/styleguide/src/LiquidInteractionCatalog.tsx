@@ -11,7 +11,6 @@ import {
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import {
   computeMaterialStyle,
-  LiquidBackdrop,
   RangeControl,
   StageFooter,
   StageHeader,
@@ -182,7 +181,7 @@ export function LiquidInteractionCatalog({ material }: { readonly material: Liqu
   const [rendererFailed, setRendererFailed] = useState(false)
   const [hovered, setHovered] = useState<ButtonKey | null>(null)
   const [pressed, setPressed] = useState<ButtonKey | null>(null)
-  const [activeControl, setActiveControl] = useState<ButtonKey | null>(null)
+  const [activeControl, setActiveControl] = useState<ButtonKey | null>('launch')
   const [favorite, setFavorite] = useState(false)
   const [addExpanded, setAddExpanded] = useState(false)
   const [layer, setLayer] = useState<Layer>('Content')
@@ -281,7 +280,6 @@ export function LiquidInteractionCatalog({ material }: { readonly material: Liqu
           {...stylexProps(styles.stage, styles.buttonStage, materialStyle)}
           data-liquid-renderer={canRender ? 'webgpu' : 'css-fallback'}
         >
-          <LiquidBackdrop tint={material.tint} />
           <StageHeader
             canRender={canRender}
             eyebrow="Interactive glass"
