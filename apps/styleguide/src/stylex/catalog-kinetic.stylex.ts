@@ -157,28 +157,6 @@ export const catalogKineticStyles = stylex.create({
     color: 'var(--kinetic-background)',
   },
   denseStateReview: { color: 'var(--kinetic-accent)' },
-  segment: {
-    backgroundColor: 'color-mix(in srgb, var(--kinetic-background) 92%, white)',
-    borderColor: 'var(--kinetic-foreground)',
-    borderStyle: 'solid',
-    borderWidth: 1,
-    boxShadow:
-      'inset 1px 1px 0 color-mix(in srgb, white 54%, transparent), inset -1px -1px 0 var(--kinetic-edge-shadow)',
-    color: 'var(--kinetic-foreground)',
-    cursor: 'pointer',
-    fontWeight: 700,
-    minHeight: 38,
-    outline: { ':focus-visible': '2px solid var(--kinetic-accent)' },
-    outlineOffset: { ':focus-visible': 3 },
-    paddingInline: 10,
-    transition: 'box-shadow 150ms ease',
-  },
-  segmentSelected: {
-    backgroundColor: 'var(--kinetic-accent)',
-    boxShadow:
-      'inset 2px 2px 4px color-mix(in srgb, var(--kinetic-shadow-color) 46%, transparent), inset -1px -1px 0 color-mix(in srgb, white 24%, transparent)',
-    color: 'var(--kinetic-background)',
-  },
   switchTrack: {
     backgroundColor: 'color-mix(in srgb, var(--kinetic-background) 82%, black)',
     borderColor: 'var(--kinetic-foreground)',

@@ -9,7 +9,6 @@ import type {
   GrammarControlKit,
   RangeKitProps,
   ReviewRow,
-  SegmentKitProps,
   SwitchKitProps,
   TableKitProps,
 } from './ControlKits'
@@ -55,21 +54,6 @@ export function createKineticControlKit(material: KineticMaterial): GrammarContr
             </i>
           </span>
         </div>
-      )
-    },
-    renderSegment({ children, onClick, selected }: SegmentKitProps) {
-      return (
-        <button
-          aria-pressed={selected}
-          className={className(
-            catalogKineticStyles.segment,
-            selected && catalogKineticStyles.segmentSelected,
-          )}
-          onClick={onClick}
-          type="button"
-        >
-          {children}
-        </button>
       )
     },
     renderSwitch({ ariaLabel, checked, onClick }: SwitchKitProps) {
