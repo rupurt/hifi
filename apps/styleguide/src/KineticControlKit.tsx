@@ -1,4 +1,5 @@
 import {
+  KineticBinaryControl,
   KineticDenseTable,
   type KineticDenseTableColumn,
   type KineticMaterial,
@@ -72,31 +73,13 @@ export function createKineticControlKit(material: KineticMaterial): GrammarContr
       )
     },
     renderSwitch({ ariaLabel, checked, onClick }: SwitchKitProps) {
-      const duration = Math.round(
-        Math.min(420, Math.max(70, 56000 / material.stiffness + material.damping * 2.2)),
-      )
-
       return (
-        <button
-          aria-checked={checked}
-          aria-label={ariaLabel}
-          className={className(
-            catalogKineticStyles.switchTrack,
-            checked && catalogKineticStyles.switchTrackChecked,
-          )}
-          onClick={onClick}
-          role="switch"
-          type="button"
-        >
-          <span
-            {...stylexProps(
-              catalogKineticStyles.switchThumb({
-                transitionDuration: `${duration}ms`,
-                translateX: checked ? '25px' : '0px',
-              }),
-            )}
-          />
-        </button>
+        <KineticBinaryControl
+          ariaLabel={ariaLabel}
+          checked={checked}
+          material={material}
+          onCheckedChange={() => onClick()}
+        />
       )
     },
     renderTable({ rows }: TableKitProps) {

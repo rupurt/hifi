@@ -1,6 +1,15 @@
 export { type KineticThemeName, kineticGrammar } from './grammar.js'
 export { KineticButton, type KineticButtonProps } from './KineticButton.js'
 export {
+  KineticBinaryControl,
+  type KineticBinaryControlProps,
+} from './KineticBinaryControl.js'
+export {
+  KineticSegmentedControl,
+  type KineticSegmentedControlOption,
+  type KineticSegmentedControlProps,
+} from './KineticSegmentedControl.js'
+export {
   type KineticDenseTableAlignment,
   type KineticDenseTableColumn,
   KineticDenseTable,

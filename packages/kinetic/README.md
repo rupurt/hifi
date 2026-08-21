@@ -23,6 +23,39 @@ export function LaunchControl() {
 
 `KineticButton` remains a native button and preserves consumer event handlers while mapping the active material into travel, settling, and shadow response. `KineticSurface` and `getKineticMaterialStyle` apply the same mechanism to larger compositions.
 
+## Preserve binary state
+
+`KineticBinaryControl` is a controlled native switch with fixed geometry. Its
+material governs the housing, thumb, travel, and settling response without
+changing the control's accessible binary meaning.
+
+```tsx
+<KineticBinaryControl
+  ariaLabel="Enable live material"
+  checked={enabled}
+  onCheckedChange={setEnabled}
+  theme="precision"
+/>
+```
+
+## Select one segment
+
+`KineticSegmentedControl` owns one complete single-selection group. Arrow keys
+move focus across enabled segments while `Home` and `End` reach its bounds.
+
+```tsx
+<KineticSegmentedControl
+  ariaLabel="Composition layer"
+  onValueChange={setLayer}
+  options={[
+    { label: 'Field', value: 'field' },
+    { label: 'Evidence', value: 'evidence' },
+    { label: 'Proof', value: 'proof' },
+  ]}
+  value={layer}
+/>
+```
+
 ## Align dense evidence
 
 `KineticDenseTable` keeps high-dimensional records on one explicit alignment surface. It renders a native table, preserves row and column headers, scrolls the complete relation on narrow viewports, and declares an empty bounded view instead of implying missing records.
